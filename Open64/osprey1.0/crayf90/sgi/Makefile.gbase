@@ -1,0 +1,467 @@
+#
+#
+#  Copyright (C) 2000, 2001 Silicon Graphics, Inc.  All Rights Reserved.
+#
+#  This program is free software; you can redistribute it and/or modify it
+#  under the terms of version 2 of the GNU General Public License as
+#  published by the Free Software Foundation.
+#
+#  This program is distributed in the hope that it would be useful, but
+#  WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+#
+#  Further, this software is distributed without any warranty that it is
+#  free of the rightful claim of any third person regarding infringement 
+#  or the like.  Any license provided herein, whether implied or 
+#  otherwise, applies only to this software file.  Patent licenses, if 
+#  any, provided herein do not apply to combinations of this program with 
+#  other software, or any other product whatsoever.  
+#
+#  You should have received a copy of the GNU General Public License along
+#  with this program; if not, write the Free Software Foundation, Inc., 59
+#  Temple Place - Suite 330, Boston MA 02111-1307, USA.
+#
+#  Contact information:  Silicon Graphics, Inc., 1600 Amphitheatre Pky,
+#  Mountain View, CA 94043, or:
+#
+#  http://www.sgi.com
+#
+#  For further information regarding this notice, see:
+#
+#  http://oss.sgi.com/projects/GenInfo/NoticeExplan
+#
+#
+
+#
+#  Makefile.base for Cray F90 front-end
+#
+
+#----------------------------------------------------------------------
+#  Information about Makefile
+#
+#  *  This Makefile does not require that tdt has already been built.
+#
+#  *  Because the Makefile removes temporary files that are in the
+#     current directory (at startup and on interrupts) you can't
+#     run two or more makes in the same directory at the same time.
+#     (Perhaps, If I could force the temp files out to a temp directory,
+#     this could be changed?)
+#
+#----------------------------------------------------------------------
+
+#----------------------------------------------------------------------
+#  Set environment variables
+#
+#  TARGDIR   :  is the targ specific directory in which we do build.
+#               e.q.  /d1/cmplrs.src/v4.00/host32
+#
+#----------------------------------------------------------------------
+TARGDIR = $(BUILD_AREA)
+CURDIR  = .
+
+ARITH_TARG_DIR = $(TARGDIR)/arith
+FE90_TARG_DIR = ../fe90
+SGI_TARG_DIR   = ../sgi
+F90SGI_TARG_DIR = ../libf90sgi
+LIBCIF_TARG_DIR = $(TARGDIR)/libcif
+
+#----------------------------------------------------------------------
+#  Include the usual commondefs
+#----------------------------------------------------------------------
+include $(COMMONDEFS)
+
+#----------------------------------------------------------------------
+#  Set environment variables
+#
+#----------------------------------------------------------------------
+ifeq ($(BUILD_COMPILER), VENDOR)
+  ifeq ($(BUILD_OS), IRIX)
+    CVERSION  =  -xansi
+    HOSTDEFS += -D_LONGLONG -D_SVR4_SOURCE # for compilation with -ansi
+  endif
+else
+  CVERSION  =  -ansi 
+  HOSTDEFS += -D_LONGLONG -D_SVR4_SOURCE 
+endif
+
+#----------------------------------------------------------------------
+#  Install the messages file to the standard nls directory
+#----------------------------------------------------------------------
+LANG_C_MSG_DIR=/usr/lib/locale/C/LC_MESSAGES
+
+#----------------------------------------------------------------------
+#  Compiler Options
+#----------------------------------------------------------------------
+HOSTDEFS += -DSGI_DIRS
+HOSTDEFS += -Dlonglong
+HOSTDEFS += -DSGI_MONGOOSE
+HOSTDEFS += -DFRONT_END
+HOSTDEFS += -DFRONT_F90
+HOSTDEFS += -D_PDGCS 
+HOSTDEFS += 
+
+HOSTDEFS += -DUSE_STANDARD_TYPES
+ifeq ($(BUILD_OS), LINUX)
+  HOSTDEFS += -D__MIPS_AND_IA64_ELF_H
+  HOSTDEFS += -Dlinux
+  HOSTDEFS += -D__USE_BSD
+  HOSTDEFS += -D_GNU_SOURCE
+endif
+
+ifeq ($(BUILD_VARIANT), DEBUG)
+  HOSTDEFS += -DIs_True_On
+  HOSTDEFS += -DInsist_On 
+endif
+
+#----------------------------------------------------------------------
+#  List of directories, and source files of interest
+#----------------------------------------------------------------------
+
+CRAYF90_DIR		= $(BUILD_TOT)/crayf90
+ARITH_DIR 		= $(BUILD_TOT)/arith
+FE90_DIR		= $(CRAYF90_DIR)/fe90
+SGI_DIR			= $(CRAYF90_DIR)/sgi
+COMMON_DIR 		= $(BUILD_TOT)/common
+COMMON_COM_DIR 		= $(COMMON_DIR)/com
+COMMON_COM_TARG_DIR 	= $(COMMON_COM_DIR)/ia64
+COMMON_LIB_DIR 		= $(COMMON_DIR)/lib
+COMMON_UTIL_DIR 	= $(COMMON_DIR)/util
+INCLUDE_DIR 		= $(BUILD_TOT)/include
+
+# special include directories
+LINUX_FE90_INC		= $(BUILD_TOT)/linux/mfef90_includes
+LINUX_INC		= $(BUILD_TOT)/linux/include
+TARG_INC                = $(BUILD_AREA)/include
+
+
+LIBCOMUTIL_DIR 		= $(BUILD_TOT)/libcomutil
+
+TARG_COMUTIL_DIR	= $(TARGDIR)/libcomutil
+
+SRC_DIRS                = $(SGI_DIR) \
+	                  $(COMMON_COM_DIR) \
+                          $(COMMON_UTIL_DIR)\
+	                  $(COMMON_COM_TARG_DIR)
+
+
+#----------------------------------------------------------------------
+#  List of source files.  Please keep them in alphabetical order.
+#----------------------------------------------------------------------
+
+TRANS_SRCS = \
+	cwh_unimp.cxx  \
+	cwh_addr.cxx   \
+	cwh_auxst.cxx  \
+	cwh_block.cxx  \
+	cwh_data.cxx   \
+	cwh_directive.cxx	\
+	cwh_dope.cxx   \
+	cwh_dst.cxx    \
+	cwh_expr.cxx   \
+	cwh_intrin.cxx \
+	cwh_io.cxx     \
+	cwh_mkdepend.cxx \
+	cwh_pdgcs.cxx  \
+	cwh_preg.cxx   \
+	cwh_types.cxx  \
+	cwh_stab.cxx   \
+	cwh_stmt.cxx   \
+	cwh_stk.cxx    \
+	sgi_cmd_line.cxx \
+	make_depend.cxx 
+
+COMMON_COM_CXX_SRCS =	\
+  cleanUpWhirl.cxx	\
+  config.cxx		\
+  const.cxx		\
+  controls.cxx		\
+  dwarf_DST.cxx		\
+  dwarf_DST_dump.cxx	\
+  dwarf_DST_mem.cxx	\
+  dwarf_DST_producer.cxx	\
+  err_host.cxx		\
+  f90_utils.cxx		\
+  glob.cxx		\
+  ir_bcom.cxx		\
+  ir_bwrite.cxx		\
+  ir_reader.cxx		\
+  irbdata.cxx		\
+  mtypes.cxx		\
+  opcode.cxx		\
+  opcode_core.cxx	\
+  pu_info.cxx		\
+  strtab.cxx		\
+  symtab.cxx            \
+  symtab_verify.cxx	\
+  ttype.cxx		\
+  upc_symtab_utils.cxx	\
+  wn.cxx		\
+  wn_map.cxx		\
+  wn_pragmas.cxx	\
+  wn_simp.cxx		\
+  wn_util.cxx		\
+  wutil.cxx		
+
+
+COMMON_COM_TARG_SRCS =  \
+  config_host.c		\
+  config_platform.c	
+
+COMMON_COM_TARG_CXX_SRCS = \
+  config_targ.cxx	\
+  config_elf_targ.cxx	\
+  targ_const.cxx	\
+  targ_sim.cxx
+
+SGI_C_SRCS = $(COMMON_COM_TARG_SRCS)
+
+SGI_CXX_SRCS = $(TRANS_SRCS) \
+	$(COMMON_COM_CXX_SRCS)   \
+	$(COMMON_COM_TARG_CXX_SRCS)
+
+CFILES = $(SGI_C_SRCS)
+CXXFILES = $(SGI_CXX_SRCS)
+
+#----------------------------------------------------------------------
+# extra files to be removed with make clobber
+#----------------------------------------------------------------------
+LDIRT = cf90.i cf90.cat cf90.exp cf90.cat.m cf90.exp.m
+
+
+#----------------------------------------------------------------------
+# Define LCINCS and LCXXINCS (override definitions in gcommondefs)
+#----------------------------------------------------------------------
+HEADER_DIRS = $(FE90_DIR) $(SRC_DIRS) $(CURDIR)
+
+LCINCS = $(addprefix -I, $(HEADER_DIRS))
+
+LCINCS += -I$(INCLUDE_DIR)
+ifeq ($(BUILD_OS), LINUX)
+  LCINCS += -I$(TARG_INC) -I$(LINUX_FE90_INC) -I$(LINUX_INC)
+endif
+
+ifneq ($(STL_EXT_PATH),)
+  LCINCS += -I$(STL_EXT_PATH)
+endif
+
+LCXXINCS = $(LCINCS)
+
+#----------------------------------------------------------------------
+# Other compiler options
+#----------------------------------------------------------------------
+LCDEFS = $(HOSTDEFS) $(TARGDEFS) -D_TARGET_MONGOOSE -D_SGI_WHIRLCONVERT
+
+ifeq ($(BUILD_OS), IRIX)
+  LCDEFS += -D_SGI_SGI
+endif
+
+ifeq ($(filter LINUX TRU64, $(BUILD_OS)), $(BUILD_OS))
+  LCDEFS += -D_LINUX_LINUX
+endif
+
+LCXXDEFS = $(LCDEFS)
+
+LCOPTS += $(STD_COMPILE_OPTS) $(WOFF)
+LCXXOPTS += $(STD_COMPILE_OPTS)
+
+# setup stuff to build shared or non-shared
+GLDOPTS = $(STD_LOAD_OPTS)
+
+
+#----------------------------------------------------------------------
+#  Platform specific options
+#----------------------------------------------------------------------
+
+ifeq ($(BUILD_OS), IRIX)
+ifeq ($(BUILD_COMPILER), VENDOR)
+  WOFF = -woff 1174,1209,1375,1460,1552,3201
+else
+  CFLAGS += -D__GNU_BUG_WORKAROUND
+  CXXFLAGS += -D__GNU_BUG_WORKAROUND
+endif
+endif
+
+ifeq ($(BUILD_OS), LINUX)
+endif
+
+ifeq ($(BUILD_OS), TRU64)
+ifeq ($(BUILD_COMPILER), GNU)
+  CFLAGS += -D__GNU_BUG_WORKAROUND
+  CXXFLAGS += -D__GNU_BUG_WORKAROUND
+endif
+endif
+
+ifeq ($(BUILD_OS), SOLARIS)
+  CFLAGS = -D_SOLARIS_SOLARIS -D_SOLARIS -Dlonglong -D_LONGLONG -D_PDGCS \
+	-DUSE_STANDARD_TYPES -D_TARGET_MONGOOSE -D_SGI_WHIRLCONVERT \
+	-DFRONT_END -DFRONT_F90 $(LCINCS) $(OPTIMIZER)
+  LLDLIBS += -lelf
+  ifeq ($(BUILD_COMPILER), GNU)
+    CFLAGS += -D__GNU_BUG_WORKAROUND
+  endif
+  ifeq ($(BUILD_COMPILER), VENDOR)
+  ifeq ($(BUILD_SB), YES)
+    CFLAGS += -xsb
+  endif
+  endif
+  CXXFLAGS = $(CFLAGS) -w
+endif
+
+CXXFLAGS +=
+CFLAGS +=
+
+#----------------------------------------------------------------------
+#  Define target
+#----------------------------------------------------------------------
+
+MFEF90_EXE = $(addsuffix $(EXEext), mfef90)
+
+
+TARGETS = $(MFEF90_EXE)
+
+LIBRARY = fe90_sgi.a
+
+VPATH    =  $(FE90_DIR) $(SRC_DIRS)
+
+#----------------------------------------------------------------------
+#  Variables describing additional sources, objects, and libraries
+#----------------------------------------------------------------------
+
+LIBRARIES = $(TARG_COMUTIL_DIR)/libcomutil.a $(FE90_TARG_DIR)/fe90.a \
+	$(ARITH_TARG_DIR)/arith.a \
+	$(LIBCIF_TARG_DIR)/libcif.a $(F90SGI_TARG_DIR)/libf90sgi.a
+
+LLDLIBS += $(LIBRARIES)
+ifeq ($(BUILD_ARCH), IA64)
+  LLDLIBS += -L/usr/ia64-sgi-linux/bin
+endif
+ifeq ($(BUILD_ARCH), IA32)
+  LLDLIBS += -L/usr/ia32-sgi-linux/bin
+endif
+ifeq ($(BUILD_OS), LINUX)
+  LLDLIBS += -lc -lm
+  MAJOR_VERSION = $(shell $(CC) -dumpversion | awk -F. '{print $$1}')
+  ifeq ($(MAJOR_VERSION),3)
+    LLDLIBS += -lg2c
+  else
+    LLDLIBS += -lgfortran
+  endif
+  ifeq ($(BUILD_HOST), IA64)
+    LDFLAGS += -Wl,-relax
+  endif
+endif
+ifeq ($(filter IRIX TRU64, $(BUILD_OS)), $(BUILD_OS))
+  LLDLIBS += -lm
+endif
+ifeq ($(BUILD_OS), TRU64)
+  # For linking with fold.o produced from fold.f
+  ifeq ($(BUILD_COMPILER), VENDOR)
+    LLDLIBS += -lfor
+  else
+    LLDLIBS += -lg2c
+  endif
+endif
+
+default: first depends $(TARGETS) last
+
+#----------------------------------------------------------------------
+#  The commands in this section are done BEFORE any other target is
+#  built.
+#----------------------------------------------------------------------
+first:
+	cd $(TARG_COMUTIL_DIR) && $(MAKE)
+	cd $(F90SGI_TARG_DIR) && $(MAKE)
+	cd $(LIBCIF_TARG_DIR) && $(MAKE)
+	cd $(ARITH_TARG_DIR) && $(MAKE)
+	cd $(FE90_TARG_DIR) && $(MAKE)
+
+include $(BUILD_TOT)/Makeinclude
+
+#----------------------------------------------------------------------
+#  The commands in this section are done AFTER every other target is
+#  built.
+#----------------------------------------------------------------------
+DIRTS = 
+
+#----------------------------------------------------------------------
+#  Build 'mfef90'
+#
+#  These rules build the 'mfef90' executable by default, and can install
+#  it in the mongoose compilers directory.
+#
+#----------------------------------------------------------------------
+exports: cf90.cat cf90.exp
+	$(INSTALL) -m 444 -F $(LANG_C_MSG_DIR) -src cf90.cat cf90.cat
+	$(INSTALL) -m 444 -F $(LANG_C_MSG_DIR) -src cf90.cat.m cf90.cat.m
+	$(INSTALL) -m 444 -F $(LANG_C_MSG_DIR) -src cf90.exp cf90.exp
+	$(INSTALL) -m 444 -F $(LANG_C_MSG_DIR) -src cf90.exp.m cf90.exp.m
+
+ifeq ($(BUILD_OS), LINUX)
+install: default cf90.cat
+	$(STD_INSTALL) $(STD_INSTALL_EXEC_MASK) -D $(MFEF90_EXE) \
+	  $(STD_MONGOOSE_LINUX_LOC)/$(MFEF90_EXE)
+	$(STD_INSTALL) $(STD_INSTALL_EXEC_MASK) -D cf90.cat \
+	  $(STD_MONGOOSE_LINUX_LOC)/cf90.cat
+else
+install: default cf90.cat cf90.exp
+	$(STD_INSTALL) $(STD_INSTALL_EXEC_MASK) -F $(STD_MONGOOSE_LOC) \
+	  $(MFEF90_EXE)
+	$(STD_INSTALL) -m 444 -F $(LANG_C_MSG_DIR) -src cf90.cat cf90.cat
+	$(STD_INSTALL) -m 444 -F $(LANG_C_MSG_DIR) -src cf90.cat.m cf90.cat.m
+	$(STD_INSTALL) -m 444 -F $(LANG_C_MSG_DIR) -src cf90.exp cf90.exp
+	$(STD_INSTALL) -m 444 -F $(LANG_C_MSG_DIR) -src cf90.exp.m cf90.exp.m
+endif
+
+#-------------------------------------------------------------------------
+#  Rules for mfef90, and error message catelogue cf90.cat
+#-------------------------------------------------------------------------
+$(MFEF90_EXE): $(OBJECTS) $(LIBRARIES) 
+	echo char \* mfef90_compiler_build_date = \" `date` \"\;> compiler_build_date.c
+	$(CC) -c  compiler_build_date.c
+	$(C++F) -o $@ $(OBJECTS) compiler_build_date.o \
+	  $(TARG_COMUTIL_DIR)/libcomutil.a $(LDFLAGS)
+#
+# eraxxon: Because Cygwin and MacOS do not support gencat, for the
+# time being we are replacing catgetmsg() et al. with our own implementation
+# that essentially contains a static version of cf90.i. See 
+#   Open64/osprey1.0/include/nl_types.h
+#   Open64/osprey1.0/libcsup/msgnew/mycat.*, catgetmsg.c, catmsgfmt.c.
+# The line below marked 'good' were commented out for this change.
+#
+ifeq ($(BUILD_OS), IRIX)
+#	caterr -c cf90.cat $(BUILD_TOT)/crayf90/fe90/cf90.msgs
+else
+#       cf90.i must be created on IRIX: caterr cf90.msgs > cf90.i
+#	$(BUILD_TOT)/linux/tools/caterr -c cf90.cat $(BUILD_TOT)/crayf90/fe90/cf90.msgs
+endif
+#good	gencat cf90.cat $(BUILD_TOT)/crayf90/fe90/cf90.i
+
+
+cf90.i: $(FE90_DIR)/cf90.msgs
+	$(CCF) -E $(FE90_DIR)/cf90.msgs > cf90.i
+
+ifeq ($(BUILD_OS), IRIX)
+cf90.cat: cf90.i
+	rm -f cf90.cat
+	$(TOOLROOT)/usr/bin/caterr -Yc,$(TOOLROOT)/usr/bin/gencat -Ym,$(ROOT)/usr/lib/tmac/tmac.sg -c cf90.cat cf90.i
+endif
+
+cf90.exp: cf90.i
+	rm -f cf90.exp
+	$(TOOLROOT)/usr/bin/caterr -Yc,$(TOOLROOT)/usr/bin/gencat -Ym,$(ROOT)/usr/lib/tmac/tmac.sg -Yn,/usr/bin/nroff -e -c cf90.exp cf90.i
+
+#----------------------------------------------------------------------
+#  Include the usual commonrules
+#----------------------------------------------------------------------
+include $(COMMONRULES)
+
+#----------------------------------------------------------------------
+#  Special case rules for files that want to be individualistic
+#----------------------------------------------------------------------
+# Solaris CC needs __EXTENSIONS__ to get definition of "memccpy"
+ifeq ($(BUILD_OS), SOLARIS)
+ifeq ($(BUILD_COMPILER), VENDOR)   
+make_depend.o : make_depend.cxx
+	$(C++F) -c -D__EXTENSIONS__ $(SGI_DIR)/make_depend.cxx
+endif
+endif

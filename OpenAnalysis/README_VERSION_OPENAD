@@ -1,0 +1,10 @@
+This version of OpenAnalysis is a snapshot that 
+works with OpenAD (see www.mcs.anl.gov/openad).
+The subversion repository at Rice University is 
+serving only as means to allow incremental updates to
+and incremental builds of an OpenAD installation.  
+To obtain the complete revision history 
+for the OpenAnalysis development and the most 
+recent code (that is not necessarily working 
+with OpenAD) refer to the OpenAnalysis web page
+http://developer.berlios.de/projects/openanalysis/

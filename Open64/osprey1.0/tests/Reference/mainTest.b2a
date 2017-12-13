@@ -1,0 +1,44 @@
+ LOC 0 0 source files:	1	"/m_home/m_utkej/Argonne/Dev/Current/OpenAD/Open64/osprey1.0/tests/fortran90/single_file_tests/mainTest.f90"
+ LOC 1 1 Program myProgram
+FUNC_ENTRY <1,20,myprogram_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 2     Integer :: main = 0
+ LOC 1 3     if (main == 0) Print *, "OK"
+ IF
+   I4I4LDID 0 <2,1,MAIN> T<4,.predef_I4,4>
+   I4INTCONST 0 (0x0)
+  I4I4EQ
+ THEN
+  BLOCK
+  COMMENT <2,3,if (main == 0) Print *, "OK"> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,23,"OK"> T<32,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 2 (0x2)
+   IO_ITEM <96,CHAR> T<31,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ ELSE
+  BLOCK
+  END_BLOCK
+ END_IF
+ LOC 1 4 End Program myProgram
+ VCALL 2174 <1,21,_END> # flags 0x87e
+ RETURN
+ RETURN
+ END_BLOCK

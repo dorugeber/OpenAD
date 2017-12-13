@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Demonstration of use of template and inlining
+  Uwe Naumann, Feb 2004
+-->
+                                                                                
+<xaif:CallGraph xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xaif="http://www.mcs.anl.gov/XAIF"
+       xsi:schemaLocation="http://www.mcs.anl.gov/XAIF ../xaif_output.xsd"
+       program_name="joint_rescp">
+
+
+  <xaif:ScopeHierarchy>
+                                                                                
+    <xaif:Scope vertex_id="1">
+      <xaif:SymbolTable>
+        <xaif:Symbol symbol_id="sub1" kind="subroutine" type="void"/>
+        <xaif:Symbol symbol_id="x"/>
+        <xaif:Symbol symbol_id="y"/>
+      </xaif:SymbolTable>
+    </xaif:Scope>
+
+    <xaif:Scope vertex_id="2">
+      <xaif:SymbolTable>
+        <xaif:Symbol symbol_id="x"/>
+        <xaif:Symbol symbol_id="y"/>
+        <xaif:Symbol symbol_id="partial_1"/>
+      </xaif:SymbolTable>
+    </xaif:Scope>
+    
+    <!-- ETC. -->
+
+  </xaif:ScopeHierarchy>
+
+  <xaif:AliasSetMap>
+    <xaif:AliasSet key="0">
+      <xaif:AliasRange from_virtual_address="1" to_virtual_address="1"/>
+    </xaif:AliasSet>
+  </xaif:AliasSetMap>
+
+  <xaif:DUUDSetMap>
+    <xaif:StmtIdSet key="0">
+    </xaif:StmtIdSet>
+  </xaif:DUUDSetMap>
+
+  <xaif:DOSetMap>
+    <xaif:StmtIdSet key="0">
+    </xaif:StmtIdSet>
+  </xaif:DOSetMap>
+
+
+
+  <xaif:ReplacementList vertex_id="1" template_name="template" symbol_id="sub1" scope_id="1" controlflowgraph_scope_id="2">
+    <xaif:Replacement placeholder="3">
+      <xaif:BasicBlock vertex_id="1" scope_id="2">
+<!-- call sub2(x,y,2,1) -->
+        <xaif:SubroutineCall statement_id="1" scope_id="1" symbol_id="sub2" formalArgCount="4">
+          <xaif:Argument position="1">
+            <xaif:VariableReference vertex_id="1">
+             <xaif:SymbolReference vertex_id="1" scope_id="2" symbol_id="x"/>
+            </xaif:VariableReference>
+          </xaif:Argument>
+          <xaif:Argument position="2">
+            <xaif:VariableReference vertex_id="1">
+              <xaif:SymbolReference vertex_id="1" scope_id="2" symbol_id="y"/>
+            </xaif:VariableReference>
+          </xaif:Argument>
+          <xaif:Argument position="3">
+            <xaif:VariableReference vertex_id="1">
+              <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="TWO"/>        
+            </xaif:VariableReference>
+          </xaif:Argument>
+          <xaif:Argument position="4">
+            <xaif:VariableReference vertex_id="1">
+              <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="ONE"/>        
+            </xaif:VariableReference>
+          </xaif:Argument>
+        </xaif:SubroutineCall>
+
+       <xaif:Assignment statement_id="partial_1">
+         <xaif:AssignmentLHS>
+           <xaif:SymbolReference vertex_id="1" symbol_id="partial_1" scope_id="2"/>
+         </xaif:AssignmentLHS>
+         <xaif:AssignmentRHS>
+            <xaif:Intrinsic vertex_id="1" name="minus_scal"/>
+            <xaif:Intrinsic vertex_id="2" name="sin_scal"/>
+            <xaif:VariableReference vertex_id="3" deriv="false">
+              <xaif:SymbolReference vertex_id="1" symbol_id="y" scope_id="2"/>
+            </xaif:VariableReference>
+            <xaif:ExpressionEdge edge_id="1" source="3" target="2" position="1"/>           
+            <xaif:ExpressionEdge edge_id="2" source="2" target="1" position="1"/>
+         </xaif:AssignmentRHS>
+       </xaif:Assignment>
+
+
+<!-- call push_partial(partial_1) -->
+        <xaif:InlinableSubroutineCall subroutine_name="push_partial" statement_id="inline_1">
+          <xaif:Argument position="1">
+            <xaif:VariableReference vertex_id="1">
+              <xaif:SymbolReference vertex_id="1" symbol_id="partial_1" scope_id="2"/>
+            </xaif:VariableReference>
+          </xaif:Argument>
+        </xaif:InlinableSubroutineCall>
+
+ <!-- y%v=cos(y%v)
+      call pop_partial(local_partial) -->
+
+<!-- y%a=y%a*local_partial -->
+
+        <xaif:DerivativePropagator>
+          <xaif:Sax>
+            <xaif:AX>
+              <xaif:A>
+                <xaif:VariableReference>
+                  <xaif:SymbolReference symbol_id="local_partial" scope_id="2"/>
+                </xaif:VariableReference>
+              </xaif:A>
+              <xaif:X>
+                <xaif:SymbolReference symbol_id="y" scope_id="2"/>
+              </xaif:X>
+            </xaif:AX>
+            <xaif:Y>
+              <xaif:SymbolReference symbol_id="y" scope_id="2"/>
+            </xaif:Y>
+          </xaif:Sax>
+        </xaif:DerivativePropagator>
+
+ <!-- call sub2(x,y,2,2) -->
+
+      </xaif:BasicBlock>
+
+    </xaif:Replacement>
+  </xaif:ReplacementList>
+
+  <!-- ETC. -->
+
+</xaif:CallGraph>
+

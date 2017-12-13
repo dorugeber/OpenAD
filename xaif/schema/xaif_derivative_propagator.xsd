@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ ##########################################################
+ # This file is part of xaif.                             #
+ # The full COPYRIGHT notice can be found in the top      #
+ # level directory of the xaif source tree.               #
+ # For more information visit                             #
+ # http://www.mcs.anl.gov/xaif       and                  #
+ # http://www.mcs.anl.gov/openad                          #
+ ##########################################################
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	    xmlns:xaif="http://www.mcs.anl.gov/XAIF"
+	    targetNamespace="http://www.mcs.anl.gov/XAIF"
+	    version="xaif 1.0 (derivative propagation)"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+<!-- *********************************************************** -->
+<!-- SetDeriv: Deriv(Tgt) = Deriv(Src) -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="SetDerivType">
+   <xsd:sequence>
+     <xsd:element name="Tgt" type="xaif:VariableReferenceType"
+                  minOccurs="1" maxOccurs="1"/>
+     <xsd:element name="Src" type="xaif:VariableReferenceType" 
+                  minOccurs="1" maxOccurs="1"/>
+   </xsd:sequence>
+</xsd:complexType>
+
+<!-- *********************************************************** -->
+<!-- SetNegDeriv: Deriv(Tgt) = -Deriv(Src) -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="SetNegDerivType">
+   <xsd:sequence>
+     <xsd:element name="Tgt" type="xaif:VariableReferenceType"
+                  minOccurs="1" maxOccurs="1"/>
+     <xsd:element name="Src" type="xaif:VariableReferenceType" 
+                  minOccurs="1" maxOccurs="1"/>
+   </xsd:sequence>
+</xsd:complexType>
+
+<!-- *********************************************************** -->
+<!-- IncDeriv: Deriv(Tgt) += Deriv(Src) -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="IncDerivType">
+   <xsd:sequence>
+     <xsd:element name="Tgt" type="xaif:VariableReferenceType"
+                  minOccurs="1" maxOccurs="1"/>
+     <xsd:element name="Src" type="xaif:VariableReferenceType" 
+                  minOccurs="1" maxOccurs="1"/>
+   </xsd:sequence>
+</xsd:complexType>
+
+<!-- *********************************************************** -->
+<!-- DecDeriv: Deriv(Tgt) -= Deriv(Src) -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="DecDerivType">
+   <xsd:sequence>
+     <xsd:element name="Tgt" type="xaif:VariableReferenceType"
+                  minOccurs="1" maxOccurs="1"/>
+     <xsd:element name="Src" type="xaif:VariableReferenceType" 
+                  minOccurs="1" maxOccurs="1"/>
+   </xsd:sequence>
+</xsd:complexType>
+
+<!-- *********************************************************** -->
+<!-- A*X -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="AXType">
+   <xsd:sequence>
+      <xsd:element name="A" type="xaif:ExpressionType"
+                   minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="X" type="xaif:VariableReferenceType"
+                   minOccurs="1" maxOccurs="1"/>
+   </xsd:sequence>
+</xsd:complexType>
+
+<!-- *********************************************************** -->
+<!-- SAX: Y = A1*X1 + A2*X2 + ... -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="SaxType">
+   <xsd:sequence>
+      <xsd:element name="AX" type="xaif:AXType"
+                   minOccurs="1" maxOccurs="unbounded"/>
+      <xsd:element name="Y" type="xaif:VariableReferenceType"
+                   minOccurs="1" maxOccurs="1"/>
+   </xsd:sequence>
+</xsd:complexType>
+
+<!-- *********************************************************** -->
+<!-- SAXPY: Y = A1*X1 + A2*X2 + ... + Y -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="SaxpyType">
+   <xsd:sequence>
+     <xsd:element name="AX" type="xaif:AXType"
+                  minOccurs="1" maxOccurs="unbounded"/>
+     <xsd:element name="Y" type="xaif:VariableReferenceType"
+                  minOccurs="1" maxOccurs="1"/>
+   </xsd:sequence>
+</xsd:complexType>
+
+<!-- *********************************************************** -->
+<!-- Derivative propagator -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="DerivativePropagatorType">
+   <xsd:sequence>
+
+     <xsd:choice minOccurs="0" maxOccurs="unbounded">
+       <xsd:element name="SetDeriv" type="xaif:SetDerivType"/>
+       <xsd:element name="SetNegDeriv" type="xaif:SetNegDerivType"/>
+       <xsd:element name="IncDeriv" type="xaif:IncDerivType"/>
+       <xsd:element name="DecDeriv" type="xaif:DecDerivType"/>
+       <xsd:element name="Sax" type="xaif:SaxType"/>
+       <xsd:element name="Saxpy" type="xaif:SaxpyType"/>
+       <xsd:element name="ZeroDeriv" type="xaif:VariableReferenceType"/>
+     </xsd:choice>
+
+   </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="DerivativePropagator" type="xaif:DerivativePropagatorType"/>
+
+</xsd:schema>

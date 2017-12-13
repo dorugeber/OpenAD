@@ -1,0 +1,1130 @@
+\documentclass{book}
+
+\usepackage{amsmath,amssymb}
+\usepackage[dvips]{epsfig}
+\usepackage{makeidx,showidx}
+
+\newcommand{\sect}[1]{Section~#1}
+\newcommand{\fig}[1]{Figure~#1}
+
+\newcommand{\angel}{angel}
+\newcommand{\doxygen}{doxygen}
+\newcommand{\InternalRep}{internal reprepresentation}
+\newcommand{\todo}{{\bf TODO}}
+\newcommand{\xaif}{xaif}
+\newcommand{\xaifbooster}{xaifbooster}
+\newcommand{\xaifii}{xaifii}
+
+\newcommand{\notexists}{{ \kern .2em | \kern -.4em \exists }}
+
+% class names
+\newcommand{\AliasActivityMap}{{\tt AliasActivityMap}}
+\newcommand{\Assignment}{{\tt Assignment}}
+\newcommand{\Variable}{{\tt Variable}}
+\newcommand{\VariableVertex}{{\tt VariableVertex}}
+\newcommand{\BasicBlock}{{\tt BasicBlock}}
+\newcommand{\CallGraph}{{\tt CallGraph}}
+\newcommand{\CallGraphVertex}{{\tt CallGraphVertex}}
+\newcommand{\CallGraphEdge}{{\tt CallGraphEdge}}
+\newcommand{\ConceptuallyStaticInstances}{{\tt ConceptuallyStaticInstances}}
+\newcommand{\Constant}{{\tt Constant}}
+\newcommand{\ControlFlowGraph}{{\tt ControlFlowGraph}}
+\newcommand{\ControlFlowGraphVertex}{{\tt ControlFlowGraphVertex}}
+\newcommand{\Entry}{{\tt Entry}}
+\newcommand{\Exit}{{\tt Exit}}
+\newcommand{\Expression}{{\tt Expression}}
+\newcommand{\ExpressionVertex}{{\tt ExpressionVertex}}
+\newcommand{\GenericTraverseInvoke}{{\tt GenericTraverseInvoke}}
+\newcommand{\IfStatement}{{\tt IfStatement}}
+\newcommand{\InlinableIntrinsicsCatalogue}{{\tt InlinableIntrinsicsCatalogue}}
+\newcommand{\Intrinsic}{{\tt Intrinsic}}
+\newcommand{\JacobianAccumulationExpression}{{\tt JacobianAccumulationExpression}}
+\newcommand{\JacobianAccumulationExpressionList}{{\tt JacobianAccumulationExpressionList}}
+\newcommand{\LinearizedComputationalGraph}{{\tt LinearizedComputationalGraph}}
+\newcommand{\PrivateLinearizedComputationalGraph}{{\tt PrivateLinearizedComputationalGraph}}
+\newcommand{\Scope}{{\tt Scope}}
+\newcommand{\ScopeContainment}{{\tt ScopeContainment}}
+\newcommand{\Scopes}{{\tt Scopes}}
+\newcommand{\Symbol}{{\tt Symbol}}
+\newcommand{\SymbolReference}{{\tt SymbolReference}}
+\newcommand{\SymbolTable}{{\tt SymbolTable}}
+\newcommand{\Argument}{{\tt Argument}}
+\newcommand{\XMLParserHelper}{{\tt XMLParserHelper}}
+
+%method names
+\newcommand{\printXMLHierarchy}{{\tt printXMLHierarchy}}
+
+
+\newtheorem{Def}{Definition}
+\newtheorem{Alg}{Algorithm}
+
+\title{xaifbooster Documentation}
+
+\author{Uwe Naumann and Jean Utke \thanks{Mathematics and Computer Science Division, Argonne National Laboratory}}
+
+\makeindex
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter*{Prolog}
+
+The \xaifbooster~library provides a set of
+algorithms for the semantic transformation of
+numerical programs written in imperative programming
+languages. It also provides a language independent
+platform for the development of new algorithms.
+
+
+\chapter{Overview}
+
+\section{ACTS Project}
+
+\section{Open64}
+
+\section{SAGE}
+
+\chapter{A Crash Course in Automatic Differentiation}
+
+Automatic differentiation (AD) \cite{CG91, BBCG96, CFG+01, Gri00} 
+is a technique for transforming numerical
+simulation programs into programs that compute derivatives.
+
+\chapter{xaif}
+\index{xaif}
+
+\section{Overall Structure}
+
+For the structure of \xaif\ please refer to the documentation 
+under ???. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\todo: JU figure out of date
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}
+\epsfig{file=xaif_structure.eps,width=\linewidth}
+\caption{\xaif -- Overall Structure}
+\label{fig:xaif_structure}
+\end{figure}
+
+It should be noted that there are some logical inconsistencies in the schema
+which arise from the lack of multiple inheritance in the schema 
+definition. Such inconsistencies can only be resolved at the expense of 
+repeated definitions of otherwise common constructs. Therfore some 
+compromises lead to extraneous constructs.
+All optional parameters have defaults. The defaults are selected to 
+provide meaningful values, in particular where they impact the 
+behavior of algorithms. I.e. they need to be conservatively correct.  
+
+\chapter{xaifbooster Base}
+
+\section{Parsing and Unparsing \xaif}
+\label{sec:Parsing_and_Unparsing_xaif}
+We use the Xerces C++ XML parser 
+that can be downloaded from
+{\tt http://xml.apache.org/xerces-c} to convert
+\xaif\ documents into \xaifbooster's \InternalRep.
+The parsing code strictly follows the hierarchy 
+described in the schema in depth-first fashion. 
+Therefore either the SAX or the DOM implementation 
+could be used for parsing. 
+ 
+The SAX implementation saves memory while the DOM 
+implementation allows for arbitrary navigation of the contents tree   
+constructed from the \xaif\ document.
+Currently the \xaif\ schema and the \xaifbooster\ \InternalRep\ are similar
+enough so we can avoid arbitrary navigation.
+The methods handling the different XML elements are kept in a function pointer 
+map and keyed by the respective XML element name. All handler methods are 
+members of separate handler class.
+
+In order to pass information across hierarchy levels certain 
+\InternalRep\ element pointers are passed through a subclass of  
+\XMLParserHelper\ instances which are stacked. This subclass is 
+generated from a template by a code generator.
+
+It should be noted that the \InternalRep's unparsing mechanism does not 
+build a DOM tree and use some writer class but rather writes itself directly into a
+{\tt std::ostream}. This is done in the implementations of \printXMLHierarchy\
+and related methods which print the corresponding XML element and invokes the \printXMLHierarchy\
+methods of their direct children. Therefore an invocation of \printXMLHierarchy\ of any element 
+in the \xaifbooster\ \InternalRep\ will print a complete \xaif\ subtree.
+It was a deliberate choice to use this approach rather than the functionality provided with 
+\GenericTraverseInvoke.
+
+\section{Parsing \xaifii}
+\label{sec:Parsing_xaifii}
+The parsing mechanism for the intrinsics catalogue described by the 
+\xaifii\ schema is the same as for \xaif, see \ref{sec:Parsing_and_Unparsing_xaif}. 
+
+\section{Internal Representation}
+\label{sec:Internal_Representation}
+The \InternalRep\ mostly reflects the structure of \xaif. 
+The implementation of algorithms 
+however requires at times a more complex class hierarchy. 
+Therefore the class names mentioned below should be seen 
+as a placeholder for a subhierarchy of classes that implement the 
+respective element of the \InternalRep.
+For details  please refer to the \doxygen\ 
+generated documentation. 
+
+The majority of the data structures are graphs of some sort. 
+Rather than implementing a base graph class 
+from scratch the boost graph library is being used. 
+The boost libraries are STL based and 
+can be downloaded from {\tt http://www.boost.org}. 
+In \xaifbooster\ the boost graph and iterator classes are 
+enclosed in specific wrapper classes. This was done in order to 
+\begin{itemize}
+\item hide the edge/vertex descriptor and property maps and rather 
+provide direct access to edge/vertex instances and
+\item allow for a switch in the underlying graph representation if need be.
+\end{itemize}
+The primary advantage of using the boost graph classes is the availability 
+of a growing number of 
+efficient implementations of generic graph algorithms which could have 
+some use in AD specific algorithms. 
+The main disadvantage of using the wrapper that 
+any boost algorithm should be wrapped too if the design is to be 
+kept consistent. 
+
+\subsection{CallGraph} 
+\label{ssec:CallGraph}
+\index{call graph}
+The \CallGraph\ is the top level object in the \InternalRep. 
+It is conceptually a 
+singleton \cite{DesignPatterns}  and its instance is 
+held in \ConceptuallyStaticInstances. 
+
+\todo Figure out dependents and independents spec and see the 
+following section, not clear on 
+headroutine vs. no headroutine.
+
+The \CallGraph\ does not have to be connected, however for each 
+connected subgraph there has 
+to be a specification of the respective dependents and 
+independents together with a single 
+vertex representing the entry point.
+The \CallGraph\ is directed and generally not acyclic.
+
+\subsubsection{CallGraphVertex} 
+\index{call graph vertex}
+Each \CallGraphVertex\ instance represents a target of a call, 
+i.e. a subroutine. 
+It has a 
+\ControlFlowGraph\ member representing the internal structure of 
+this subroutine. 
+Note the difference to \xaif\ where the \ControlFlowGraph\ is used 
+directly in place of 
+\CallGraphVertex.
+
+\subsubsection{CallGraphEdge} 
+\index{call graph edge}
+A  \CallGraphEdge\ represents a potential call. 
+\todo review the following section
+
+In order to cover invocations by function pointer 
+(e.g. virtual functions in C++) 
+there should be special edges marking a selection from a set of subroutines. 
+The alternative would be edges
+to each subroutine in the set of potential candidates implying that there 
+are calls to all subroutines in 
+the set rather than one call. 
+
+\begin{figure}
+\centering \epsfig{file=xaif_and_oo.eps,width=.5\linewidth}
+\caption{Special consideration for virtual calls etc.}
+\label{fig:virtualCall}
+\end{figure}
+
+\fig{\ref{fig:virtualCall}} shows the situation of a virtual call to {\tt bar} from 
+{\tt foo} where the improved call graph signifies the call as virtual and denotes the 
+set of targets with a special vertex.
+Therefore a consideration of evaluation cost can be 
+\[
+cost_{\mbox{\tiny \tt foo}}\geq max\{cost_{\mbox{\tiny \tt A::bar}},cost_{\mbox{\tiny \tt B::bar}},cost_{\mbox{\tiny \tt C::bar}}\}
+\]
+rather than 
+\[
+cost_{\mbox{\tiny \tt foo}}\geq \sum\limits_{x \in \mbox{\tiny \tt A,B,C}} cost_{x\mbox{\tiny\tt ::bar}}
+\]
+
+
+
+\subsection{Scopes}
+\label{ssec:Scopes}
+\index{scope hierarchy}
+
+The \Scopes\ object is the scope hierarchy (tree) which 
+is attached to the call graph as the singleton top level object. 
+Aside from the basic tree structure with a unique global 
+scope as the root there are 
+no assumptions on the scoping. 
+It is implemented as a graph.
+
+\subsubsection{Scope} 
+\index{scope}
+Each \Scope\ is a vertex in the scope hierarchy and has a single 
+\SymbolTable. 
+It is identified by a unique id. 
+
+\subsubsection{ScopeContainment} 
+\index{scope containment}
+A \ScopeContainment\ is an edge in the \Scopes\ and 
+denotes the child parent relation in the tree. I.e. in this 
+particular structure the edge source is the child and the 
+edge parent the target. The rationale for this choice is 
+the more frequent up-traversal to the containing \Scope\ rather 
+than traversing the other direction.
+
+\subsection{SymbolTable}
+\label{ssec:SymbolTable}
+\index{symbol table}
+Each \SymbolTable\ is member of a scope. It is implemented 
+as a map with the symbol name as its unique id.
+
+\subsection{Symbol}
+\label{ssec:Symbol}
+\index{symbol}
+{\Symbol}s are defined as usual in programming languages, i.e. 
+variables and subroutines. Since there are no signatures stored 
+for subroutines the front-end needs to ensure the uniqueness of 
+the name, e.g. by supplying the mangled name for overloaded 
+C++ soubroutines. For variables the type and shape 
+are specified. New variables created by \xaifbooster\ have a 
+special identifying flag.
+
+\subsection{ControlFlowGraph}
+\label{ssec:ControlFlowGraph}
+\index{control flow graph}
+The \ControlFlowGraph\ is a member of a \CallGraphVertex, that is, 
+it describes the control flow for a subroutine.
+
+\todo JU: question: we allow for exactly one entry vertex and one or 
+more exit vertices?
+
+\subsubsection{ControlFlowGraphVertex} 
+\index{control flow graph vertex}
+\ControlFlowGraphVertex\ is an abstract class representing an 
+element of the control flow. For the concrete derived classes 
+see the sections below. 
+
+\subsubsection{ControlFlowGraphEdge} 
+\index{control flow graph edge}
+Fairly self explanatory, these are the edges in the control flow 
+graph. 
+
+
+\subsection{Entry}
+\label{ssec:Entry}
+\index{entry}
+
+\Entry\ is derived from \ControlFlowGraphVertex\ and denotes the 
+unique entry point into the control flow.
+
+\subsection{BasicBlock}
+\label{ssec:BasicBlock}
+\index{basic block}
+
+\BasicBlock\ is derived from \ControlFlowGraphVertex\ and represents a
+basic block.
+
+\subsection{IfStatement}
+\label{ssec:IfStatement}
+\index{if-statement}
+
+\IfStatement\ is derived from \ControlFlowGraphVertex.
+
+\subsection{ForLoopStatement}
+\label{ssec:ForLoopStatement}
+\index{forloop-statement}
+
+ForLoopStatement is derived from \ControlFlowGraphVertex.
+There is currently not a clear definition of 
+the language construct that should be represented 
+as a ForLoopStatement. Generally the ForLoopStatement 
+could be defined as {\tt for(Initialization;Condition;Update)\{ForLoopBody;\}}.
+The problem lies with the varying complexity permitted in 
+{\tt Initialization} and {\tt Update}. For instance in 
+C++ the use of the sequencing operator (comma) allows essentially 
+for an entire basic block to be in place of the {\tt Initialization} 
+or the {\tt Update}. 
+There are the following questions. 
+\begin{enumerate}
+\item What is a canonical ForLoopStatement usable for all target languages?
+\item What is actually exploitable within \xaifbooster?
+\item Do compilers generally canonicalize into some PreLoopStatement 
+right away?
+\end{enumerate}
+Within \xaifbooster\ the idea is that a ``simple'' for loop 
+construct operates with integers that are used as array indices within
+the loop body. Such a loop could be exploited e.g. for a reversal. 
+It is assumed that - similar to parallelizing compilers - only such 
+relatively simple constructs can be exploited. 
+
+For the canonicalization we should also ensure the correct scoping of 
+{\tt Initialization} and {\tt Udate}.
+
+\todo This should not be used until we have a proper definition.
+
+\subsection{PreLoopStatement}
+\label{ssec:PreLoopStatement}
+\index{preloop-statement}
+
+PreLoopStatement is derived from \ControlFlowGraphVertex.
+
+\subsection{PostLoopStatement}
+\label{ssec:PostLoopStatement}
+
+PostLoopStatement is derived from \ControlFlowGraphVertex.
+
+\subsection{Exit}
+\label{ssec:Exit}
+\index{exit}
+
+\Exit\ is derived from \ControlFlowGraphVertex.
+
+\subsection{Assignment}
+\label{ssec:Assignment}
+\index{assignment}
+
+An \Assignment\ consists of a left and a right hand side.
+
+\subsubsection{AssignmentLHS}
+\index{assignment lhs}
+
+The left-hand side of an \Assignment\ is a \Variable. 
+This allows to express array access.
+Note, that this is different from \Argument\ which is an 
+\ExpressionVertex\ that has a \Variable.
+
+\subsubsection{AssignmentRHS}
+\index{assignment rhs}
+
+The right-hand side of an \Assignment\ is an \Expression.
+
+\subsection{SubroutineCall}
+\label{ssec:SubroutineCall}
+\index{subroutine call}
+This is a stand-alone statement representing a subroutine call. 
+Note the 
+difference to a call to a subroutine within an \Expression\ which is 
+refered to as a call to an {\em inlinable intrinsic}, 
+see also \ref{ch:Intrinsics}.
+
+\subsection{Expression}
+\label{ssec:Expression}
+\index{expression}
+An \Expression\ is a directed acyclic graph. 
+{\Expression}s are used to represent
+the right hand side in an \Assignment. 
+This use would imply some conditions 
+on the graph such as out degree to be exactly one for all 
+non-minimal and non-maximal 
+vertices and to have exactly one maximal vertex. 
+These conditions are currently 
+not enforced by the \Expression\ class.
+
+\subsubsection{ExpressionVertex}
+\index{expression vertex}
+\ExpressionVertex\ is an abstract class to represent 
+vertices in an \Expression.
+
+\subsubsection{ExpressionEdge}
+\index{expression edge}
+Fairly self explanatory, this is an edge in an \Expression.
+
+\subsection{Variable}
+\label{ssec:Variable}
+\index{variable}
+
+{\Variable}s are {\em lvalues}. 
+They appear on left-hand sides
+of {\Assignment}s. 
+In order to be able to represent array access they are implemented as graphs.
+A single variable on the left hand side would be represented as a graph with a single 
+node that is a \SymbolReference\ and no edges. 
+Note that the \SymbolReference\ refers 
+to an entry in a \SymbolTable\ whereas a \Variable\ does not. 
+Rather, 
+a \Variable refers to an entry in the \AliasActivityMap.
+
+\subsubsection{VariableVertex}
+\index{base variable reference vertex}
+A \VariableVertex\ is an abstract base class.
+
+\subsubsection{VariableEdge}
+\index{base variable reference edge}
+Fairly self explanatory, this is an edge in a \Variable.
+
+\subsection{Argument}
+\label{ssec:Argument}
+\index{argument}
+
+{\Argument}s are {\em rvalues}, that is, they are vertices in 
+{\Expression}s and have a \Variable. 
+
+\subsection{Intrinsic}
+\label{ssec:Intrinsic}
+\index{intrinsic}
+An \Intrinsic\ is an \ExpressionVertex. It has a name 
+that is key to  
+an entry in the \InlinableIntrinsicsCatalogue.
+
+\subsection{Constant}
+\label{ssec:Constant}
+\index{constant}
+A \Constant\ is an  \ExpressionVertex. It has a type 
+and a value.
+
+\subsection{FunctionCall}
+\label{ssec:FunctionCall}
+\index{function call}
+\todo tobeimplemented
+
+\chapter{Handling Intrinsics}
+\label{ch:Intrinsics}
+\index{intrinsic}
+
+\begin{Def} \label{def:intrinsic}
+A function is {\bf intrinsic} if it is not a user-defined
+compilation unit and if routines for computing
+the individual entries of its derivative tensor are available
+at compile time.
+\todo JU a 'compilation unit' usually means something else.
+\end{Def}
+
+\section{Inlinable Intrinsics}
+\label{sec:InlinableIntrinsics}
+\index{inlinable intrinsics}
+
+\begin{Def} \label{def:inlinable_intrinsic}
+An intrinsic $v_j = \varphi_j(v_i)_{i \prec j}$ 
+is {\bf inlinable} if its partial derivatives 
+$\frac{\partial \varphi_j}{\partial v_i}$
+are computed for all $i \prec j$ by expressions that use 
+\begin{itemize}
+\item constants;
+\item references to the arguments of $\varphi_j,$ that is to some
+$v_i$ such that $i \prec j;$
+\item references to the result $v_j$ of $\varphi_j$ 
+\item references to the intermediate values that are
+computed by the routine that computes $\varphi_j;$\footnote[1]{Not present in version 1.0.}
+\item references to the intermediate values that are
+computed by the routine that computes 
+$\frac{\partial \varphi_j}{\partial v_k},$ where $k \prec j$ and
+$k < i;$\footnote[1]{Not present in version 1.0.}
+\item built-in operations of the programming language;
+\item inlinable intrinsics.
+\end{itemize}
+\end{Def}
+
+\subsubsection{Example}
+The scalar multiplication $c=a*b$ 
+is an inlinable 
+intrinsic since
+$$
+\frac{\partial (a*b)}{\partial a} = b, \quad
+\frac{\partial (a*b)}{\partial b} = a, \quad
+\frac{\partial^2 (a*b)}{\partial a^2} = 0, \quad
+\frac{\partial^2 (a*b)}{\partial a \partial b} = 1, 
+$$
+$$
+\frac{\partial^2 (a*b)}{\partial b \partial a} = 1, \quad
+\frac{\partial^2 (a*b)}{\partial b^2} = 0, \quad
+\frac{\partial^3 (a*b)}{\partial a \partial b^2} = 0, \quad
+\frac{\partial^3 (a*b)}{\partial b \partial a^2} = 0, 
+$$
+and so forth.
+Similarly, 
+the scalar exponential $c=\exp(a)$ 
+is an inlinable intrinsic because 
+$ \frac{\partial^i \exp(a)}{\partial a^i} = c $
+for $i=1,\infty.$ 
+Finally, consider the scalar division
+$c=a/b$ in the context of
+computing first derivatives. It is well-known that
+$ \frac{\partial (a/b)}{\partial a} = 1/b$ and
+$\frac{\partial (a/b)}{\partial b} = -a/(b*b).$ If the function
+itself is computed as 
+$[t=1/b,$ $c=t*a],$
+then the local partial derivatives can be computed as
+$ \frac{\partial (a/b)}{\partial a} = t$ and
+$\frac{\partial (a/b)}{\partial b} = -c/b.$ Constants and 
+calls to inlinable intrinsics are used alongside with references to
+the result of the intrinsic, to an intermediate result of
+the corresponding procedure, and to the arguments to compute
+the local partial derivatives. $\square$ \\
+\\
+Inlinable intrinsic are listed in an XML file whose structure
+is described by the schema {\tt xaif\_inlinable\_intrinsics.xsd}.
+An inlinable intrinsic is described by a procedure for computing
+the function value itself and by a list of procedures for computing
+the partial derivatives.
+\subsubsection{Example}
+\begin{verbatim}
+<xaifii:InlinableIntrinsic name="cos_scal" nr_arguments="1">
+  <xaifii:Function type="builtin">
+    <xaif:Constant type="string" value="cos"/>
+  </xaifii:Function>
+  <xaifii:Partial partial_id="1">
+    <xaif:Intrinsic vertex_id="1" name="minus_scal"/>
+    <xaif:Intrinsic vertex_id="2" name="sin_scal"/>
+    <xaifii:ArgumentReference vertex_id="3" argument="2"/>
+    <xaif:ExpressionEdge edge_id="1" source="3" target="2"/>
+    <xaif:ExpressionEdge edge_id="2" source="2" target="1"/>
+  </xaifii:Partial>
+</xaifii:InlinableIntrinsic>
+\end{verbatim}
+This specification of cosine is taken from a file that lists
+the inlinable intrinsics for C.
+Obviously, the list of partial derivatives contains a single element for
+unary intrinsics. 
+The type of the function evaluation procedure is set to ``builtin".
+Consequently, the string constant ``{\tt cos}" can be used by the unparser
+to generate the corresponding C code. The ``builtin" attribute indicates
+that the C compiler knows how to handle calls to ``{\tt cos}". $\square$ \\ 
+\\
+
+
+\section{Non-inlinable Intrinsics}
+\label{sec:NonInlinableIntrinsics}
+\index{non-inlinable intrinsics}
+
+\begin{Def} \label{def:noninlinable_intrinsic}
+An intrinsic $v_j = \varphi_j(v_i)_{i \prec j}$ 
+is {\bf non-inlinable} if the computation of any of its partial 
+derivatives involves a call to some routine that is not inlinable.
+\todo JU I don't think we can define it that way.
+\end{Def}
+
+For non-inlinable intrinsics
+the user must provided a routine that computes all entries of
+the derivative tensor and returns them as scalars. 
+Non-inlinable intrinsics are listed in an XML file whose structure
+is described by the schema {\tt xaif\_noninlinable\_intrinsics.xsd}.
+An entry in this file associates the name of intrinsic with a name
+of a routine for computing the scalar entries of the derivative tensor.
+The correspondence between dependent variables, independent variables
+and the respective partial derivative is given as a list of triplets.
+
+\subsubsection{Example}
+
+Consider a non-inlinable intrinsic ${\tt f}(v_1,v_2,v_3)$ 
+where $v_1$ and $v_2$ are inputs and
+$v_2$ and $v_3$ are outputs. Let the routine that
+computes the Jacobian matrix
+$$
+J =
+\begin{pmatrix}
+\frac{\partial v_2}{\partial v_1} & \frac{\partial v_2}{\partial v_2} \\
+\frac{\partial v_3}{\partial v_1} & \frac{\partial v_3}{\partial v_2} \\
+\end{pmatrix} =
+\begin{pmatrix}
+j_{2,1} & j_{2,2} \\
+j_{3,1} & j_{3,2} \\
+\end{pmatrix} 
+$$
+be ${\tt df}(v_1,v_2,v_3,j_{2,1},j_{2,2},j_{3,1},j_{3,2}).$
+This is described by the following xml code fragment.
+\begin{verbatim}
+<xaifnii:NonInlinableIntrinsic function="f" jacobian="df">
+  <xaifnii:Partial dep="2" indep="1" partial="4"/>
+  <xaifnii:Partial dep="2" indep="2" partial="5"/>
+  <xaifnii:Partial dep="3" indep="1" partial="6"/>
+  <xaifnii:Partial dep="3" indep="2" partial="7"/>
+</xaifnii:NonInlinableIntrinsic>
+\end{verbatim}
+The attributes of {\tt dep}, {\tt indep}, and {\tt partial} are
+positions in the argument lists of {\tt f} and {\tt df}, respectively.
+
+
+
+\section{Limitations}
+\label{sec:xaifbooster_limitations}
+
+\xaifbooster~is not able to handle function calls that are not
+compilation units
+and that are neither
+in the list of inlinable intrinsics nor in the list of non-inlinable
+intrinsics.
+
+\chapter{xaifbooster Algorithms}
+
+\section{General Implementation of Algorithms}
+\label{sec:General_Implementation_of_Algorithms}
+
+One of the objectives for this tool set is to provide an extensible framework 
+for the implementation of AD related algorithms. To ensure a minimal level 
+of stability of the framework and ease the combination of different algorithms
+the design distinguishes between relatively stable system components 
+and user provided algorithm components. 
+In most cases an AD specific algorithm will operate on rather low level 
+elements such as statements, basic blocks etc. In order to create a fully functional 
+source transformation tool however the entire program structure needs to be 
+represented. 
+Algorithms will involve some action that needs to be 
+performed by passing through the \InternalRep.
+Therefore the basic design is to 
+\begin{itemize}
+\item implement and define a complete \InternalRep\ as described in \ref{sec:Internal_Representation},
+\item provide a mechanism for execute an action while passing through the \InternalRep,
+\item provide extensible algorithm members in the relevant objects of the \InternalRep,
+\item make the algorithm members part of the pass through / action mechanism.
+\item provide a hook for overriding the unparsing into \xaif, see also \ref{sec:Parsing_and_Unparsing_xaif}.
+\end{itemize}
+The kind of separation of the algorithms will always require some compromise 
+between different objectives such as usability, type safety, and ease of maintenance. 
+A variety of different approaches that were discussed such as templatizing the 
+\InternalRep\ or direct subclassing of the \InternalRep\ objects. While there are 
+certain shortcomings we felt that our approach overall ensured a workable solution.
+
+\subsection{Generic Traversal and Invocation}
+\label{ssec:Generic_Traversal_and_Invocation}
+The entire \InternalRep\ is constructed with classes inheriting from {\tt GenericTraverseInvoke}
+which requires each non-abstract subclass to implement {\tt traverseToChildren}. This method describes
+how to walk the \InternalRep\ from a parent element to its direct children. The respective 
+action is performed by virtual function invocation, that is, each action has an empty default implementation 
+in {\tt GenericTraverseInvoke} that can be overwritten. The respective action is selected by 
+specifying it through an associated enumeration from {\tt GenericAction}. {\tt GenericAction} provides 
+anonymous names for actions to be taken by some algorithm. 
+While allowing for an easy way to define a new action for a pass through the \InternalRep\ it restricts the access to 
+input or the collection of results to conceptually static instances (per pass/thread).
+\begin{figure}
+\epsfig{file=GenericTraverseInvoke_uml.eps,width=\linewidth}
+\caption{Generic Traversal and Invocation}
+\label{fig:Generic_Traversal_and_Invocation}
+\end{figure}
+Figure~\ref{fig:Generic_Traversal_and_Invocation} shows the general idea where we 
+have {\tt B} as a child of {\tt A} in the \InternalRep\ by virtue of composition.
+
+\subsection{Algorithm Classes}
+\label{ssec:Algorithm_Classes}
+In order to extend the data structure (e.g. {\tt Expression}) and implement algorithms 
+the respective classes 
+that are instantiated in the \InternalRep\ have an algorithm data member.
+The instance of this algorithm data member is created by a call to Factory object. The Factory
+has a dummy implementation that instantiates an algorithm base class (in 
+Figure~\ref{fig:Algorithm_Classes} {\tt ExpressionAlgBase}).
+The user extends that algorithm base class and reimplements the Factory class 
+that now instantiates the derived class (in 
+Figure~\ref{fig:Algorithm_Classes} {\tt ExpressionUserAlg}) instead. 
+In the 
+current implementation the Factory class declarations and definitions are done 
+by macros. 
+Due to the idea of reimplementation of the same factory for a 
+derived algorithm class a template could not be used here since the algorithm 
+class would be the template parameter which results in a different class name. 
+\begin{figure}
+\epsfig{file=Algorithm_classes_uml.eps,width=\linewidth}
+\caption{Algorithm and Factory classes}
+\label{fig:Algorithm_Classes}
+\end{figure}
+All user data and methods are implemented in the derived algorithm class. 
+In order for the algorithm classes to implement new actions performed with a 
+pass through \InternalRep, see \ref{ssec:Generic_Traversal_and_Invocation}, all 
+algorithms inherit from {\tt GenericTraverseInvoke} and the algorithm objects 
+are part of the traversal.
+In order for the algorithm classes to override the unparsing into \xaif all 
+algorithm base classes inherit the respective printing method \printXMLHierarchy, 
+see \ref{sec:Parsing_and_Unparsing_xaif}.
+The algorithm base class just refers back to the standard implementation of 
+\printXMLHierarchy.
+
+The instantiation and deletion of the algorithm instance is common to all 
+classes that have an algorithm member. This would normally lend itself to the 
+creation of a template base class {\tt HasAlgorithm<Algorithm>}. The mutual reference between 
+a {\tt HasAlgorithm<Algorithm>} subclass instance and an AlgBase subclass would lead to 
+a recursive template definition. This could only be circumvented by making one of these 
+classes non-template classes which leads to less type checking at compile time. 
+
+\section{Canonicalization}
+
+The output of function calls and calls to non-inlinable intrinsics
+is assigned to auxiliary variable references.
+
+\section{Linearization}
+\label{sec:linearization}
+
+Linearization is applied to right-hand sides of canonicalized 
+assignments. Two tasks are performed.
+\begin{enumerate}
+\item The expression is transformed into {\em static single
+assignment} (SSA) form by attaching auxiliary variable references
+to intermediate vertices where needed (see \sect{\ref{ssec:ssa}}).
+\item Expressions for computing the local partial derivatives are
+associated with all edges in the expression (see \sect{\ref{ssec:lin_intr}}).
+\end{enumerate}
+
+\subsection{Transformation into Static Single Assignment Form}
+\label{ssec:ssa}
+\index{static single assignment form}
+
+For an edge $(i,j)$ the value $v_i$ (resp. $v_j$) is assigned to an 
+auxiliary variable if $\frac{\partial v_j}{\partial v_i}$ takes
+$v_i$ (resp. $v_j$) as an argument. The link between the
+abstract specification of partial derivatives of some inlinable
+intrinsic and the current contex is established via the position
+of a given argument within the argument lists. In the expression
+the position of an argument is specified by the
+{\tt position} attribute of the corresponding edge.
+In the InlinableIntrinsicsCatalogue the abstract expressions
+for the function and all the partials also contain an argument list
+that holds pointers to the corresponding vertices in the abstract
+expression. 
+
+\begin{figure}
+\centering \epsfig{file=linearization.eps,width=.7\linewidth}
+\caption{Putting the InlinableIntrinsicsCatalog into Context}
+\label{fig:catalogmap}
+\end{figure}
+
+\subsubsection{Example}
+
+\fig{\ref{fig:catalogmap}} shows a representation of the
+InlinableIntrinsicsCatalogItem for the scalar division. 
+
+ 
+
+\subsection{Linearization of Single Intrinsics}
+\label{ssec:lin_intr}
+\index{linearization}
+
+When linearized, all inedges of an inlinable intrinsic are assigned
+a reference to the abstract version of the corresponding
+partial derivative. Furthermore, a list of pairs of correspondences
+between abstract and concrete arguments is constructed. The position
+of a concrete argument within the argument list can be obtained from
+the inedge whose source the argument respresents. The corresponding
+vertex reference in the abstract expression is found by looking up
+the position'th element in the abstract argument list.
+
+\section{Constant Partial Derivative Folding}
+\label{sec:const_fold}
+\index{constant folding}
+
+Constant partial derivatives can be folded as described in 
+\cite{Nau03OptStatGrad}.
+
+\section{Optimal Statement-level Gradient Accumulation}
+
+\subsection{Minimal Separating Sets}
+
+\section{Code Generation for Linearized Assignments}
+\label{sec:code_gen_lin_assgn}
+
+\section{Flattening Basic Blocks}
+\label{sec:Flattening_Basic_Blocks}
+For an approximately optimal accumulation of a Jacobian 
+on a basic block level there is a higher potential when 
+optimizing on a computational graph that is the combined 
+representation of the basic block. More precisely one can only
+optimize over the combined representation of an uninterrupted 
+sequence of {\Assignment}s. That means any subroutine 
+call limits the sequence of {\Assignment}s to be flattened.
+While the goal of flattening is intuitively clear the actual 
+algorithm in terms of graph elements is relatively complex and 
+therefore we give the following formal description.
+\begin{Alg}[Flattening Basic Blocks]
+Consider a sequence $S$ of {\Assignment}s $A$ to be
+flattenend into a 
+  directed acyclic graph $G=(V,E)$. We maintain two lists $L_{var}$ 
+(variables) 
+and $L_{intr}$ (intrinsics)   
+of pairs $(v_e,v_G)$ of certain vertices $v_e$ from the 
+\Expression\ $e$ that is the right hand side $rhs(A)$ of an \Assignment\ $A$
+and certain vertices $v_G \in V$. The \Expression\ $e$ itself is a graph 
+$(V_e,E_e$). For simplicity we consider the left hand side $lhs(A)$ to be 
+just like a \Argument\ that is an element of $V_e$.
+Perform the following steps.
+\begin{tabbing}
+\hspace*{3ex}\=\hspace*{3ex}\=\hspace*{3ex}\=\hspace*{3ex}\=\hspace*{-13ex}
+$L_{var}:=L_{intr}:=\emptyset$ \\
+$V:=E:=\emptyset$ \\
+$\forall  A \in S $ (in sequence order) \\
+\> $e:=rhs(A)$ \\
+\> $\forall v\in V_e$  \\
+\>\> if $(v\in L)$  \\
+\>\>\> ${\bf break}$\\
+\>\> else\\
+\>\>\> add new vertex $v'$ to $G$ \\ 
+\>\>\> if (v is an \Argument)\\
+\>\>\>\> $L_{var}:=L_{var}+(v,v')$\\
+\>\>\> elseif $(|\{(w,v):(w,v)\in E_e\}|>0)$\\
+\>\>\>\> $L_{intr}:=L_{intr}+(v,v')$\\
+\>\>\> if $(\{(v,w):(v,w)\in E_e\}=\emptyset)$\\
+\>\>\>\> $v'_{max}:=v'$\\
+\> $\forall (v,w)\in E_e$ \\
+\>\> add new edge $(v',w')$ to $G$ where \\
+\>\> $(v,v') \in L_{var}\cup L_{intr} \wedge (w,w') \in L_{intr}$ \\
+\> if $(\exists (v,v') \in L_{var}:v=lhs(A))$ \\
+\>\> $L_{var}:=L_{var}-(v,v')$\\
+\> $L_{var}:=L_{var}+(lhs(A),v'_{max})$\\
+\end{tabbing}
+\end{Alg}
+
+
+\section{Accumulation of Jacobians of Basic Blocks}
+\label{sec:jac_code_gen_bb}
+\index{basic block}
+
+Given a basic block $b=(a_1,\ldots,a_k)$ the local Jacobian code
+has the following structure:
+$$
+(a_1^{\tt ssa}, a_1^{\tt lin}, \ldots
+a_k^{\tt ssa}, a_k^{\tt lin}, b^{\tt jac}) \quad .$$
+$a_i^{\tt ssa}$ is the code list of $a_i.$
+$a_i^{\tt lin}$ is the linearization of $a_i,$ that is, each
+local partial derivative is assigned to a unique auxiliary variable.
+$b^{\tt jac}$ denotes the code that accumulates the Jacobian matrix of
+$b$ based on the local partial derivatives that were computed by
+$a_i^{\tt lin}$ for $i=1,\ldots,k.$ This approach takes care of possible
+overwritings of program variables within the basic block. The Jacobian
+code is correct, but not necessarily as efficient as possible
+\footnote{\todo: We should work on an algorithm that optimizes
+data access by exploiting data locality. Thus, many of the trivial
+assignments of the form $c_{j,i}=v_k$ can be avoided.}.
+
+\chapter{xaifbooster -- angel Interface}
+
+\section{Linearized Computational Graphs}
+
+To accumulate the Jacobian matrix of a \BasicBlock\ based on a face 
+elimination sequence in the linearized computational graph xaifbooster
+builds the \LinearizedComputationalGraph.  This class is a structural 
+representation of the flattened \BasicBlock\ see \ref{sec:Flattening_Basic_Blocks}.
+The purpose of \angel\ is to compute an elimination sequence for a generic dag 
+so a structural representation is sufficient and hides \xaifbooster\ internals from 
+\angel. The actual instance of \LinearizedComputationalGraph\ passed to \angel 
+is however a \PrivateLinearizedComputationalGraph\ which has back references to the 
+concrete vertices and edges. In Figure~\ref{fig:angel_input} we see in the 
+\begin{figure}
+\epsfig{file=angel_input.eps,width=.6\linewidth}
+\caption{\BasicBlock\ and \PrivateLinearizedComputationalGraph}
+\label{fig:angel_input}
+\end{figure}
+left side a \BasicBlock\ $B$ with two {\Assignment}s $A_1$ amd $A_2$. On the right is 
+the respective \PrivateLinearizedComputationalGraph\ that is the flattened representation 
+of $B$. In the \LinearizedComputationalGraph\ we need to distinguish the locally dependent and 
+independent vertex sets, in Figure~\ref{fig:angel_input} they are $\{y\}$ and $\{x_1,x_2\}$ respectively.
+We call the angel interface
+routine.
+{
+\tt
+\begin{tabbing}
+compute\_elimination\_sequence(\=LinearizedComputationalGraph\&,\\
+\>Method,\\
+\>JacobianAccumulationExpressionList\&)\\ 
+\end{tabbing}
+}
+The second input parameter {\tt Method} specifies the methods to be used for
+the computation of the face elimination sequence by \angel\ and the \JacobianAccumulationExpressionList\
+represents the returned elimination sequence. 
+More precisely the elimination sequence is an ordered list of fused multiply add operations 
+given as  {\JacobianAccumulationExpression}s in terms of the edges of the \LinearizedComputationalGraph\ and 
+maximal vertices of preceeding {\JacobianAccumulationExpression}s. 
+Those {\JacobianAccumulationExpression}s that are Jacobian entries are marked in terms of the locally dependent/independent vertices as shown in Figure~\ref{fig:angel_output}.
+\begin{figure}
+\epsfig{file=angel_output.eps,width=.8\linewidth}
+\caption{\LinearizedComputationalGraph\ and \JacobianAccumulationExpressionList}
+\label{fig:angel_output}
+\end{figure}
+\begin{Alg}[Breadth-First Ordering for Vertex Sets in DAGs]
+Consider a directed acyclic graph $G=(V,E).$ For any set $X$ of mutually 
+unreachable vertices the vertices that can be reached from members of this set
+are ordered as follows: 
+\begin{tabbing}
+$\forall i \in V :~\chi(i)=0;$ \\
+$c=1;$ \\
+$\forall i \in X :~\chi(i)=c;~c=c+1;$ \\
+$U=X;$ \\
+$\forall$ \= $i \in U$ \\
+\> $\forall$ \= $j \in S_i$ \\
+\> \> $(|P_j|>1)$ \= $ \rightarrow \forall$ \= $k \in P_j$ \\
+\>\>\>\> $(\chi(k)=0)$ \= $\rightarrow {\bf break}$ \\
+\>\> ${\bf break} \rightarrow {\bf continue};$ \\
+\>\> $\chi(j)=c;~c=c+1;$ \\
+\>\> $U = U \cup \{j\};$ \\
+\>\> $(c>|V|) \rightarrow {\bf exit};$ \\
+\> $U = U \setminus \{i\};$ 
+\end{tabbing}
+\end{Alg}
+
+The algorithm that is currently in angel is {\em brute force}.
+\begin{Alg}
+\begin{tabbing}
+$\neg {\bf done};$ \\
+$\forall i \in V :~\chi(i)=0;$ \\
+$c=1;$ \\
+{\bf 1:} $\neg {\bf done} \rightarrow \forall $ \= $i \in V$ \\
+\> $\forall$ \= $ j \in P_i$ \\
+\>\> $\chi(j) =0 \rightarrow {\bf break};$ \\
+\> $\neg {\bf break} \rightarrow \chi(j)=c; c=c+1;$ \\
+\> $(c>|V|) \rightarrow {\bf done};$ \\
+{\bf goto 1} 
+\end{tabbing}
+\end{Alg}
+
+\section{Jacobian Accumulation Graphs}
+
+\section{Code Generation for Jacobian Accumulation Graphs}
+\label{sec:code_gen_jac_acc}
+\subsection{SSA and Linearized Code List Generation}
+\label{ssec:code_gen_lin_code_list}
+For a given linearized computational graph $G$ that is the 
+right hand side of an \Assignment, 
+see \ref{sec:linearization}, 
+we create the sequence of {\Assignment}s 
+$S^{ssa}(A)=(A^{ssa}_1,\ldots,A^{ssa}_\nu)$
+that are the 
+ssa version of $G$ and a sequence of {\Assignment}s
+$S^{lin}(A)=A^{lin}_1,\ldots,A^{lin}_{\nu'})$
+that are
+the linearization, that is, the local partial derivatives.
+The $A^{ssa}_i=A^{ssa}(v)$ need to be created in the correct 
+dependency order of the respective vertices $v$ whose values they
+calculate. 
+This is ensured by two interleaving recursions.
+The first recursion starts at the maximal node 
+and creates call stacks for vertices in $G$
+top down. 
+The second recursion builds the $A^{ssa}(v')$. 
+If the second recursion encounters any vertex $v$ that needs to be 
+stored as some $A^{ssa}(v)$ but has not gotten one yet 
+then it invokes the first recursion with $v$
+as top node. 
+Once all these vertices are processed
+then it completes building its own $A^{ssa}(v')$ and 
+appends it to $S^{ssa}(A)$. 
+\begin{Alg}[ssa code list generation]
+Consider a sequence $S$ of {\Assignment}s $A$ in a \BasicBlock. 
+The right hand side $rhs(A)$ is an \Expression\ $e$, that is, a graph
+$(V_e,E_e)$.
+Perform the following steps.
+\begin{tabbing}
+\hspace*{3ex}\=\hspace*{3ex}\=\hspace*{3ex}\=\hspace*{3ex}\=\hspace*{-13ex}
+{\bf main:}\\
+\>$\forall  A \in S $ (in sequence order) \\
+\>\> $S^{ssa}(A):=\emptyset$ \\
+\>\> $e:=rhs(A)$ \\
+\>\> $v_{max}:=$ maximal vertex in $e$ \\ 
+\>\> $\forall (v,v_{max})\in E_e$ \\
+\>\> goto {\bf outerRecursion}$(v,v_{max})$ \\ 
+\>\> if (any new $A^*$ are created) \\ 
+\>\>\> create a new 'empty' assignment $A^*$\\
+\>\>\> $lhs(A^*):=lhs(A)$\\
+\>\>\> $rhs(A^*):=rhs(A^*)+v_{max}$\\
+\>\>\> $\forall (v,v_{max})\in E_e$ \\
+\>\>\>\> goto {\bf innerRecursion}$(v,v_{max},A^*)$ \\ 
+\>\>\> $S^{ssa}(A)=S^{ssa}(A)+A^*$ \\
+\>exit\\
+\\
+{\bf outerRecursion$(v,v')$:}\\
+\> $\forall (v'',v)\in E_e$ \\
+\>\> goto {\bf outerRecursion}$(v'',v)$ \\ 
+\> if ($v'$ has auxiliary variable $v'_{aux}$) (see \ref{ssec:ssa}) \\
+\>\> if $(\exists A^{ssa}(v'))$\\
+\>\>\> return\\
+\>\> create a new 'empty' assignment $A^*$\\
+\>\> $lhs(A^*):=v'_{aux}$\\
+\>\> $rhs(A^*):=rhs(A^*)+v'$\\
+\>\> $\forall (v'',v')\in E_e$ \\
+\>\>\> goto {\bf innerRecursion}$(v'',v',A^*)$ \\ 
+\>\> $S^{ssa}(A)=S^{ssa}(A)+A^*$ \\
+\> return \\
+\\
+{\bf innerRecursion$(v,v',A^*)$:}\\
+\> if ($v$ has auxiliary variable $v_{aux}$) \\
+\>\> if $(\notexists A^{ssa}(v))$\\
+\>\>\> goto {\bf outerRecursion}$(v,v')$ \\
+\>\> $v_{add}:=v_{aux}$\\
+\> else \\
+\>\> $v_{add}:=v$\\
+\> $rhs(A^*):=rhs(A^*)+v_{add} + (v_{add},v')$\\  
+\>\> $\forall (v'',v)\in E_e$ \\
+\>\>\> goto {\bf innerRecursion}$(v'',v,A^*)$ \\ 
+\> return \\
+\end{tabbing}
+\end{Alg}
+
+Now the Jacobian accumulation code can be generated 
+
+\begin{Alg}[linearized code list generation]
+Consider a sequence $S$ of {\Assignment}s $A$ in a \BasicBlock. 
+The right hand side $rhs(A)$ is an \Expression\ $e$, that is, a graph
+$(V_e,E_e)$.
+Perform the following steps.
+\begin{tabbing}
+\hspace*{3ex}\=\hspace*{3ex}\=\hspace*{3ex}\=\hspace*{3ex}\=\hspace*{-13ex}
+{\bf main:}\\
+\>$\forall  A \in S $ (in sequence order) \\
+\>\> $S^{ssa}(A):=\emptyset$ \\
+\>\> $e:=rhs(A)$ \\
+\>\> $v_{max}:=$ maximal vertex in $e$ \\ 
+\>\> $\forall (v,v_{max})\in E_e$ \\
+\>\> goto {\bf outerRecursion}$(v,v_{max})$ \\ 
+\>\> if (any new $A^*$ are created) \\ 
+\>\>\> create a new 'empty' assignment $A^*$\\
+\>\>\> $lhs(A^*):=lhs(A)$\\
+\>\>\> $rhs(A^*):=rhs(A^*)+v_{max}$\\
+\>\>\> $\forall (v,v_{max})\in E_e$ \\
+\>\>\>\> goto {\bf innerRecursion}$(v,v_{max},A^*)$ \\ 
+\>\>\> $S^{ssa}(A)=S^{ssa}(A)+A^*$ \\
+\>exit\\
+\\
+{\bf outerRecursion$(v,v')$:}\\
+\> $\forall (v'',v)\in E_e$ \\
+\>\> goto {\bf outerRecursion}$(v'',v)$ \\ 
+\> if ($v'$ has auxiliary variable $v'_{aux}$) (see \ref{ssec:ssa}) \\
+\>\> if $(\exists A^{ssa}(v'))$\\
+\>\>\> return\\
+\>\> create a new 'empty' assignment $A^*$\\
+\>\> $lhs(A^*):=v'_{aux}$\\
+\>\> $rhs(A^*):=rhs(A^*)+v'$\\
+\>\> $\forall (v'',v')\in E_e$ \\
+\>\>\> goto {\bf innerRecursion}$(v'',v',A^*)$ \\ 
+\>\> $S^{ssa}(A)=S^{ssa}(A)+A^*$ \\
+\> return \\
+\\
+{\bf innerRecursion$(v,v',A^*)$:}\\
+\> if ($v$ has auxiliary variable $v_{aux}$) \\
+\>\> if $(\notexists A^{ssa}(v))$\\
+\>\>\> goto {\bf outerRecursion}$(v,v')$ \\
+\>\> $v_{add}:=v_{aux}$\\
+\> else \\
+\>\> $v_{add}:=v$\\
+\> $rhs(A^*):=rhs(A^*)+v_{add} + (v_{add},v')$\\  
+\>\> $\forall (v'',v)\in E_e$ \\
+\>\>\> goto {\bf innerRecursion}$(v'',v,A^*)$ \\ 
+\> return \\
+\end{tabbing}
+\end{Alg}
+
+Then in the sequence of statements in the basic block both
+$S^{ssa}(A)$ followed by $S^{lin}(A)$ take the place of $A$.
+
+\chapter*{Epilog}
+\section{Notation}
+\begin{tabular}{|l|l|}\hline
+symbol & common use \\\hline
+$\bigtriangledown$ & in graphs a vertex representing a dependent variable \\
+$\bigtriangleup$ & in graphs a vertex representing an idependent variable \\
+$\bigcirc$ & in graphs a vertex representing an intermediate variable \\
+$B$ & basic block \\
+$E$ & set of edges \\
+$G$ & graph \\
+$P_v$ & set of predecessor vertices of a vertex $v$ \\
+$S_v$ & set of successor vertices of a vertex $v$ \\
+ssa & static single assignment \\
+$V$ & set of vertices \\\hline
+\end{tabular}
+
+\bibliographystyle{plain}
+\bibliography{literature}
+
+\printindex
+
+\end{document}

@@ -1,0 +1,45 @@
+OpenAD Reverse mode: The life of a subroutine
+
+-------------------------------------------------------------------------------
+Subroutine, Complete, WHIRL            | Subroutine, Numerical, XAIF
+-------------------------------------------------------------------------------
+<Symbol table>                         | <ScopeHeirarchy>
+<Other tables>                         | [Unrepresentable]
+                                       | 
+FUNC_ENTRY                             | <ControlFlowGraph>
+  ISTORE ..                            |   <BasicBlock... WhirlIds.../>
+  IF ...                               |   <Branch.../>
+    DO_LOOP                            |   <ForLoop.../>
+      INIT, COMP, INCR         whirl2xaif  <BasicBlock.../>
+      ISTORE...                     ---->
+  ELSE                                 |   <BasicBlock.../>
+    STID...                            |   
+  IO...                                |   <BasicBlock>
+  ...                                  |     <Marker.../>
+  RETURN                               |     <Marker.../>
+                                       | 
+                                       | 
+                                       |   <ControlFlowGraphEdge...>
+                                       | 
+------------------------------------------------------------|------------------
+                                                            | xaifbooster
+----------------------------------------------------------- v -----------------
+Subroutine, Numerical Frags, WHIRL     | Subroutine, Numerical Frags, XAIF
+-------------------------------------------------------------------------------
+<Symbol table -- modified>             | <ScopeHeirarchy>
+<Other tables>                         | [Unrepresentable]
+                                       | 
+FUNC_ENTRY                             | <ReplacementList>
+  COM $OPENAD$ REPLACMENT 1            | <Replacement 1>
+  [translation of new CFG 1]           |   [new CFG, using parts of old BBs]
+                                       |   
+  COM $OPENAD$ REPLACMENT 2            | <Replacement 2>  
+  [translation of new CFG 2]   xaif2whirl  [new CFG, using parts of old BBs]
+                                    <----
+  COM $OPENAD$ REPLACMENT 2            | <Replacement 3>
+  [translation of new CFG 3]           |   [new CFG, using parts of old BBs]
+                                       |   
+                                       |   
+                                       | 
+-------------------------------------------------------------------------------
+

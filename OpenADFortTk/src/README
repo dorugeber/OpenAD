@@ -1,0 +1,100 @@
+# $Header: /Volumes/cvsrep/developer/OpenADFortTk/src/README,v 1.2 2005/01/12 19:59:45 eraxxon Exp $
+=============================================================================
+==
+== $Source: /Volumes/cvsrep/developer/OpenADFortTk/src/README,v $
+==
+=============================================================================
+
+Contents:
+  1. whirl2sexp
+  2. Some Intersting support code (from the perspective of Open64)
+
+=============================================================================
+
+
+* Note: Neither PU_Infos nor the debugging symbol table (DST) is
+currently translated.
+
+
+1. whirl2sexp
+--------------------
+
+whirl <-> sexp : a glorified ir_b2a and ir_a2b
+  - Designed to translate *all* of WHIRL into sexp
+  - Plan: Designed to translate sexp into completely new WHIRL (unlike
+    ir_a2b, which was to keep the existing symbol table)
+  - Therefore: support arbitrary transformations on sexpr-WHIRL.
+
+Start with example: 
+  * output may change slightly as I work on sexp->whirl
+
+Driver: 
+  main.cxx
+
+
+'Translation library' interface:
+  * Several interface routines for translation of different WHIRL
+    levels (whole IR, a PU tree, individual PU, a single WN)
+
+  whirl2sexp.h -> whirl2sexp.cxx  (whirl2sexp.i)
+
+
+Code for translating WHIRL AST: 
+  * WN translation is dispatched to appropriate specialized translator
+    - handler table is constructed by static initializer
+    - specialized routines: specialized by conceptual similarity and
+      similarity of WN
+
+  wn2sexp.cxx (top level)
+  wn2sexp.h / wn2sexp.i (handler tbl)
+  wn2sexp.cxx (specialized routines)
+
+
+Code for translating WHIRL symbol tables: 
+  * Includes routines for translating every table, both global and
+    local (per-PU) tables
+  * Uses Open64's 'For_all' interators that apply a functor to each entry
+
+  * In order to have both routines and functors based on those
+    routines and to avoid tons of functors:
+      - write overload routines (same name)
+      - use a templated functor that call the correct routine when instantiated
+  
+  symtab2sexp.h
+  symtab2sexp.cxx
+
+=============================================================================
+
+2. Some Intersting support code (from the perspective of Open64)
+--------------------
+
+There is no true PU abstraction in Open64.  
+  - A PU relies on global 
+  - Cannot examine more than one PU at a time; instead must unload
+    current one from memory and reloading a new one
+  - what a PAIN for walking multiple PUs
+
+  So: 
+    WhirlIO.h / WhirlIO.cxx
+    WhirlGlobalStateUtils.h / WhirlGlobalStateUtils.cxx
+
+sexpostream.h
+  - A specialized ostream class that handles all output details
+    - Knows how to output atoms of different types 
+      (quoted, string, hex, dec etc.)
+    - Decides how to format lists and comments
+    - Not too smart, but good enough
+
+
+Whirl had no parent pointers.  To get around this they create a parent
+map -- based on global variables instead of an abstraction. Erg.
+
+A quickly written abstraction:
+  WhirlParentize.h / WhirlParentize.cxx
+
+
+IFDiagnostics.h Exception.h
+BaseMap.h
+CmdLineParser.h
+
+=============================================================================

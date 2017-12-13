@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ ##########################################################
+ # This file is part of xaif.                             #
+ # The full COPYRIGHT notice can be found in the top      #
+ # level directory of the xaif source tree.               #
+ # For more information visit                             #
+ # http://www.mcs.anl.gov/xaif       and                  #
+ # http://www.mcs.anl.gov/openad                          #
+ ##########################################################
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	    xmlns:xaif="http://www.mcs.anl.gov/XAIF"
+	    targetNamespace="http://www.mcs.anl.gov/XAIF"
+	    version="xaif 1.0 (output)"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+<xsd:include id="xaif_derivative_propagator.xsd" schemaLocation="xaif_derivative_propagator.xsd"/>
+
+<!-- *********************************************************** -->
+<!-- Differentiated Basic Block                                  -->
+<!-- *********************************************************** -->
+ 
+<xsd:redefine schemaLocation="xaif_base.xsd">
+<xsd:group name="BasicBlockBody">
+  <xsd:choice>
+    <xsd:group ref="xaif:BasicBlockBody"/>
+    <xsd:element ref="xaif:DerivativePropagator"/>
+    <xsd:element ref="xaif:InlinableSubroutineCall"/>
+  </xsd:choice>
+</xsd:group>
+</xsd:redefine>
+
+<!-- *********************************************************** -->
+<!-- List of Replacements                                        -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="ReplacementListType">
+  <xsd:complexContent>
+    <xsd:extension base="xaif:VertexType">
+      <xsd:sequence>
+        <xsd:element name="ArgumentList" type="xaif:ArgumentListType" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="Replacement" type="xaif:ReplacementType" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="template_name" type="xsd:string" use="required"/>
+      <xsd:attribute name="symbol_id" type="xsd:string" use="required"/>
+      <xsd:attribute name="scope_id" type="xsd:positiveInteger" use="required"/>
+      <xsd:attribute name="controlflowgraph_scope_id" type="xsd:positiveInteger" use="required"/>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:element name="ReplacementList" type="xaif:ReplacementListType" substitutionGroup="xaif:CallGraphVertex"/>
+
+<!-- *********************************************************** -->
+<!-- Replacement                                                 -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="ReplacementType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Code fragments to be inserted into templates
+    </xsd:documentation>
+  </xsd:annotation>
+   
+  <xsd:choice minOccurs="0" maxOccurs="unbounded">
+    <xsd:element ref="xaif:ControlFlowVertex"></xsd:element>
+    <xsd:element name="ControlFlowEdge" type="xaif:ControlFlowEdgeType"></xsd:element>
+  </xsd:choice>
+
+  <xsd:attribute name="placeholder" type="xsd:string" use="required"/>
+  <xsd:attribute name="structured"  type="xsd:boolean" use="optional" default="true">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        The control flow graph is considered structured if loops and branches 
+        are nested or arranged in a sequence so that for every loop and branch node
+        there is corresponding end node so that each  control flow path through
+        a given loop or branch has to traverse the corresponding endLoop or endBranch
+        node.  This excludes early returns, alternative entries, ...
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:attribute>
+
+</xsd:complexType>
+
+<!-- *********************************************************** -->
+<!-- Inlinable subroutine call                                   -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="ArgumentSubstituteType">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Substitute given variable for dummy argument at given position
+      in inlinable subroutine. Is 0 or 1 the first position?
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexContent>
+    <xsd:extension base="xaif:VariableReferenceType">
+      <xsd:attribute name="position" type="xsd:positiveInteger" use="required"/>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="InlinableSubroutineCallType">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Take the body of *subroutine_name and substitute given arguments
+      for the corresponding dummy arguments
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:sequence>
+    <xsd:element name="Argument" type="xaif:SubroutineArgumentType" minOccurs="0" maxOccurs="unbounded"/>
+  </xsd:sequence>
+  <xsd:attribute name="subroutine_name" type="xsd:string" use="required"/>
+  <xsd:attribute name="statement_id" type="xsd:string" use="required"/>
+</xsd:complexType>
+
+<xsd:element name="InlinableSubroutineCall" type="xaif:InlinableSubroutineCallType"/>
+
+</xsd:schema>

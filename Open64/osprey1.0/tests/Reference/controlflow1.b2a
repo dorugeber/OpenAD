@@ -1,0 +1,201 @@
+ LOC 0 0 source files:	1	"/m_home/m_utkej/Argonne/Dev/Current/OpenAD/Open64/osprey1.0/tests/controlflow1.f90"
+ LOC 1 1 subroutine head(x,y)
+FUNC_ENTRY <1,20,head_>
+ IDNAME 0 <2,1,X>
+ IDNAME 0 <2,2,Y>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 3   integer, dimension(1), intent(out) :: y
+ LOC 1 4   integer i
+ LOC 1 5 
+ LOC 1 6 
+ LOC 1 7   y(1)=x(1) 
+    U8U8LDID 0 <2,1,X> T<30,anon_ptr.,8>
+    I4INTCONST 1 (0x1)
+    I4INTCONST 1 (0x1)
+   U8ARRAY 1 4
+  I4I4ILOAD 0 T<4,.predef_I4,4> T<31,anon_ptr.,8>
+   U8U8LDID 0 <2,2,Y> T<30,anon_ptr.,8>
+   I4INTCONST 1 (0x1)
+   I4INTCONST 1 (0x1)
+  U8ARRAY 1 4
+ I4ISTORE 0 T<31,anon_ptr.,8>
+ LOC 1 8   if (y(1)>0.) then
+ IF
+      U8U8LDID 0 <2,2,Y> T<30,anon_ptr.,8>
+      I4INTCONST 1 (0x1)
+      I4INTCONST 1 (0x1)
+     U8ARRAY 1 4
+    I4I4ILOAD 0 T<4,.predef_I4,4> T<31,anon_ptr.,8>
+   F4I4CVT
+   F4CONST <1,21,____0.000000>
+  I4F4GT
+ THEN
+  BLOCK
+ LOC 1 9      do i=1,3
+  DO_LOOP
+   IDNAME 0 <2,3,I>
+  INIT
+    I4INTCONST 1 (0x1)
+   I4STID 0 <2,3,I> T<4,.predef_I4,4>
+  COMP
+    I4I4LDID 0 <2,3,I> T<4,.predef_I4,4>
+    I4INTCONST 3 (0x3)
+   I4I4LE
+  INCR
+ LOC 1 10         y(1)=y(1)*x(1)
+ LOC 1 11      end do
+     I4I4LDID 0 <2,3,I> T<4,.predef_I4,4>
+     I4INTCONST 1 (0x1)
+    I4ADD
+   I4STID 0 <2,3,I> T<4,.predef_I4,4>
+  BODY
+ LOC 1 9
+   BLOCK
+ LOC 1 10
+       U8U8LDID 0 <2,1,X> T<30,anon_ptr.,8>
+       I4INTCONST 1 (0x1)
+       I4INTCONST 1 (0x1)
+      U8ARRAY 1 4
+     I4I4ILOAD 0 T<4,.predef_I4,4> T<31,anon_ptr.,8>
+       U8U8LDID 0 <2,2,Y> T<30,anon_ptr.,8>
+       I4INTCONST 1 (0x1)
+       I4INTCONST 1 (0x1)
+      U8ARRAY 1 4
+     I4I4ILOAD 0 T<4,.predef_I4,4> T<31,anon_ptr.,8>
+    I4MPY
+     U8U8LDID 0 <2,2,Y> T<30,anon_ptr.,8>
+     I4INTCONST 1 (0x1)
+     I4INTCONST 1 (0x1)
+    U8ARRAY 1 4
+   I4ISTORE 0 T<31,anon_ptr.,8>
+   END_BLOCK
+  END_BLOCK
+ ELSE
+ LOC 1 8
+  BLOCK
+ LOC 1 12   else
+ LOC 1 13      y(1)=y(1)/x(1)
+      U8U8LDID 0 <2,2,Y> T<30,anon_ptr.,8>
+      I4INTCONST 1 (0x1)
+      I4INTCONST 1 (0x1)
+     U8ARRAY 1 4
+    I4I4ILOAD 0 T<4,.predef_I4,4> T<31,anon_ptr.,8>
+      U8U8LDID 0 <2,1,X> T<30,anon_ptr.,8>
+      I4INTCONST 1 (0x1)
+      I4INTCONST 1 (0x1)
+     U8ARRAY 1 4
+    I4I4ILOAD 0 T<4,.predef_I4,4> T<31,anon_ptr.,8>
+   I4DIV
+    U8U8LDID 0 <2,2,Y> T<30,anon_ptr.,8>
+    I4INTCONST 1 (0x1)
+    I4INTCONST 1 (0x1)
+   U8ARRAY 1 4
+  I4ISTORE 0 T<31,anon_ptr.,8>
+  END_BLOCK
+ END_IF
+ LOC 1 14   end if
+ LOC 1 15 
+ LOC 1 16 
+ LOC 1 17 end subroutine head
+ RETURN
+ END_BLOCK
+ LOC 1 18 
+ LOC 1 19 program controlFlow1
+FUNC_ENTRY <1,22,controlflow1_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 20   integer, dimension(1) :: x,y
+ LOC 1 21   x(1)=2
+  I4INTCONST 2 (0x2)
+   U8LDA 0 <2,2,X> T<30,anon_ptr.,8>
+   I4INTCONST 1 (0x1)
+   I4INTCONST 1 (0x1)
+  U8ARRAY 1 4
+ I4ISTORE 0 T<31,anon_ptr.,8>
+ LOC 1 22   call head(x,y)
+    U8LDA 0 <2,2,X> T<30,anon_ptr.,8>
+   I4I4ILOAD 0 T<4,.predef_I4,4> T<31,anon_ptr.,8>
+  U8PARM 257 T<4,.predef_I4,4> #  by_reference PASS_ADDRESS 
+    U8LDA 0 <2,3,Y> T<30,anon_ptr.,8>
+   I4I4ILOAD 0 T<4,.predef_I4,4> T<31,anon_ptr.,8>
+  U8PARM 257 T<4,.predef_I4,4> #  by_reference PASS_ADDRESS 
+ VCALL 2174 <1,20,head_> # flags 0x87e
+ LOC 1 23   if (y(1) .eq. x(1)**4 ) then 
+     U8LDA 0 <2,3,Y> T<30,anon_ptr.,8>
+     I4INTCONST 1 (0x1)
+     I4INTCONST 1 (0x1)
+    U8ARRAY 1 4
+   I4I4ILOAD 0 T<4,.predef_I4,4> T<31,anon_ptr.,8>
+       U8LDA 0 <2,2,X> T<30,anon_ptr.,8>
+       I4INTCONST 1 (0x1)
+       I4INTCONST 1 (0x1)
+      U8ARRAY 1 4
+     I4I4ILOAD 0 T<4,.predef_I4,4> T<31,anon_ptr.,8>
+    I4PARM 2 T<4,.predef_I4,4> #  by_value 
+     I4INTCONST 4 (0x4)
+    I4PARM 2 T<4,.predef_I4,4> #  by_value 
+   I4INTRINSIC_OP 2 <1,I4EXPEXPR> 0
+  I4I4EQ
+ I4STID 0 <2,5,t__1> T<27,.log.4,4>
+ IF
+  I4I4LDID 0 <2,5,t__1> T<27,.log.4,4>
+ THEN
+  BLOCK
+ LOC 1 24     print *, 'OK'
+  COMMENT <2,6,print *, 'OK'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,25,"OK"> T<36,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 2 (0x2)
+   IO_ITEM <96,CHAR> T<35,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ ELSE
+ LOC 1 23
+  BLOCK
+ LOC 1 25   else 
+ LOC 1 26     print *,'failed'
+  COMMENT <2,7,print *,'failed'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,27,"failed"> T<39,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 6 (0x6)
+   IO_ITEM <96,CHAR> T<38,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ END_IF
+ LOC 1 27   endif
+ LOC 1 28 end program
+ VCALL 2174 <1,23,_END> # flags 0x87e
+ RETURN
+ RETURN
+ END_BLOCK

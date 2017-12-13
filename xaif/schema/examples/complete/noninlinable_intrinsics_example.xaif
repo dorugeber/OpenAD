@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="LATIN1"?>
+<xaifnii:NonInlinableIntrinsicDefinitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xaifnii="http://www.mcs.anl.gov/XAIFNonInlinableIntrinsics" xmlns:xaif="http://www.mcs.anl.gov/XAIF" xsi:schemaLocation="http://www.mcs.anl.gov/XAIFNonInlinableIntrinsics ../xaif_noninlinable_intrinsics.xsd">     
+
+  
+  
+  
+  <xaifnii:ExplicitJacobian name="myEJfun" jacobian="myEJjac" return_type="real" nonSmooth="false">
+    <xaifnii:Partial dep="2" indep="1" partial="4"></xaifnii:Partial>
+    <xaifnii:Partial dep="2" indep="2" partial="5"></xaifnii:Partial>
+    <xaifnii:Partial dep="3" indep="1" partial="6"></xaifnii:Partial>
+    <xaifnii:Partial dep="3" indep="2" partial="7"></xaifnii:Partial>
+  </xaifnii:ExplicitJacobian>
+
+  
+  
+  
+  <xaifnii:ExplicitJacobian name="myEJfun2" jacobian="myEJjac2" return_type="real" nonSmooth="false">
+    <xaifnii:Partial dep="1" indep="2" partial="3"></xaifnii:Partial>
+    <xaifnii:Partial dep="1" indep="3" partial="4"></xaifnii:Partial>
+  </xaifnii:ExplicitJacobian>	
+
+  
+  
+  
+  <xaifnii:DirectAction name="transpose_arr" derivAction="transpose_arr" nonSmooth="false"></xaifnii:DirectAction>
+
+</xaifnii:NonInlinableIntrinsicDefinitions>

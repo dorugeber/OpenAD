@@ -1,0 +1,1 @@
+whirl2f drops the result clause of the recursive function. While ifort accepts that it is violating the standard and accordingly fails e.g. with gfortran and the NAG compiler; see <a href="http://trac.mcs.anl.gov/projects/openAD/ticket/147">bug report</a>

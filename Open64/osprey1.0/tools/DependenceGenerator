@@ -1,0 +1,252 @@
+
+# $Id: DependenceGenerator,v 1.1.1.1 2002-05-22 20:10:41 dsystem Exp $ 
+# ===========================================================================
+#   Copyright (C) 2003 Rice University. All rights reserved.
+# 
+#   This program is free software; you can redistribute it and/or modify it
+#   under the terms of version 2 of the GNU General Public License as
+#   published by the Free Software Foundation.
+# 
+#   This program is distributed in the hope that it would be useful, but
+#   WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# 
+#   Further, this software is distributed without any warranty that it is
+#   free of the rightful claim of any third person regarding infringement
+#   or the like.  Any license provided herein, whether implied or
+#   otherwise, applies only to this software file.  Patent licenses, if
+#   any, provided herein do not apply to combinations of this program with
+#   other software, or any other product whatsoever.
+# 
+#   You should have received a copy of the GNU General Public License along
+#   with this program; if not, write the Free Software Foundation, Inc., 59
+#   Temple Place - Suite 330, Boston MA 02111-1307, USA.
+# 
+# ===========================================================================
+
+########################################################################### 
+#         Copyright (c) 1990, 1991, 1992, 1993, 1994 Rice University 
+#                            All Rights Reserved 
+###########################################################################
+
+###########################################################################
+#
+#  File:
+#     DependenceGenerator
+#
+#  Purpose:
+#     Generate dependence for a source file
+#
+#  Arguments:
+#     <file> - full pathname of file starting with
+#     [-Idir] - directories containing include files
+#
+#  Description:
+#     List all the include files in the 'file' and, if include directories
+#     are specified, recursively lists all their included files.  Include
+#     directories are searched in the order presented, with the directory
+#     containing 'file' searched last.
+#
+#     An include file is processed only once to avoid indirect recursio n
+#    (and long listings).  Thus, its nested includes appear only once at
+#     the beginning of the list; thereafter, only top level includes in a
+#     file are printed.
+#
+#     This information is used to compute the dependence information the 
+#     file.  This information is stored in the file '.d_<filename>' and 
+#     is checked by verifydepends during the compile to determine whether 
+#     or not to recompile the file.
+#
+#     Each .d_$* has two sections: 'dependences for compilation' and 'files
+#     that would be nearer than current dependences for compilation.'
+#
+#     DependenceVerify uses the 'dependences...' section to check the time
+#     stamps on all the files that are included by the source file.  If any
+#     timestamp is later than the source file timestamp, then the .d_$* file
+#     is deleted.  Likewise, if any of the files in the 'files that...'
+#     section exist, the .d_$* file is deleted.
+#
+#     When the system is being recompiled, any source file that does not
+#     have a .d_$* file is considered to be stale and will be recompiled.
+#     A new .d_$* file is built for the source file.
+#
+#     DependenceCheck uses the 'dependences...' section to check to see if
+#     it needs to compile the file or if it can be extracted from the
+#     installed archive.
+#
+#  History:
+#     01/01/95 - ghansen - initial revision
+#     01/01/95 - curetonk - added comment headers
+#
+###########################################################################
+
+  #########################################################################
+  #
+  #   Set the needed environment variables
+  #
+  #########################################################################
+ 
+
+  #########################################################################
+
+  $| = 1;       # flush after every print
+
+  $usage = "usage: DependenceGenerator file [-Idir]";
+
+  #########################################################################
+  # argument parsing
+  #########################################################################
+  if ($#ARGV < 0)
+  {
+     print $usage, "\n";
+     exit 1;
+  }
+
+  $file =  $ARGV[0];
+
+  if (! -T $file) 
+  { 
+     print "$file not a text file; ", $usage, "\n";
+     exit 1;
+  }
+
+  shift @ARGV;   # remove file argument
+
+  #
+  # put all of the include directories into an array called 'include_dirs'
+  #
+  foreach $arg (@ARGV) 
+  {
+     if ($arg =~ /^-I(.*)/m) 
+     {
+        if (! -d $1) 
+        { 
+           print "$1 not a directory; ", $usage, "\n"; 
+           exit 1;
+        } 
+        else 
+        { 
+           push(@include_dirs, $1); 
+        }
+     } 
+     else 
+     { 
+        print "improper option; ", $usage, "\n"; 
+        exit 1; 
+     }
+  }
+
+  @comps = split(/\//, $file);
+  pop(@comps);   # remove file name
+  push(@include_dirs, join('/', @comps));
+
+  #########################################################################
+  # get the actual location of the file
+  #########################################################################
+  $file_found = "false";
+  foreach $idir (@include_dirs) 
+  {
+     if (-e "$idir/$file")
+     {
+        $deps_current{"$idir/$file"} = 1;
+        $file_found = "true";
+        last;
+     }
+  }
+  if ($file_found eq "false")
+  {
+     $deps_current{$file} = 1; 
+  }
+ 
+  #########################################################################
+  # compute the nesting of the include files
+  #########################################################################
+  &doincludes($file);  
+
+ 
+  #########################################################################
+  # convert the list of current dependences into a dependence file
+  #########################################################################
+      # use newline as the input record separator
+   $/ = "\n";
+ 
+      # do multiline matching within a string
+   # $* = 1;  deprecated, replaced by 'm' qualifier
+ 
+      # take the output of cpp and filter it.  Store the include files in
+      # an associative array based on the included name.
+ 
+      # covert the associative array to a regular array
+   foreach (sort keys %deps_current)
+   {
+     push(@tmp_list, $_);
+   }
+ 
+      # join the include files into one, long string with newlines
+      # between each entry.
+   $include_list = join("\n", @tmp_list);
+
+      # generate the dependence file
+
+   print "# dependences for compilation", "\n", $include_list;
+ 
+   exit 0;
+
+  #########################################################################
+  # recursively find all of the include files possbile
+  #########################################################################
+  sub doincludes 
+  {
+     local($filename) = @_;
+     local($ifile, $idir, $seen);
+     local($include_file);
+     local(@include_files); 
+     local(%tmp_list);
+
+     # Extract the include lines from the file
+     open(FILE, $filename) || warn "Can't open $filename: $1\n";
+     while (<FILE>) 
+     {
+#        if (/^#include[ \t]+["<]([^">]*)[">]/) 
+# js: changed to deal with blank spaces before, between # and include 
+	if (/^[ \t]*#[ \t]*include[ \t]*["<]([^">]*)[">]/m)
+        {
+           $tmp_list{$1} = 1;
+        }
+# js: ?
+        if (/^[ \t]+include\s+["']([^"']*)["']/m) 
+        {
+           $tmp_list{$1} = 1;
+        }
+     }
+     close(FILE);
+
+     foreach $ifile (sort keys %tmp_list)
+     {
+        push(@include_files, $ifile);
+     }
+
+     DEP: foreach $ifile (@include_files) 
+     {
+        # find the file in the include dirs by looking in each
+        # include dir for it.  Once found, do the necessary 
+        # processing
+        foreach $idir (@include_dirs) 
+        {
+           $include_file = "$idir/$ifile";
+
+           if (-e $include_file) 
+           {
+              $seen = $deps_current{$include_file};
+
+              if (!$seen) { $seen = 0; }
+ 
+              $deps_current{$include_file} += 1;
+              next DEP if $seen;   # avoid indirect recursion
+
+              &doincludes($include_file);
+              next DEP;
+           }
+        }
+     }
+  }

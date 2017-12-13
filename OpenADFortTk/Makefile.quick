@@ -1,0 +1,110 @@
+##########################################################
+# This file is part of OpenADFortTk.                     #
+# The full COPYRIGHT notice can be found in the top      #
+# level directory of the OpenADFortTk source tree.       #
+# For more information visit                             #
+# http://www.mcs.anl.gov/openad                          #
+##########################################################
+
+#############################################################################
+#
+# Description:
+#   Configures and installs OpenADFortTk in local directory.
+#
+#############################################################################
+
+#############################################################################
+
+SHELL = /bin/sh
+WD := $(shell pwd)
+
+PLATFORM := $(shell cd $(WD)/config && ./hpcplatform)
+ifeq ($(PLATFORM),)
+  $(error "Unknown/unsupported platform") # unavailable in older gmakes
+  error "Unknown/unsupported platform"    # will certainly cause an error
+endif
+
+#############################################################################
+
+BUILDDIR   = $(WD)/build-$(PLATFORM)
+INSTALLDIR = $(WD)/OpenADFortTk-$(PLATFORM)
+
+ifdef DEVELOP
+  CONFIG_OPTS += --enable-develop
+endif
+
+ifdef SEXP
+  CONFIG_OPTS += --with-sexp=$(SEXP)
+endif
+
+# used by configure (from GNU Autoconf)
+export CC
+export CXX
+
+#############################################################################
+
+define HELPCMDS
+echo "A wrapper for configuring, building and installing OpenADFortTk."
+echo "Targets:"
+echo "  all       - Configure, build and install, using the options below."
+echo ""
+echo "  configure - Configure and create makefiles, using the options below."
+echo "  build     - Build"
+echo "  install   - Install"
+echo ""
+echo "Options to 'all' and 'configure':"
+echo "  CC=<C-compiler>         - Set the C compiler"
+echo "  CXX=<C++-compiler>      - Set the C++ compiler"
+echo "  SEXP=<SEXP-install-dir> - Set SEXP installation (absolute path)"
+echo "  DEVELOP=1               - develop mode"
+echo ""
+echo "By default, makefiles are created in:"
+echo "  $(BUILDDIR)"
+echo "By default, the installation is performed in:"
+echo "  $(INSTALLDIR)"
+echo ""
+echo "For more complex actions, use the configure target above and then use"
+echo "the _resulting_ makefiles in the build directory; or use the typical"
+echo "Autoconf/Automake trio,"
+echo "  ./configure <options> ; make ; make install"
+endef
+
+help: 
+	@$(HELPCMDS)
+
+all: configure build install
+
+.PHONY : all help
+
+#############################################################################
+
+configure: 
+	@echo "*** Configuring ***"
+	$(WD)/config/hpcautotouch
+	-mkdir -p $(BUILDDIR)
+	cd $(BUILDDIR) && \
+	../configure $(CONFIG_OPTS) --prefix="$(INSTALLDIR)"
+
+build:
+	@echo "*** Building ***"
+	cd $(BUILDDIR) && $(MAKE)
+
+clean:
+	/bin/rm -f -r $(BUILDDIR)
+
+.PHONY : configure build clean
+
+############################################################
+
+install: uninstall
+	@echo "*** Installing ***"
+	cd $(BUILDDIR) && $(MAKE) install
+	@echo "*** Installed to: $(INSTALLDIR) ***"
+
+uninstall: 
+	/bin/rm -f -r $(INSTALLDIR)
+
+.PHONY : install uninstall
+
+#############################################################################
+

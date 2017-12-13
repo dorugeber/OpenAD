@@ -1,0 +1,96 @@
+
+=============================================================================
+
+[jira] Created: (XERCESC-1252) Compilation problem on IRIX 6.5 with MIPSpro Compilers: Version 7.41
+
+    * From: xerces-c-dev
+    * Subject: [jira] Created: (XERCESC-1252) Compilation problem on IRIX 6.5 with MIPSpro Compilers: Version 7.41
+    * Date: Tue, 10 Aug 2004 10:13:54 -0700 
+
+Message:
+
+  A new issue has been created in JIRA.
+
+---------------------------------------------------------------------
+View the issue:
+  http://issues.apache.org/jira/browse/XERCESC-1252
+
+Here is an overview of the issue:
+---------------------------------------------------------------------
+        Key: XERCESC-1252
+    Summary: Compilation problem on IRIX 6.5 with MIPSpro Compilers: Version 7.41
+       Type: Bug
+
+     Status: Unassigned
+   Priority: Major
+
+    Project: Xerces-C++
+ Components: 
+             Build
+   Versions:
+             2.5.0
+
+   Assignee: 
+   Reporter: Marcus Mohr
+
+    Created: Tue, 10 Aug 2004 10:14 AM
+    Updated: Tue, 10 Aug 2004 10:14 AM
+Environment: IRIX 6.5
+MIPSpro Compilers: Version 7.41
+
+Description:
+Hi,
+
+I was trying to built xerces-c version 2.5.0 on an IRIX 6.5 using
+MIPSpro compilers version 7.41.
+
+After having enabled namespace support in MIPSproDefs.hpp by
+commenting in #define XERCES_HAS_CPP_NAMESPACE, I configured xerces
+using the following command line
+
+./runConfigure -pirix -ccc -xCC -b64 -P<myPrefix>
+
+This went fine. The successive gmake, however, ran into problems. CC
+reported six errors of the following type when compiling
+DOMDocumentImpl.cpp:
+
+using precompiled header file "DOMDocumentImpl.pch".
+cc-1220 CC: ERROR File = DOMDeepNodeListPool.c, Line = 78
+  The function
+          "xercesc_2_5::DOMDeepNodeListPool<TVal>::DOMDeepNodeListPool(XMLSize_
+          t, bool, XMLSize_t)" has already been defined.
+
+Checking the sources a little bit, I think that the problem is the
+following. DOMDocumentImpl.cpp explicitely includes both,
+DOMDeepNodeListPool.c and DOMDeepNodeListPool.hpp. Since
+XERCES_TMPSINC was not defined during inclusion
+DOMDeepNodeListPool.hpp did not in turn include DOMDeepNodeListPool.c.
+
+However, now a feature of the IRIX C++ compiler comes into play. By
+default the compiler uses auto inclusion. This means that it will try
+to include template definition files, if necessary. Thus, it will
+include DOMDeepNodeListPool.c twice, once explicitely and once
+implicitely via automatic inclusion through DOMDeepNodeList.hpp.
+
+Fortunately this behaviour of the compiler can be changed by the
+-no_auto_include option. If this is specified in ./runConfigure
+compilation goes fine. And the samples I tested work also.
+
+My suggestions are the following:
+
+1) Make XERCES_HAS_CPP_NAMESPACE the default in MIPSproDefs.hpp
+2) Add -no_auto_include to PLATFORM_COMPILE_OPTIONS for IRIX
+
+Another point that I did not recognise in the beginning was that
+specifying -b64 will define things like the -DXML_BITSTOBUILD_64
+macro, but a little bit surprisingly :) it will not instruct the
+compiler to generate 64-bit objects. I only noted that when trying to
+link the library with our application code.
+
+The remedy of course is to specify -z -64 -l -64 to runConfigure,
+but it might be worth trying to handle this automatically.
+
+Cheers
+Marcus
+
+=============================================================================

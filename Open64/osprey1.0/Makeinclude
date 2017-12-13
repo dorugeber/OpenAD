@@ -1,0 +1,97 @@
+#----------------------------------------------------------------------
+# Makeinclude provides a cross-platform mechanism for file dependency
+#----------------------------------------------------------------------
+
+#----------------------------------------------------------------------
+# define two Perl tools 
+#----------------------------------------------------------------------
+PERL = perl
+DEPVERIFY = $(PERL) $(BUILD_TOT)/tools/DependenceVerify
+DEPGEN = $(PERL) $(BUILD_TOT)/tools/DependenceGenerator
+
+
+#----------------------------------------------------------------------
+# make sure LCINCS contains ALL local directories where headers are,
+# usually LCINCS==LCXXINCS
+#----------------------------------------------------------------------
+INCLUDE_DIRS := $(LCINCS) $(LCXXINCS)
+FILES := $(CFILES) $(CXXFILES) $(FFILES)
+
+#----------------------------------------------------------------------
+# define DEPENDS based on ALL source files (.c, .cxx, .f), note we 
+# don't use $(SOURCES) defined in gcommondefs because it is too broad
+#----------------------------------------------------------------------
+DEPENDS := ${addprefix .d_,$(basename $(FILES))}
+
+
+#----------------------------------------------------------------------
+# turn off SUFFIX rules
+#----------------------------------------------------------------------
+.SUFFIX :
+
+
+#----------------------------------------------------------------------
+# verify each .d_XXX file, if the .d_XXX is older than any files in it, 
+# delete the .d_XXX file
+#----------------------------------------------------------------------
+.PHONY : depends
+
+depends:
+ifneq "$(DEPENDS)" ""
+	@$(DEPVERIFY) "$(DEPENDS)"
+else
+	@# Bogus command to inhibit "nothing to be done" message
+endif
+
+
+#----------------------------------------------------------------------
+# rules of compiling object files, archieving, and re-compiling
+#----------------------------------------------------------------------
+.PRECIOUS : $(LIBRARY)
+.PRECIOUS : %.o   # temporarily keep object files
+.PRECIOUS : .d_%  # keep dependence files
+
+$(TARGETS): $(DEPENDS)
+
+#$(LIBRARY): $(LIBRARY)($(OBJECTS)) $(DEPENDS)
+
+#$(LIBRARY)(%.o) : %.o .d_%
+
+%.o : %.c .d_%
+	$(CC) $(CFLAGS) -c $< -o $@
+
+%.o : %.cxx .d_%
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Fortran source files are always taken care of individually in
+# Makefile.gbase, so no need to write a rule for them
+
+.d_% : %.c
+	$(DEPGEN) $< $(INCLUDE_DIRS) > $@
+
+.d_% : %.cxx
+	$(DEPGEN) $< $(INCLUDE_DIRS) > $@
+
+.d_% : %.f
+	$(DEPGEN) $< $(INCLUDE_DIRS) > $@
+
+.d_% : %.F
+	$(DEPGEN) $< $(INCLUDE_DIRS) > $@
+
+
+#----------------------------------------------------------------------
+# In case we want to delete all object files after archieving, define
+# DIRTS in individual Makefile.gbase and rm them explicitly
+# PLATFORM_DIRTS_SPECIFIC is to delete compiler cache, when broken
+#----------------------------------------------------------------------
+
+ifeq ($(Open64BuildType), Open64BuildRelease)
+PLATFORM_DIRTS_COMMON = *~ *.o \#* \#.*
+last : 
+	if test -f itanium.o; then mv itanium.o itanium.o.last; fi
+	rm -rf $(DIRTS) $(PLATFORM_DIRTS_COMMON) $(PLATFORM_DIRTS_SPECIFIC)
+	if test -f itanium.o.last; then mv itanium.o.last itanium.o; fi
+else
+last :
+	rm -rf $(PLATFORM_DIRTS_SPECIFIC)
+endif

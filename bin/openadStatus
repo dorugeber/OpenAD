@@ -1,0 +1,177 @@
+#!/usr/bin/env python
+##########################################################
+# This file is part of OpenAD released under the LGPL.   #
+# The full COPYRIGHT notice can be found in the top      #
+# level directory of the OpenAD distribution             #
+##########################################################
+
+import os
+import sys
+if (not os.environ.has_key("OPENADROOT")):
+  sys.stderr.write("ERROR: no OPENADROOT environment variable set, please use the setenv scripts and refer to the manual for details.\n")
+  sys.exit(-1)
+sys.path.append(os.environ["OPENADROOT"])
+import openadConfig
+sys.path.append(os.path.join(os.environ["OPENADROOT"],"tools","libpythontk"))
+import Repository
+globPingTarget="www.rice.edu"
+globNWTest=True
+globSkipNWTest=False
+
+def netAvail() :
+    global globSkipNWTest
+    if (globSkipNWTest) : 
+      return True
+    global globNWTest
+    if (not globNWTest): 
+      return False
+    global globPingTarget
+    ret=os.system("ping -c 1 -q "+globPingTarget+" > /dev/null 2>&1")
+    if (ret == 0) : 
+	return True
+    else :
+        globNWTest=False
+	return False	
+
+def isLink(path):
+  if(os.path.islink(path)):
+    return True
+  (head,tail)=os.path.split(path)
+  while (tail!="OpenAD" and head!=""):
+    if(os.path.islink(head)):
+      return True
+    (head,tail)=os.path.split(head)
+  return False
+
+def changed(repo):
+    if (not netAvail()) :
+    	sys.stdout.write('  ? |')
+        sys.stdout.flush()
+        return
+    sys.stdout.write(' ')
+    if repo.locallyModified() :
+        sys.stdout.write('C')
+    else:
+        sys.stdout.write(' ')
+    if repo.pendingUpdate() :
+        sys.stdout.write('U')
+    else:
+        sys.stdout.write(' ')
+    sys.stdout.write(' |')
+    sys.stdout.flush()
+
+def inOut(repo, writeable):
+    if (not netAvail()) :
+    	sys.stdout.write('  ? |')
+        sys.stdout.flush()
+        return
+    status=""
+    if repo.incoming() :
+        status+="I"
+    if (writeable and repo.outgoing()) :
+        status+="O"
+    sys.stdout.write('%3s |'%status)
+    sys.stdout.flush()
+
+def main():
+  global globPingTarget
+  from optparse import OptionParser
+  usage = '%prog [options]\n\tdisplays OpenAD repository status\n\tKind:   hg, svn or cvs\n\tR/W:    R=read-only, W=writeable, L=symbolic link\n\tLocal:  C=locally changed , U=locally pending updates (hg only) \n\tRemote: O=outgoing changes , I=incoming changes\n\tA \'?\' is shown when the network/server takes too long.'
+  opt = OptionParser(usage=usage)
+  opt.add_option('-l','--localTag',dest='localTag',
+                 help="inlcude the local revision tag where applicable (implies -t)",
+                 action='store_true',default=False)
+  opt.add_option('-q','--quick',dest='quick',
+                 help="don't check for uncommited changes or pending pushes",
+                 action='store_true',default=False)
+  opt.add_option('-s','--skipNetworkTest',dest='skipNetworkTest',
+                 help="skip the network test (ping "+globPingTarget+") that we do to avoid waiting for repository commands when the network is unavailable, but sometimes pings are being blocked.",
+                 action='store_true',default=False)
+  opt.add_option('-t','--tagsOnly',dest='tagsOnly',
+                 help="only list the repository and a version tag",
+                 action='store_true',default=False)
+  opt.add_option('-v','--verbose',dest='verbose',
+                 help="extra output",
+                 action='store_true',default=False)
+  opt.add_option('-d','--development',dest='development',
+                 help="only for developers!: consider SourceProcessing as a separate repository",
+                 action='store_true',default=False)
+  (options, args) = opt.parse_args()
+  if (options.localTag):
+      options.tagsOnly=True
+  doQuick=False
+  if (options.verbose):
+      sys.stdout.write("running for OPENADROOT="+os.environ["OPENADROOT"]+"\n")
+  if (options.skipNetworkTest): 
+      global globSkipNWTest
+      globSkipNWTest=True
+  try:
+      if (not options.tagsOnly and  not netAvail() and not options.skipNetworkTest): 
+	sys.stderr.write("WARNING: cannot ping "+globPingTarget+" - assuming network is unavailable (or try running with -s )\n")
+      root=os.environ["OPENADROOT"]
+      os.chdir(root)
+      oaCfg=openadConfig.openadConfig(True,True,options.development)
+      repsDict=oaCfg.getRepos()
+      for v in repsDict.values() :
+        if (v[1] and not os.path.exists(v[0].getLocalRepoPath()[len(root)+1:])):
+          raise RuntimeError("required repository "+str(v[0])+" not present")
+      allRepList=[ (repsDict[k][0].getLocalRepoPath()[len(root)+1:] ) for k in oaCfg.orderedRepoList ] 
+      repList=[]
+      for i in allRepList:
+          if (os.path.exists(i)):
+            if (i=='.'): # just to have something better in the output
+              repList.append(os.path.join('..','OpenAD'))
+            else:
+              repList.append(i)
+      maxNameLength=max([len(r) for r in repList])
+      if (not options.tagsOnly):
+          ldirName="local directory"
+	  maxNameLength=max(maxNameLength,len(ldirName))
+          columnLabelsStr = ldirName+' '*(maxNameLength-len(ldirName))+'|Kind|R/W'
+          if (not options.quick):
+              columnLabelsStr += '|Loc.|Rem.'
+          columnLabelsStr += '|URL\n'
+          sys.stdout.write(columnLabelsStr+'-'*len(columnLabelsStr)+'\n')
+          sys.stdout.flush()
+      for i in repList:
+          repo=Repository.Detect.makeRepo(os.path.join(os.environ["OPENADROOT"],i),None)
+          patchedName=i+"".join([' ' for s in range(len(i),maxNameLength)])
+          if options.tagsOnly:
+              sys.stdout.write('%s %s:%s\n' % (patchedName,repo.kind(),repo.getVersionTag(options.localTag)))
+          else:
+              sys.stdout.write('%s|%4s|' % (patchedName,repo.kind()))
+              sys.stdout.flush()
+              # read/write/link?
+              rwlString=' '
+              if repo.writeable():
+                rwlString+='W'
+              else:
+                rwlString+='R'
+              if (isLink(i)):
+                rwlString+='L'
+              else:  
+                rwlString+=' '
+              sys.stdout.write(rwlString+'|')
+              sys.stdout.flush()
+              if (not options.quick):
+                if repo.writeable():
+                  changed(repo)
+                  inOut(repo, True)
+                else:
+                  sys.stdout.write('    |')
+                  inOut(repo, False)
+              sys.stdout.write('%s\n' % repo.getUrl().strip())
+          sys.stdout.flush()
+          os.chdir(os.environ["OPENADROOT"])
+  except RuntimeError, e:
+    print 'ERROR: caught exception: ',e
+    return -1
+  except IOError, e:
+    import errno
+    if e.errno == errno.EPIPE: 
+      return 0
+    else :
+      raise e
+
+if __name__ == "__main__":
+  sys.exit(main())

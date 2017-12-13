@@ -1,0 +1,296 @@
+ LOC 0 0 source files:	1	"/m_home/m_utkej/Argonne/Dev/Current/OpenAD/Open64/osprey1.0/tests/fortran90/single_file_tests/charint.f"
+ LOC 1 1         program main
+FUNC_ENTRY <1,20,main_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 2 		character (len=10) :: str1="undefined", str2
+ LOC 1 3 		integer pos
+ LOC 1 4 		
+ LOC 1 5 		pos=scan("fortran", 'tr')+scan('fortran', 'tr', back=.TRUE.)
+     U8LDA 0 <1,24,"fortran"> T<35,anon_ptr.,8>
+    U8PARM 1 T<35,anon_ptr.,8> #  by_reference 
+     U8LDA 0 <1,25,"tr"> T<34,anon_ptr.,8>
+    U8PARM 1 T<34,anon_ptr.,8> #  by_reference 
+    null-expression
+     U4INTCONST 7 (0x7)
+    U4PARM 2 T<8,.predef_U4,4> #  by_value 
+     U4INTCONST 2 (0x2)
+    U4PARM 2 T<8,.predef_U4,4> #  by_value 
+   I4CALL 2174 <1,23,SCAN> # flags 0x87e
+     U8LDA 0 <1,26,"fortran"> T<35,anon_ptr.,8>
+    U8PARM 1 T<35,anon_ptr.,8> #  by_reference 
+     U8LDA 0 <1,27,"tr"> T<34,anon_ptr.,8>
+    U8PARM 1 T<34,anon_ptr.,8> #  by_reference 
+     I4INTCONST 1 (0x1)
+    U8PARM 1 T<27,.log.4,4> #  by_reference Keyword: BACK
+     U4INTCONST 7 (0x7)
+    U4PARM 2 T<8,.predef_U4,4> #  by_value 
+     U4INTCONST 2 (0x2)
+    U4PARM 2 T<8,.predef_U4,4> #  by_value 
+   I4CALL 2174 <1,23,SCAN> # flags 0x87e
+  I4ADD
+ I4STID 0 <2,1,POS> T<4,.predef_I4,4>
+ LOC 1 6 		if(pos.EQ.8) then
+ IF
+   I4I4LDID 0 <2,1,POS> T<4,.predef_I4,4>
+   I4INTCONST 8 (0x8)
+  I4I4EQ
+ THEN
+  BLOCK
+ LOC 1 7 		  pos=verify('aabb','ab')+verify('abc','ab')
+      U8LDA 0 <1,30,"aabb"> T<38,anon_ptr.,8>
+     U8PARM 1 T<38,anon_ptr.,8> #  by_reference 
+      U8LDA 0 <1,31,"ab"> T<34,anon_ptr.,8>
+     U8PARM 1 T<34,anon_ptr.,8> #  by_reference 
+     null-expression
+      U4INTCONST 4 (0x4)
+     U4PARM 2 T<8,.predef_U4,4> #  by_value 
+      U4INTCONST 2 (0x2)
+     U4PARM 2 T<8,.predef_U4,4> #  by_value 
+    I4CALL 2174 <1,29,VERIFY> # flags 0x87e
+      U8LDA 0 <1,32,"abc"> T<40,anon_ptr.,8>
+     U8PARM 1 T<40,anon_ptr.,8> #  by_reference 
+      U8LDA 0 <1,33,"ab"> T<34,anon_ptr.,8>
+     U8PARM 1 T<34,anon_ptr.,8> #  by_reference 
+     null-expression
+      U4INTCONST 3 (0x3)
+     U4PARM 2 T<8,.predef_U4,4> #  by_value 
+      U4INTCONST 2 (0x2)
+     U4PARM 2 T<8,.predef_U4,4> #  by_value 
+    I4CALL 2174 <1,29,VERIFY> # flags 0x87e
+   I4ADD
+  I4STID 0 <2,1,POS> T<4,.predef_I4,4>
+ LOC 1 8 		  if(pos.EQ.3) then
+  IF
+    I4I4LDID 0 <2,1,POS> T<4,.predef_I4,4>
+    I4INTCONST 3 (0x3)
+   I4I4EQ
+  THEN
+   BLOCK
+ LOC 1 9 		    if(lle("undefined", str1)) then
+   IF
+      U8LDA 0 <1,35,"undefined"> T<44,anon_ptr.,8>
+     U8PARM 1 T<44,anon_ptr.,8> #  by_reference 
+       U8LDA 0 <2,2,STR1> T<43,anon_ptr.,8>
+       I4INTCONST 10 (0xa)
+       U8INTCONST 0 (0x0)
+      U8ARRAY 1 1
+     U8PARM 1 T<43,anon_ptr.,8> #  by_reference 
+      U4INTCONST 9 (0x9)
+     U4PARM 2 T<8,.predef_U4,4> #  by_value 
+      I4INTCONST 10 (0xa)
+     I4PARM 2 T<4,.predef_I4,4> #  by_value 
+    I4CALL 2174 <1,34,LLE> # flags 0x87e
+   THEN
+    BLOCK
+ LOC 1 10 			   str2="abc"
+       U8LDA 0 <2,3,STR2> T<43,anon_ptr.,8>
+       I4INTCONST 10 (0xa)
+       U8INTCONST 0 (0x0)
+      U8ARRAY 1 1
+     U8PARM 1 T<43,anon_ptr.,8> #  by_reference 
+      U8LDA 0 <1,36,"abc"> T<40,anon_ptr.,8>
+     U8PARM 1 T<40,anon_ptr.,8> #  by_reference 
+      I4INTCONST 10 (0xa)
+     I4PARM 2 T<4,.predef_I4,4> #  by_value 
+      U4INTCONST 3 (0x3)
+     U4PARM 2 T<8,.predef_U4,4> #  by_value 
+    VINTRINSIC_CALL <29,CASSIGNSTMT> 126 # flags 0x7e
+ LOC 1 11 			   if(lgt(str1,str2)) then
+    IF
+        U8LDA 0 <2,2,STR1> T<43,anon_ptr.,8>
+        I4INTCONST 10 (0xa)
+        U8INTCONST 0 (0x0)
+       U8ARRAY 1 1
+      U8PARM 1 T<43,anon_ptr.,8> #  by_reference 
+        U8LDA 0 <2,3,STR2> T<43,anon_ptr.,8>
+        I4INTCONST 10 (0xa)
+        U8INTCONST 0 (0x0)
+       U8ARRAY 1 1
+      U8PARM 1 T<43,anon_ptr.,8> #  by_reference 
+       I4INTCONST 10 (0xa)
+      I4PARM 2 T<4,.predef_I4,4> #  by_value 
+       I4INTCONST 10 (0xa)
+      I4PARM 2 T<4,.predef_I4,4> #  by_value 
+     I4CALL 2174 <1,37,LGT> # flags 0x87e
+    THEN
+     BLOCK
+ LOC 1 12 			     pos=len(str2)-len_trim(str2)
+          U8LDA 0 <2,3,STR2> T<43,anon_ptr.,8>
+          I4INTCONST 10 (0xa)
+          U8INTCONST 0 (0x0)
+         U8ARRAY 1 1
+        U8PARM 1 T<43,anon_ptr.,8> #  by_reference 
+         I4INTCONST 10 (0xa)
+        I4PARM 2 T<4,.predef_I4,4> #  by_value 
+       I4CALL 2174 <1,38,LEN> # flags 0x87e
+          U8LDA 0 <2,3,STR2> T<43,anon_ptr.,8>
+          I4INTCONST 10 (0xa)
+          U8INTCONST 0 (0x0)
+         U8ARRAY 1 1
+        U8PARM 1 T<43,anon_ptr.,8> #  by_reference 
+         I4INTCONST 10 (0xa)
+        I4PARM 2 T<4,.predef_I4,4> #  by_value 
+       I4CALL 2174 <1,39,LEN_TRIM> # flags 0x87e
+      I4SUB
+     I4STID 0 <2,1,POS> T<4,.predef_I4,4>
+ LOC 1 13 				  if(pos.EQ.7) then
+     IF
+       I4I4LDID 0 <2,1,POS> T<4,.predef_I4,4>
+       I4INTCONST 7 (0x7)
+      I4I4EQ
+     THEN
+      BLOCK
+ LOC 1 14 				    print *, "OK"
+      COMMENT <2,5,print *, "OK"> # 
+      PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+       IO_ITEM <1,NONE>
+       IO_ITEM <10,NONE>
+        I4INTCONST 3 (0x3)
+       IO_ITEM <73,FIRST_LAST_FLAG>
+        I4INTCONST 0 (0x0)
+       IO_ITEM <70,END_EOR_EOF_FLAG>
+        I4INTCONST 0 (0x0)
+       IO_ITEM <76,ENCODE_DECODE_FLAG>
+        U8LDA 0 <1,41,"OK"> T<34,anon_ptr.,8>
+        I8INTCONST 140763258159104 (0x800600000000)
+        U4INTCONST 2 (0x2)
+       IO_ITEM <96,CHAR> T<33,.ch_str.,1>
+      IO <22,FORMATTED_WRITE,cray> 2
+      PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+      END_BLOCK
+     ELSE
+ LOC 1 13
+      BLOCK
+ LOC 1 15 				  else
+ LOC 1 16 				    print *, "failed"
+      COMMENT <2,6,print *, "failed"> # 
+      PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+       IO_ITEM <1,NONE>
+       IO_ITEM <10,NONE>
+        I4INTCONST 3 (0x3)
+       IO_ITEM <73,FIRST_LAST_FLAG>
+        I4INTCONST 0 (0x0)
+       IO_ITEM <70,END_EOR_EOF_FLAG>
+        I4INTCONST 0 (0x0)
+       IO_ITEM <76,ENCODE_DECODE_FLAG>
+        U8LDA 0 <1,43,"failed"> T<51,anon_ptr.,8>
+        I8INTCONST 140763258159104 (0x800600000000)
+        U4INTCONST 6 (0x6)
+       IO_ITEM <96,CHAR> T<50,.ch_str.,1>
+      IO <22,FORMATTED_WRITE,cray> 2
+      PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+      END_BLOCK
+     END_IF
+     END_BLOCK
+    ELSE
+ LOC 1 11
+     BLOCK
+ LOC 1 17 				  end if
+ LOC 1 18 			   else
+ LOC 1 19 			     print *, "failed"
+     COMMENT <2,7,print *, "failed"> # 
+     PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+      IO_ITEM <1,NONE>
+      IO_ITEM <10,NONE>
+       I4INTCONST 3 (0x3)
+      IO_ITEM <73,FIRST_LAST_FLAG>
+       I4INTCONST 0 (0x0)
+      IO_ITEM <70,END_EOR_EOF_FLAG>
+       I4INTCONST 0 (0x0)
+      IO_ITEM <76,ENCODE_DECODE_FLAG>
+       U8LDA 0 <1,44,"failed"> T<51,anon_ptr.,8>
+       I8INTCONST 140763258159104 (0x800600000000)
+       U4INTCONST 6 (0x6)
+      IO_ITEM <96,CHAR> T<50,.ch_str.,1>
+     IO <22,FORMATTED_WRITE,cray> 2
+     PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+     END_BLOCK
+    END_IF
+    END_BLOCK
+   ELSE
+ LOC 1 9
+    BLOCK
+ LOC 1 20 			   end if
+ LOC 1 21 			
+ LOC 1 22 			else
+ LOC 1 23 			  print *, "failed"
+    COMMENT <2,8,print *, "failed"> # 
+    PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+     IO_ITEM <1,NONE>
+     IO_ITEM <10,NONE>
+      I4INTCONST 3 (0x3)
+     IO_ITEM <73,FIRST_LAST_FLAG>
+      I4INTCONST 0 (0x0)
+     IO_ITEM <70,END_EOR_EOF_FLAG>
+      I4INTCONST 0 (0x0)
+     IO_ITEM <76,ENCODE_DECODE_FLAG>
+      U8LDA 0 <1,45,"failed"> T<51,anon_ptr.,8>
+      I8INTCONST 140763258159104 (0x800600000000)
+      U4INTCONST 6 (0x6)
+     IO_ITEM <96,CHAR> T<50,.ch_str.,1>
+    IO <22,FORMATTED_WRITE,cray> 2
+    PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+    END_BLOCK
+   END_IF
+   END_BLOCK
+  ELSE
+ LOC 1 8
+   BLOCK
+ LOC 1 24 			end if
+ LOC 1 25 		  else
+ LOC 1 26 		    print *, "failed"
+   COMMENT <2,9,print *, "failed"> # 
+   PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+    IO_ITEM <1,NONE>
+    IO_ITEM <10,NONE>
+     I4INTCONST 3 (0x3)
+    IO_ITEM <73,FIRST_LAST_FLAG>
+     I4INTCONST 0 (0x0)
+    IO_ITEM <70,END_EOR_EOF_FLAG>
+     I4INTCONST 0 (0x0)
+    IO_ITEM <76,ENCODE_DECODE_FLAG>
+     U8LDA 0 <1,46,"failed"> T<51,anon_ptr.,8>
+     I8INTCONST 140763258159104 (0x800600000000)
+     U4INTCONST 6 (0x6)
+    IO_ITEM <96,CHAR> T<50,.ch_str.,1>
+   IO <22,FORMATTED_WRITE,cray> 2
+   PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+   END_BLOCK
+  END_IF
+  END_BLOCK
+ ELSE
+ LOC 1 6
+  BLOCK
+ LOC 1 27 		  end if
+ LOC 1 28 		
+ LOC 1 29 		else
+ LOC 1 30 		  print *, "failed"
+  COMMENT <2,10,print *, "failed"> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,47,"failed"> T<51,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 6 (0x6)
+   IO_ITEM <96,CHAR> T<50,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ END_IF
+ LOC 1 31 		end if
+ LOC 1 32 		end program main VCALL 2174 <1,21,_END> # flags 0x87e
+ RETURN
+ RETURN
+ END_BLOCK

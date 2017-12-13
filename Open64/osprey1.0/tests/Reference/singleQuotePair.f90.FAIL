@@ -1,0 +1,1 @@
+the string '''bla''' is translated into double quoted "bla" when it should be single quoted 'bla'

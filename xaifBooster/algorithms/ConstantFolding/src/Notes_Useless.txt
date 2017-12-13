@@ -1,0 +1,200 @@
+EdgeChecks.cpp
+/* useless code?
+  Assigment temp2=temp1.getConcretePartialAssignment();
+  Expression temp3=temp2.getRHS();
+  if (temp3.numVertices()==1) {
+    VertexIteratorPair temp4=temp3.vertices();
+    /*Value*/ temp5=temp4[0].operator*();
+    if (temp5.isConstant()) {
+      SymbolType::SymbolType_E temp6=temp5.getType();
+      if (temp5.getValue()==1) {
+	return 2;
+      }
+      else if (temp5.getValue()==-1) {  //need to ask about what trivial means for each type....
+	return 3;
+      }
+      return 1;
+    }   
+  }
+ return 0;
+}
+*/
+
+//put \/ in PrivateLinearizedComputationGraphAlg.cpp and make all needed files to go along with it...
+/*MemOpsTradeoffPreaccumulation::LinearizedComputationalGraphCopy::front_elim_edge/back_elim_edge
+
+
+  void BasicBlockPreaccumulation::PrivateLinearizedComputationalGraph::front_elim_edge(PrivateLinearizedComputationalGraphEdge& theEdge,
+							 xaifBoosterCrossCountryInterface::JacobianAccumulationExpressionList& theJacobianAccumulationExpressionList){
+
+    //iterator over outedges of theTarget
+    PrivateLinearizedComputationalGraph::OutEdgeIteratorPair outedges (getOutEdgesOf(getTargetOf(theEdge)));
+    PrivateLinearizedComputationalGraph::OutEdgeIterator oe=outedges.first, oend=outedges.second;
+    for(; oe != oend; ++oe){
+
+      opsum++;
+
+      JacobianAccumulationExpressionCopy* theExpression = new JacobianAccumulationExpressionCopy(theJacobianAccumulationExpressionList.addExpression());
+
+      //add first minimal vertex: the edge being eliminated, set its pointer appropriately
+      xaifBoosterCrossCountryInterface::JacobianAccumulationExpressionVertex& miniin = ((*theExpression).myExpression).addVertex();
+      if(theEdge.getRefType() == PrivateLinearizedComputationalGraphEdge::TO_INTERNAL_EXPRESSION){
+	miniin.setInternalReference((theEdge.getJacobianRef()).getMaximal());
+      }
+      else{
+        miniin.setExternalReference(theEdge.getOriginalRef());
+      }
+      //add second minimal vertex: edge out of theVertex
+      xaifBoosterCrossCountryInterface::JacobianAccumulationExpressionVertex& miniout = ((*theExpression).myExpression).addVertex();    
+      if((*oe).getRefType() == PrivateLinearizedComputationalGraphEdge::TO_INTERNAL_EXPRESSION){
+        miniout.setInternalReference(((*oe).getJacobianRef()).getMaximal());
+      }// end if
+      else{
+        miniout.setExternalReference((*oe).getOriginalRef());
+      }// end else
+      //create "mult" vertex and connect it to miniin and miniout
+      xaifBoosterCrossCountryInterface::JacobianAccumulationExpressionVertex& mult = ((*theExpression).myExpression).addVertex();
+      mult.setOperation(xaifBoosterCrossCountryInterface::JacobianAccumulationExpressionVertex::MULT_OP);
+      ((*theExpression).myExpression).addEdge(miniin, mult);
+      ((*theExpression).myExpression).addEdge(miniout, mult);
+      
+      //iterator used to check for a direct edge from source to target
+      PrivateLinearizedComputationalGraph::OutEdgeIteratorPair srcoutedges (getOutEdgesOf(getSourceOf(theEdge)));
+      PrivateLinearizedComputationalGraph::OutEdgeIterator srcoe = srcoutedges.first, srcoend = srcoutedges.second;
+      PrivateLinearizedComputationalGraphEdge* directEdge_pt = NULL;
+      for(; srcoe != srcoend; ++srcoe){
+	 //if there already was a direct edge from the source vertex to the target vertex, directEdge_pt is set to point to that edge
+        if(&getTargetOf(*srcoe) == &getTargetOf(*oe)){
+          directEdge_pt = &*srcoe;
+          break;
+        } //endif
+      }//end while
+      
+      PrivateLinearizedComputationalGraphEdge& theNewEdge = addEdge(getSourceOf(theEdge), getTargetOf(*oe));
+      
+      theNewEdge.setJacobianRef(theExpression);
+      if(directEdge_pt != NULL){        //create vertex for direct edge, and "add" vertex, point new edge to it
+        xaifBoosterCrossCountryInterface::JacobianAccumulationExpressionVertex& add = ((*theExpression).myExpression).addVertex();
+        add.setOperation(xaifBoosterCrossCountryInterface::JacobianAccumulationExpressionVertex::ADD_OP);
+        //add vertex for direct edge
+        xaifBoosterCrossCountryInterface::JacobianAccumulationExpressionVertex& minidirect = ((*theExpression).myExpression).addVertex();
+        if((*directEdge_pt).getRefType() == PrivateLinearizedComputationalGraphEdge::TO_INTERNAL_EXPRESSION){
+          minidirect.setInternalReference(((*directEdge_pt).getJacobianRef()).getMaximal());
+        }
+        else{
+          minidirect.setExternalReference((*directEdge_pt).getOriginalRef());
+        }
+	//connect "add" vertex to minidirect and mult
+        ((*theExpression).myExpression).addEdge(mult, add);
+        ((*theExpression).myExpression).addEdge(minidirect, add);
+        removeAndDeleteEdge(*directEdge_pt);
+        (*theExpression).setMaximal(add);
+      }// end if
+      else{      //point the new edge to "mult"
+        (*theExpression).setMaximal(mult);	  
+      }// end else
+    }// end outedge iteration
+
+    //if the front elimination isolates the vertex, delete the vertex (which automatically deletes the edge)
+    if(numInEdgesOf(getTargetOf(theEdge)) == 1){
+      removeFromVertexList(getTargetOf(theEdge));
+      removeAndDeleteVertex(getTargetOf(theEdge));
+    }// end if
+    // if the elimination does not isolate the target vertex, we simply delete the edge
+    else{
+      removeAndDeleteEdge(theEdge);
+    }
+
+  }// end front_elim_edge
+
+  void BasicBlockPreaccumulation::PrivateLinearizedComputationalGraph::back_elim_edge(PrivateLinearizedComputationalGraphEdge& theEdge,
+							xaifBoosterCrossCountryInterface::JacobianAccumulationExpressionList& theJacobianAccumulationExpressionList){
+
+    //iterator over inedges of theVertex
+    PrivateLinearizedComputationalGraph::InEdgeIteratorPair inedges (getInEdgesOf(getSourceOf(theEdge)));
+    PrivateLinearizedComputationalGraph::InEdgeIterator ie=inedges.first, iend=inedges.second;
+    for(; ie != iend; ++ie){
+
+      opsum++;
+
+      JacobianAccumulationExpressionCopy* theExpression = new JacobianAccumulationExpressionCopy(theJacobianAccumulationExpressionList.addExpression());
+
+      //add first minimal vertex: edge into theVertex
+      xaifBoosterCrossCountryInterface::JacobianAccumulationExpressionVertex& miniin = ((*theExpression).myExpression).addVertex();
+      if((*ie).getRefType() == PrivateLinearizedComputationalGraphEdge::TO_INTERNAL_EXPRESSION){
+        miniin.setInternalReference(((*ie).getJacobianRef()).getMaximal());
+      }
+      else{
+        miniin.setExternalReference((*ie).getOriginalRef());
+      }
+      //add second minimal vertex: the edge being eliminated
+      xaifBoosterCrossCountryInterface::JacobianAccumulationExpressionVertex& miniout = ((*theExpression).myExpression).addVertex();    
+      if(theEdge.getRefType() == PrivateLinearizedComputationalGraphEdge::TO_INTERNAL_EXPRESSION){
+        miniout.setInternalReference((theEdge.getJacobianRef()).getMaximal());
+      }// end if
+      else{
+        miniout.setExternalReference(theEdge.getOriginalRef());
+      }// end else
+      //create "mult" vertex and connect it to miniin and miniout
+      xaifBoosterCrossCountryInterface::JacobianAccumulationExpressionVertex& mult = ((*theExpression).myExpression).addVertex();
+      mult.setOperation(xaifBoosterCrossCountryInterface::JacobianAccumulationExpressionVertex::MULT_OP);
+      ((*theExpression).myExpression).addEdge(miniin, mult);
+      ((*theExpression).myExpression).addEdge(miniout, mult);
+      
+      //iterator used to check for a direct edge from source to target
+      PrivateLinearizedComputationalGraph::OutEdgeIteratorPair srcoutedges (getOutEdgesOf(getSourceOf(*ie)));
+      PrivateLinearizedComputationalGraph::OutEdgeIterator srcoe = srcoutedges.first, srcoend = srcoutedges.second;
+      PrivateLinearizedComputationalGraphEdge* directEdge_pt = NULL;
+      for(; srcoe != srcoend; ++srcoe){
+	//if there already was a direct edge from the source vertex to the target vertex, directEdge_pt is set to point to that edge
+        if(&getTargetOf(*srcoe) == &getTargetOf(theEdge)){
+          directEdge_pt = &*srcoe;
+          break;
+        } //endif
+      }//end while
+
+      PrivateLinearizedComputationalGraphEdge& theNewEdge = addEdge(getSourceOf(*ie), getTargetOf(theEdge));
+
+      theNewEdge.setJacobianRef(theExpression);
+      if(directEdge_pt != NULL){        //create vertex for direct edge, and "add" vertex, point new edge to it
+        xaifBoosterCrossCountryInterface::JacobianAccumulationExpressionVertex& add = ((*theExpression).myExpression).addVertex();
+        add.setOperation(xaifBoosterCrossCountryInterface::JacobianAccumulationExpressionVertex::ADD_OP);
+        //add vertex for direct edge
+        xaifBoosterCrossCountryInterface::JacobianAccumulationExpressionVertex& minidirect = ((*theExpression).myExpression).addVertex();
+        if((*directEdge_pt).getRefType() == PrivateLinearizedComputationalGraphEdge::TO_INTERNAL_EXPRESSION){
+          minidirect.setInternalReference(((*directEdge_pt).getJacobianRef()).getMaximal());
+        }
+        else{
+          minidirect.setExternalReference((*directEdge_pt).getOriginalRef());
+        }
+	//connect "add" vertex to minidirect and mult
+        ((*theExpression).myExpression).addEdge(mult, add);
+        ((*theExpression).myExpression).addEdge(minidirect, add);
+        removeAndDeleteEdge(*directEdge_pt);
+        (*theExpression).setMaximal(add);
+      }// end if
+      else{      //point the new edge to "mult"
+        (*theExpression).setMaximal(mult);	  
+      }// end else
+    }// end inedge iteration
+
+    if(numOutEdgesOf(getSourceOf(theEdge)) == 1){
+      const PrivateLinearizedComputationalGraph::ConstVertexPointerList& copyDependents = getDependentList();
+      // if the now isolated vertex is not a dependent
+      if(find(copyDependents.begin(), copyDependents.end(), &getSourceOf(theEdge)) == copyDependents.end()){
+	removeFromVertexList(getSourceOf(theEdge));
+	removeAndDeleteVertex(getSourceOf(theEdge));
+      }// end if
+      // is the source of the edge is a dependent vertex
+      else{
+	removeAndDeleteEdge(theEdge);
+      }// end else
+
+    }// end if
+    // if the vertex is not now isolated
+    else{
+      removeAndDeleteEdge(theEdge);
+    }// end else
+
+  }// end back_elim_edge
+*/

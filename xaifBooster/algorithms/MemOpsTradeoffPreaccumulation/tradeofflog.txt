@@ -1,0 +1,20 @@
+Andrew Lyons - SULI Intern
+Argonne National Laboratory
+Spring Semester 2004
+
+Log for implementation of memory tradeoff heuristic comparison
+
+
+(1/26/04) - Created empty functions forwardmode, reversemode, markowitzmode, elim_vertex
+(1/27/04) - Added pseudocode to compute_elimination_sequence and elim_vertex
+(1/28/04) - Added pseudocode to implement markowitz_mode, forward_mode, and reverse_mode
+(1/29/04) - Added function to add and append a JAE to the list
+
+
+(2/9/04) - Continue to work out bugs preventing compilation
+(2/10/04) - Function copies successfully, elim compiles, "segmentation fault"
+(2/11/04) - elim makes new edges and deletes direct edges, delete vertex causes seg fault
+(2/12/04) - able to make a bipartite graph, added expression class that holds pointer to maximal vertex, added routine to set expressions as jacobian
+
+
+*how to implement a tie-breaker?

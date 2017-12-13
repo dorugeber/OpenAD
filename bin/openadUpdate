@@ -1,0 +1,214 @@
+#!/usr/bin/env python
+##########################################################
+# This file is part of OpenAD released under the LGPL.   #
+# The full COPYRIGHT notice can be found in the top      #
+# level directory of the OpenAD distribution             #
+##########################################################
+
+import os
+import sys
+import time
+if (not os.environ.has_key("OPENADROOT")):
+  sys.stderr.write("ERROR: no OPENADROOT environment variable set, please use the setenv scripts and refer to the manual for details.\n")
+  sys.exit(-1)
+sys.path.append(os.environ["OPENADROOT"])
+import openadConfig
+sys.path.append(os.path.join(os.environ["OPENADROOT"],"tools","libpythontk"))
+import RunCmds
+import Repository
+
+class ParseException(Exception):
+  pass
+
+class OpenadUpdate:
+  def __init__(self,options):
+    dir = os.getcwd();
+    snm="openadUpdate."+time.strftime('%Y-%m-%d_%H:%M:%S', time.localtime())+".log~"
+    print "openadUpdate log: "+ snm
+    self.logfnm = os.path.join(dir,snm)
+    self.runCmdsDebug=1
+    if options.verbose :
+      self.runCmdsDebug=2
+    self.options=options
+    self.fileRevisions=None
+
+  def parseRevisionFile(self):
+    try: 
+      revisionFileHandle=open(self.options.revisionFile,'r')
+      self.fileRevisions={}
+      for theLine in revisionFileHandle:
+        (lPath,vPair)=theLine.split()
+        splitPair=vPair.split(':')
+        vType=None
+        vVer=None
+        if (len(splitPair) in [2,3]):
+          vType=splitPair[0]
+          vVer=splitPair[-1]
+        else: 
+          raise ParseException('problem parsing specified revision file on line: '+theLine)
+        if (lPath=='../OpenAD'):
+          lPath='.'
+        if (lPath=='boost/boost'):
+          # something in the boost setup prevents the update for the latest 
+	  # branch revision on the given branch
+  	  continue
+        if vType=='hg' and vVer[-1]=='+':
+          vVer=vVer[:-1]
+        if vType!='cvs':
+          self.fileRevisions[lPath]=vVer
+    except IOError, e:
+      sys.stderr.write('ERROR: handling specified revision file '+str(self.options.revisionFile)+' '+str(e)+'\n')
+      raise e
+  
+  def getRevisionFromFile(self,repo):
+    if not self.options.revisionFile:
+      return None
+    if not self.fileRevisions:
+      self.parseRevisionFile()
+    localRelPath=repo.getLocalRepoPath()[len(os.environ["OPENADROOT"])+1:]
+    if localRelPath in self.fileRevisions:
+      return self.fileRevisions[localRelPath]
+    return None
+
+  def Run(self):
+    oaCfg=openadConfig.openadConfig(self.options.tests,self.options.extras,self.options.development)
+    repositories=oaCfg.getRepos()
+    cmdDescVecRef = []
+    for key in oaCfg.orderedRepoList:
+      repoPair=repositories[key]
+      actRepo=None
+      # if we don't have repository info, then this is external to us
+      if repoPair[0].getUrl() is None:
+        sys.stdout.write('WARNING: '+repoPair[0].getLocalRepoPath()+' has no repository information, no updates will be done\n')
+        sys.stdout.flush()
+        continue
+      if repoPair[0].repoExists():
+	if os.path.islink(repoPair[0].getLocalName()):
+	  sys.stdout.write('WARNING: '+repoPair[0].getLocalRepoPath()+' is a link, no updates will be done\n')
+          sys.stdout.flush()
+          continue
+        try:
+          actRepo=Repository.Detect.makeRepo(os.path.join(repoPair[0].getLocalPath(),repoPair[0].getLocalName()),
+                                             repoPair[0].getSubdir())
+          if (actRepo.getUrl()==repoPair[0].getUrl()
+              and
+              actRepo.getTag()==repoPair[0].getTag()) :
+            fRev=self.getRevisionFromFile(repoPair[0])
+            if fRev:
+              repoPair[0].rev=fRev
+	    if  self.options.force : 
+	      repoPair[0].force=True
+            repoPair[0].update() # sets CmdDesc to update repository
+          else:
+            if (self.options.development):
+              if (actRepo.getUrl()!=repoPair[0].getUrl()
+                  or
+                  actRepo.getTag()!=repoPair[0].getTag()):
+                sys.stdout.write('NOTE: development repo URL '+actRepo.getUrl()+' for '+actRepo.getLocalRepoPath()+'\n')
+              fRev=self.getRevisionFromFile(repoPair[0])
+              if fRev:
+                actRepo.rev=fRev
+              actRepo.update() # sets CmdDesc to update the actual repository
+              repoPair=(actRepo,True)
+            else:   
+              sys.stdout.write('WARNING: for '+repoPair[0].getLocalName()+' mismatched ')
+              if (str(actRepo.getUrl())!=str(repoPair[0].getUrl())) : 
+                sys.stdout.write('URL: \n\tcurrent: '+str(actRepo.getUrl())+'\n\tconfig : '+str(repoPair[0].getUrl())+'\n')
+              elif (actRepo.getTag()!=repoPair[0].getTag()) : 
+                sys.stdout.write('tag: \n\tcurrent: '+str(actRepo.getTag())+'\n\tconfig : '+str(repoPair[0].getTag())+'\n')
+              if (not self.options.force and raw_input("\tThe current repository will be deleted and a new repository will be created, continue? (y)/n: ")) == "n" :
+                sys.stdout.flush()
+                fRev=self.getRevisionFromFile(repoPair[0])
+                if fRev:
+                  repoPair[0].rev=fRev
+                repoPair[0].update() # sets CmdDesc to update repository
+              else :
+		cmd=RunCmds.CmdDesc()
+		cmd.setCmd("rm -rf "+os.path.join(repoPair[0].getLocalPath(),repoPair[0].getLocalName()))
+		cmd.setDesc("removing "+os.path.join(repoPair[0].getLocalPath(),repoPair[0].getLocalName()))
+                cmdDescVecRef.append(cmd)
+                fRev=self.getRevisionFromFile(repoPair[0])
+                if fRev:
+                  repoPair[0].rev=fRev
+                repoPair[0].checkout() # check out repository
+        except (RunCmds.RunnerException), e:
+          if self.options.keepGoing:
+            sys.stderr.write('ERROR: '+str(e)+'... continuing\n')
+            continue
+          else:
+            raise e
+        except (Repository.RepositoryException), e:
+          if self.options.keepGoing:
+            sys.stderr.write('ERROR: '+str(e)+'... continuing\n')
+            continue
+          else:
+            raise e
+      else:
+        try: 
+          repoPair[0].checkout() # check out repository
+        except (Repository.RepositoryException, RunCmds.RunnerException), e:
+          if self.options.keepGoing:
+            sys.stderr.write('ERROR: '+str(e)+'... continuing\n')
+            continue
+          else:
+            raise e
+      cmdDescVecRef.append(repoPair[0].cmdDesc)
+    RunCmds.Runner(self.runCmdsDebug,self.options.interactive, self.logfnm, self.options.keepGoing).doit(cmdDescVecRef)
+
+def main():
+  from optparse import OptionParser
+  os.chdir(os.environ["OPENADROOT"])
+  usage = '%prog [options]\n\t get or update OpenAD repositories'
+  opt = OptionParser(usage=usage)
+  opt.add_option('-e','--extras',dest='extras',
+                 help="include repositories for revolve and examples referenced in the User Manual (requires Mercurial)",
+                 action='store_true',default=False)
+  opt.add_option('-f','--force',dest='force',
+                 help="do all actions, no confirmations (even when repositories are deleted), implies -k",
+                 action='store_true',default=False)
+  opt.add_option('-i','--interactive',dest='interactive',
+                 help="requires to confirm each command",
+                 action='store_true',default=False)
+  opt.add_option('-k','--keepGoing',dest='keepGoing',
+                 help="keep going despite errors",
+                 action='store_true',default=False)
+  opt.add_option('-t','--tests',dest='tests',
+                 help="include repositories for test cases (requires Mercurial)",
+                 action='store_true',default=False)
+  opt.add_option('--revisionFile',dest='revisionFile',
+                 help="takes the output of \'opendadStatus -t\' as  an input file to update to specific component revisions",
+                 metavar='<file_name>',
+                 default=None)
+  opt.add_option('-v','--verbose',dest='verbose',
+                 help="extra output",
+                 action='store_true',default=False)
+  opt.add_option('-d','--development',dest='development',
+                 help="only for developers!: adjust updates for Mercurial development repositories",
+                 action='store_true',default=False)
+  (options, args) = opt.parse_args()
+  if (args): 
+    opt.error("accepts given arguments ("+' '.join(map(str,args))+") only for a preceding option")
+  if (options.verbose):
+    sys.stdout.write("running for OPENADROOT="+os.environ["OPENADROOT"])
+  if (options.force):
+    options.keepGoing=True
+    if (options.interactive):
+      opt.error("options -f and -i are mutually exclusive")
+  try: 
+    os.chdir(os.environ["OPENADROOT"])
+    cfgOldMtime=os.stat('openadConfig.py').st_mtime
+    oadU = OpenadUpdate(options)
+    oadU.Run()
+    if (cfgOldMtime!=os.stat('openadConfig.py').st_mtime):
+      sys.stdout.write('NOTE: the update changed the repository configuration, rerunning the update.\n')
+      reload(openadConfig)
+      oadU = OpenadUpdate(options)
+      oadU.Run()
+  except (Repository.RepositoryException, RunCmds.RunnerException, ParseException), e:
+    sys.stderr.write('ERROR: '+str(e)+'\n')
+    opt.print_help()
+    return 1
+  return 0
+
+if __name__ == "__main__":
+  sys.exit(main())

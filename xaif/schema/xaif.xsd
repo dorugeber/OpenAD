@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<!--
+ ##########################################################
+ # This file is part of xaif.                             #
+ # The full COPYRIGHT notice can be found in the top      #
+ # level directory of the xaif source tree.               #
+ # For more information visit                             #
+ # http://www.mcs.anl.gov/xaif       and                  #
+ # http://www.mcs.anl.gov/openad                          #
+ ##########################################################
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xaif="http://www.mcs.anl.gov/XAIF"
+            targetNamespace="http://www.mcs.anl.gov/XAIF"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xmlns="http://www.mcs.anl.gov/XAIF"
+            version="xaif 1.0"
+            elementFormDefault="qualified"
+	    attributeFormDefault="unqualified">       
+
+<xsd:include id="xaif_base.xsd" schemaLocation="xaif_base.xsd"/>
+
+</xsd:schema>

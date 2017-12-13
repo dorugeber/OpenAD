@@ -1,0 +1,33 @@
+$Id: README,v 1.5 2003/12/29 21:07:56 eraxxon Exp $
+
+=============================================================================
+==
+== README
+==
+== xercesc
+==
+=============================================================================
+
+This is the README for the version of Xerces-C++ that is distributed
+with HPCToolkit.  HPCToolkit uses Xerces-C++ to parse XML data files.
+
+This directory contains a complete version of Xerces-C++ that has been
+tested with HPCToolkit.  Also, we have added a top level makefile to
+simplify the building process when used with HPCToolkit.
+
+It is not strictly necessary to use this version of Xerces, but we do
+not currently support other situations.  Consequently, we strongly
+encourage the use of this version of Xerces-C++ with HPCToolkit.
+
+For further information on Xerces-C++, see
+  http://xml.apache.org/
+  http://xml.apache.org/xerces-c/
+
+For further information on HPCToolkit, see
+  http://www.hipersoft.rice.edu/hpctoolkit
+
+
+=============================================================================
+
+Some files have been very slightly modified (originals exist as *.ORIG).
+

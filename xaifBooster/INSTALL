@@ -1,0 +1,38 @@
+If xaifBooster is to be built within OpenAD please see the 
+OpenAD build instructions at 
+www.mcs.anl.gov/OpenAD
+
+If xaifBooster is to be built stand alone 
+the following environment variables to be set: 
+
+XERCESCROOT       the path to the xerces install 
+		  e.g. XERCESCROOT=/sandbox/xerces-c-src_2_3_0
+BOOSTROOT         the path to the boost install 
+		  e.g.  BOOSTROOT=/sandbox/boost_1_29_0
+XAIFBOOSTERROOT   the path to the xaifBooster installation, 
+		  i.e. the *parent* of the xaifBooster directory, 
+		  e.g. XAIFBOOSTERROOT=/sandbox/xaifBooster_current
+ANGELROOT         the path to the ANGEL install, 
+	          e.g. ANGELROOT=/sandbox/CVS/angel
+                  Note, that in order to build ANGEL for use i
+                  with xaifBooster edit 
+		  $(ANGELROOT)/specs/lib_usage.conf and make sure
+			CPPFLAGS	+= -DUSE_XAIF
+		  and 
+			CPPFLAGS	+= -I$(XAIF_DIR)
+		  are not commented out and XAIF_DIR (used by the angel build) 
+		  is set to the same value as XAIFBOOSTERROOT
+
+before any make do: 
+
+	cd ${XAIFBOOSTERROOT}/xaifBooster
+
+to make all object files, support libraries and the main drivers:  
+	make 
+
+to make all drivers: 
+	make driver
+
+to create doxygen html files: 
+	make doc
+

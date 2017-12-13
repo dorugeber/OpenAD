@@ -1,0 +1,2 @@
+povray -Ititle_r.pov -W640 -H630 +d
+

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+        subroutine head(x,y)
+          double precision x,y
+                                                                                
+          do while (y<x)
+            y=x+1
+            continue
+            y=x+1
+          end do
+                                                                                
+        end subroutine
+-->
+
+<xaif:CallGraph xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xaif="http://www.mcs.anl.gov/XAIF"
+       xsi:schemaLocation="http://www.mcs.anl.gov/XAIF ../xaif.xsd"
+       program_name="Example 2">
+
+  <xaif:ScopeHierarchy>
+
+    <xaif:Scope vertex_id="1">
+      <xaif:SymbolTable>
+        <xaif:Symbol symbol_id="head" kind="subroutine" type="void"/>
+      </xaif:SymbolTable>
+    </xaif:Scope>
+
+    <xaif:Scope vertex_id="2">
+      <xaif:SymbolTable>
+        <xaif:Symbol symbol_id="x"/>
+        <xaif:Symbol symbol_id="y"/>
+      </xaif:SymbolTable>
+    </xaif:Scope>
+
+    <xaif:ScopeEdge edge_id="1" source="2" target="1"/>
+
+  </xaif:ScopeHierarchy>
+
+  <xaif:AliasSetMap>
+    <xaif:AliasSet key="0">
+      <xaif:AliasRange from_virtual_address="1" to_virtual_address="1"/>
+    </xaif:AliasSet>
+  </xaif:AliasSetMap>
+
+  <xaif:DUUDSetMap>
+    <xaif:StmtIdSet key="0">
+    </xaif:StmtIdSet>
+  </xaif:DUUDSetMap>
+
+  <xaif:DOSetMap>
+    <xaif:StmtIdSet key="0">
+    </xaif:StmtIdSet>
+  </xaif:DOSetMap>
+
+
+
+  <xaif:ControlFlowGraph vertex_id="1" symbol_id="head" scope_id="1" controlflowgraph_scope_id="2">
+
+     <xaif:ArgumentList>
+       <xaif:ArgumentSymbolReference position="2" symbol_id="x" scope_id="2"/>
+       <xaif:ArgumentSymbolReference position="3" symbol_id="y" scope_id="2"/>
+     </xaif:ArgumentList>
+
+     <xaif:Entry vertex_id="1"/>
+
+     <xaif:PreLoop vertex_id="2">
+       <xaif:Condition>
+         <xaif:BooleanOperation vertex_id="1" name="less_than"/>
+         <xaif:VariableReference vertex_id="2">
+           <xaif:SymbolReference vertex_id="1" symbol_id="y" scope_id="2"/>
+         </xaif:VariableReference>
+         <xaif:VariableReference vertex_id="3">
+           <xaif:SymbolReference vertex_id="1" symbol_id="x" scope_id="2"/>
+         </xaif:VariableReference>
+         <xaif:ExpressionEdge edge_id="1" source="2" target="1" position="1"/>
+         <xaif:ExpressionEdge edge_id="2" source="3" target="1" position="2"/>
+       </xaif:Condition>
+     </xaif:PreLoop>
+
+     <xaif:BasicBlock vertex_id="3" scope_id="2">
+       <xaif:Assignment statement_id="1"> 
+         <xaif:AssignmentLHS>
+           <xaif:SymbolReference vertex_id="1" symbol_id="y" scope_id="2"/>
+         </xaif:AssignmentLHS>
+         <xaif:AssignmentRHS>
+           <xaif:VariableReference vertex_id="1">
+             <xaif:SymbolReference vertex_id="1" symbol_id="x" scope_id="2"/>
+           </xaif:VariableReference>
+           <xaif:Constant vertex_id="2" type="integer" value="1"/>
+           <xaif:Intrinsic vertex_id="3" name="add_scal_scal"/>
+           <xaif:ExpressionEdge edge_id="1" source="1" target="3" position="1"/>
+           <xaif:ExpressionEdge edge_id="2" source="2" target="3" position="2"/>
+         </xaif:AssignmentRHS>
+       </xaif:Assignment>      
+     </xaif:BasicBlock>
+
+     <xaif:Goto vertex_id="4"/>
+
+     <xaif:BasicBlock vertex_id="5" scope_id="2">
+       <xaif:Assignment statement_id="2"> 
+         <xaif:AssignmentLHS>
+           <xaif:SymbolReference vertex_id="1" symbol_id="y" scope_id="2"/>
+         </xaif:AssignmentLHS>
+         <xaif:AssignmentRHS>
+           <xaif:VariableReference vertex_id="1">
+             <xaif:SymbolReference vertex_id="1" symbol_id="x" scope_id="2"/>
+           </xaif:VariableReference>
+           <xaif:Constant vertex_id="2" type="integer" value="1"/>
+           <xaif:Intrinsic vertex_id="3" name="add_scal_scal"/>
+           <xaif:ExpressionEdge edge_id="1" source="1" target="3" position="1"/>
+           <xaif:ExpressionEdge edge_id="2" source="2" target="3" position="2"/>
+         </xaif:AssignmentRHS>
+       </xaif:Assignment>      
+     </xaif:BasicBlock>
+
+     <xaif:EndLoop vertex_id="6"/>
+
+     <xaif:Exit vertex_id="7"/>
+
+     <xaif:ControlFlowEdge edge_id="1" source="1" target="2"/>
+     <xaif:ControlFlowEdge edge_id="2" source="2" target="3" has_condition_value="true"/>
+     <xaif:ControlFlowEdge edge_id="3" source="3" target="4"/>
+     <xaif:ControlFlowEdge edge_id="4" source="4" target="2"/>
+     <xaif:ControlFlowEdge edge_id="5" source="5" target="6"/>
+     <xaif:ControlFlowEdge edge_id="6" source="6" target="2"/>
+     <xaif:ControlFlowEdge edge_id="7" source="2" target="7"/>
+
+  </xaif:ControlFlowGraph>
+
+</xaif:CallGraph>

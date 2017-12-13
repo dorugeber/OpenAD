@@ -1,0 +1,96 @@
+ LOC 0 0 source files:	1	"/m_home/m_utkej/Argonne/Dev/Current/OpenAD/Open64/osprey1.0/tests/sumDble.f90"
+ LOC 1 1 program sumVar
+FUNC_ENTRY <1,20,sumvar_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 2 	real :: v(3)
+ LOC 1 3         double precision :: s
+ LOC 1 4 	v(1)=1.0
+  F4CONST <1,22,____1.000000>
+   U8LDA 0 <2,2,V> T<30,anon_ptr.,8>
+   I4INTCONST 3 (0x3)
+   I4INTCONST 1 (0x1)
+  U8ARRAY 1 4
+ F4ISTORE 0 T<31,anon_ptr.,8>
+ LOC 1 5 	v(2)=2.0
+  F4CONST <1,23,____2.000000>
+   U8LDA 0 <2,2,V> T<30,anon_ptr.,8>
+   I4INTCONST 3 (0x3)
+   I4INTCONST 2 (0x2)
+  U8ARRAY 1 4
+ F4ISTORE 0 T<31,anon_ptr.,8>
+ LOC 1 6 	v(3)=3.0
+  F4CONST <1,24,____3.000000>
+   U8LDA 0 <2,2,V> T<30,anon_ptr.,8>
+   I4INTCONST 3 (0x3)
+   I4INTCONST 3 (0x3)
+  U8ARRAY 1 4
+ F4ISTORE 0 T<31,anon_ptr.,8>
+ LOC 1 7 	s=sum(dble(v))
+ BODY
+       U8LDA 0 <2,2,V> T<30,anon_ptr.,8>
+      F4F4ILOAD 0 T<10,.predef_F4,4> T<31,anon_ptr.,8>
+     U8PARM 1 T<10,.predef_F4,4> #  by_reference 
+    F8CALL 2174 <1,26,DBLE> # flags 0x87e
+   U8PARM 1 T<11,.predef_F8,8> #  by_reference 
+  F8CALL 2174 <1,25,SUM> # flags 0x87e
+ F8STID 0 <2,1,S> T<11,.predef_F8,8>
+ LOC 1 8 	if (s==6.0D0) then 
+ IF
+   F8F8LDID 0 <2,1,S> T<11,.predef_F8,8>
+   F8CONST <1,27,____6.000000000000000>
+  I4F8EQ
+ THEN
+  BLOCK
+ LOC 1 9 	print *,'OK'
+  COMMENT <2,4,print *,'OK'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,29,"OK"> T<37,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 2 (0x2)
+   IO_ITEM <96,CHAR> T<36,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ ELSE
+ LOC 1 8
+  BLOCK
+ LOC 1 10 	else 	
+ LOC 1 11 	print *,'FAILED'
+  COMMENT <2,5,print *,'FAILED'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,31,"FAILED"> T<40,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 6 (0x6)
+   IO_ITEM <96,CHAR> T<39,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ END_IF
+ LOC 1 12 	end if
+ LOC 1 13 end program
+ VCALL 2174 <1,21,_END> # flags 0x87e
+ RETURN
+ RETURN
+ END_BLOCK

@@ -1,0 +1,121 @@
+# ========== begin copyright notice ===================
+# This file is part of
+# ---------------
+# xaifBooster
+# ---------------
+# which is distributed under the BSD license.
+# The full COPYRIGHT notice can be found in the top
+# level directory of the xaifBooster distribution.
+# ========== end copyright notice =====================
+
+ifndef XERCESCROOT
+  $(error "Error:  environment variable XERCESCROOT not defined!")
+endif
+
+ifndef BOOSTROOT
+  $(error "Error:  environment variable BOOSTROOT not defined!")
+endif
+
+ifndef XAIFBOOSTERROOT
+  $(error "Error:  environment variable XAIFBOOSTERROOT not defined!")
+endif
+
+export ROOTDIR=xaifBooster
+
+export FLIST=$(basename $(wildcard *.cpp))
+
+export XERCESC_LIB=$(XERCESCROOT)/lib/libxerces-c.a
+export XERCESC_INCLUDE_DIR=$(XERCESCROOT)/include
+
+export BOOST_INCLUDE_DIR=$(BOOSTROOT)
+
+export SYSTEM_OBJ_SET=$(addsuffix .o, $(addprefix $(XAIFBOOSTERROOT)/$(ROOTDIR)/system/src/obj/, $(basename $(notdir $(wildcard $(XAIFBOOSTERROOT)/$(ROOTDIR)/system/src/*.cpp)))))
+
+export SYSTEM_INC_DIR=$(XAIFBOOSTERROOT)
+
+export UTILS_LIB_NAME=xaifBoosterutils
+export UTILS_LIB_DIR=$(XAIFBOOSTERROOT)/$(ROOTDIR)/utils/lib
+export UTILS_LIB=$(UTILS_LIB_DIR)/lib$(UTILS_LIB_NAME).a
+
+export IPATH= \
+-I$(SYSTEM_INC_DIR) \
+-I$(XERCESC_INCLUDE_DIR) \
+-I$(BOOST_INCLUDE_DIR)
+
+CC=
+ifndef PLATFORM
+PLATFORM=${OPENADPLATFORM}
+endif 
+ifeq ($(PLATFORM),i686-Cygwin)
+include $(XAIFBOOSTERROOT)/$(ROOTDIR)/Makefile.incl.x86-Linux
+endif
+ifeq ($(PLATFORM),x86-Cygwin)
+include $(XAIFBOOSTERROOT)/$(ROOTDIR)/Makefile.incl.x86-Linux
+endif
+ifeq ($(PLATFORM),x86-Linux)
+include $(XAIFBOOSTERROOT)/$(ROOTDIR)/Makefile.incl.$(PLATFORM)
+endif
+ifeq ($(PLATFORM),x86_64-Linux)
+include $(XAIFBOOSTERROOT)/$(ROOTDIR)/Makefile.incl.x86-Linux
+endif
+ifeq ($(PLATFORM),i686-Linux)
+include $(XAIFBOOSTERROOT)/$(ROOTDIR)/Makefile.incl.x86-Linux
+endif
+ifeq ($(PLATFORM),x86-MacOS)
+include $(XAIFBOOSTERROOT)/$(ROOTDIR)/Makefile.incl.$(PLATFORM)
+export XERCESC_LIB=$(XERCESCROOT)/lib/libxerces-c.dylib
+endif
+ifeq ($(PLATFORM),sparc-SunOS)
+include $(XAIFBOOSTERROOT)/$(ROOTDIR)/Makefile.incl.$(PLATFORM)
+endif
+ifndef CC
+  $(error "Error:  platform $(PLATFORM) not configured!")
+endif
+
+export LIBS += $(XERCESC_LIB) $(UTILS_LIB)
+
+export OBJS=$(addprefix obj/, $(addsuffix .o, $(FLIST)))
+
+# include the dependency information 
+export DEPINCL = $(addprefix obj/, $(addsuffix .d, $(FLIST)))
+
+# make object dir
+obj: 
+	mkdir  obj
+
+clean: 
+	rm -rf obj $(CLEANTARGETS)
+
+.PHONY: clean
+
+# compile the objects
+# as part of this we create dependency information 
+# 1: Remove old dependencies
+# 2: invoke compiler to create raw dependencies with processId attached
+# 3: replace target by prepending the 'obj' subdirectory and adding the dependency file itself
+# 4: copy the resulting file back
+# appending to the dependencies:
+# 5: all lines with the original targets removed
+# 6: the line continuation removed
+# 7: all empty lines removed
+# 8: the remaining lines ended with ':'
+# in order to represent all prerequisites as targets to deal with 
+# removed prerequisites
+obj/%.o: %.cpp
+	@set -e; rm -f $*.d; \
+	   $(MAKEDEPEND) $< > obj/$*.d.$$$$; \
+	   sed -e 's,\($*\)\.o[ :]*,obj/\1.o obj/\1.d : ,g' < obj/$*.d.$$$$ > obj/$*.d; \
+           cp obj/$*.d obj/$*.d.$$$$; \
+           sed -e 's,^[^:]*: *,,' \
+	       -e 's, *\\$$,,' \
+	       -e '/^$$/ d' \
+	       -e 's,$$, :,' < obj/$*.d.$$$$ >> obj/$*.d; \
+	   rm -f obj/$*.d.$$$$
+	$(CC) $(CCFLAGS) $(IPATH) -c $< -o $@
+
+buildStamp.hpp: FORCE
+	$(XAIFBOOSTERROOT)/xaifBooster/createBuildStamp.sh
+
+FORCE:
+
+export DOXYGEN = doxygen

@@ -1,0 +1,1 @@
+the  front end drops information about the public and private qualifiers and does not distinguish in the symbol table reference between A1::foo and B1::foo;  see <a href="http://trac.mcs.anl.gov/projects/openAD/ticket/162">bug report</a>.

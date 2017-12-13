@@ -1,0 +1,66 @@
+This Analysis is specific to ForTran
+
+Def-Use Activity Analysis
+-------------------------
+
+Changes:
+--------
+
+ICFGDep.hpp:
+
+L49: (added)
+    //! Return an iterator over all records in mDepDFSet
+  std::map<StmtHandle,OA_ptr<DepDFSet> >& getDepMap(){ return mDepDFSet;};
+
+
+
+OAMaps.cxx:
+
+L210: (added)
+  // Def-Use Graph
+  FORTTK_MSG(1, "progress: DUG standard: performAnalysis");
+  OA::OA_ptr<OA::DUG::ManagerDUGStandard> dugman;
+  dugman = new OA::DUG::ManagerDUGStandard(irIF);
+  OA::OA_ptr<OA::DUG::DUGStandard> dug
+      = dugman->performAnalysis(icfg, parambind, interAlias);
+
+
+ManagerICFGDep.cpp:
+
+L277: (added)
+    // map ProcHandle to stmt in depResults
+    mDep->mapStmtToProc(stmt, proc);
+
+
+
+
+July. 30. 2009
+--------------------------------------------------
+- Merged Jean Utke's changes into CSFIActivity.ori to make
+  CSFIActivity.merge. These include "NONEFORMAL_NODE" and
+  "activeWithVariedOnly". 
+
+
+
+
+July. 31. 2009
+--------------------------------------------------
+Problem: 
+  Because of the exponential growth of the number of all paths among PARAM
+  nodes, the time took forever when there was 41 PARAM nodes. 
+
+Solution:
+  For all pairs of actual parameters that are mapped to a pair of formal
+  parameters that have a PARAM_EDGE between them, we add a FLOW_EDGE and no
+  PARAM_EDGE's are generated.
+
+Changes:
+- ManagerDUGStandard.cpp:867 -> commented
+// 		insertEdge(formal1, formal2, PARAM_EDGE, CallHandle(0), proc, proc, proc);
+
+- ManagerDUGStandard.cpp:876 -> inserted
+		    assert(set2.size() == 1); // only one actual can be assigned
+
+- ManagerDUGStandard.cpp:882 -> inserted
+			    insertEdge(*i1, *i2, CFLOW_EDGE, CallHandle(0), caller, caller, caller);
+

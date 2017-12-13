@@ -1,0 +1,157 @@
+ LOC 0 0 source files:	1	"/m_home/m_utkej/Argonne/Dev/Current/OpenAD/Open64/osprey1.0/tests/shapeReshape.f90"
+ LOC 1 1 module bla
+FUNC_ENTRY <1,20,bla_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ END_BLOCK
+ LOC 1 2 end module
+ LOC 1 3 
+ LOC 1 4 subroutine head(x,y)
+FUNC_ENTRY <1,21,head_>
+ IDNAME 0 <2,1,X>
+ IDNAME 0 <2,2,Y>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 5  integer, dimension(:,:) :: x
+ LOC 1 6  integer, dimension(10) :: y
+ LOC 1 7  y = reshape(x,shape(y))
+ BODY
+     U8U8LDID 0 <2,1,X> T<31,anon_ptr.,8>
+    I4I4ILOAD 0 T<4,.predef_I4,4> T<36,anon_ptr.,8>
+   U8PARM 1 T<4,.predef_I4,4> #  by_reference 
+       U8U8LDID 0 <2,2,Y> T<33,anon_ptr.,8>
+      I4I4ILOAD 0 T<4,.predef_I4,4> T<36,anon_ptr.,8>
+     U8PARM 1 T<4,.predef_I4,4> #  by_reference 
+    I4CALL 2174 <1,23,SHAPE> # flags 0x87e
+   U8PARM 1 T<4,.predef_I4,4> #  by_reference 
+### attention: null WN pointer, place holder
+### attention: null WN pointer, place holder
+  I4CALL 2174 <1,22,RESHAPE> # flags 0x87e
+    U8U8LDID 0 <2,2,Y> T<33,anon_ptr.,8>
+    I4INTCONST 10 (0xa)
+     I4INTCONST 1 (0x1)
+     I4INTCONST 10 (0xa)
+     I4INTCONST 1 (0x1)
+    I8SRCTRIPLET
+   U8ARRSECTION 1 4
+   I4INTCONST 1 (0x1)
+  U8ARRAYEXP 2
+ I4ISTORE 0 T<36,anon_ptr.,8>
+ LOC 1 8 end subroutine
+ RETURN
+ END_BLOCK
+ LOC 1 9 
+ LOC 1 10 program main
+FUNC_ENTRY <1,24,main_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ INTERFACE <2,5,unnamed interface>
+ BODY
+  FUNC_ENTRY <1,21,head_>
+   IDNAME 0 <2,3,X>
+   IDNAME 0 <2,4,Y>
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 15   end subroutine
+ LOC 1 16  end interface
+ LOC 1 17  integer, dimension(2,5) :: x
+ LOC 1 18  integer, dimension(10) :: y
+ LOC 1 19  x(2,3)=6
+  I4INTCONST 6 (0x6)
+   U8LDA 0 <2,1,X> T<40,anon_ptr.,8>
+   I4INTCONST 5 (0x5)
+   I4INTCONST 2 (0x2)
+   I4INTCONST 3 (0x3)
+   I4INTCONST 2 (0x2)
+  U8ARRAY 2 4
+ I4ISTORE 0 T<36,anon_ptr.,8>
+ LOC 1 20  call head(x,y)
+    U8LDA 0 <2,1,X> T<40,anon_ptr.,8>
+   I4I4ILOAD 0 T<4,.predef_I4,4> T<36,anon_ptr.,8>
+  U8PARM 32769 T<4,.predef_I4,4> #  by_reference MAKE_DV 
+    U8LDA 0 <2,2,Y> T<33,anon_ptr.,8>
+   I4I4ILOAD 0 T<4,.predef_I4,4> T<36,anon_ptr.,8>
+  U8PARM 257 T<4,.predef_I4,4> #  by_reference PASS_ADDRESS 
+ VCALL 2174 <1,21,head_> # flags 0x87e
+ LOC 1 21  if (y(6) .eq. 6) then 
+ IF
+     U8LDA 0 <2,2,Y> T<33,anon_ptr.,8>
+     I4INTCONST 10 (0xa)
+     I4INTCONST 6 (0x6)
+    U8ARRAY 1 4
+   I4I4ILOAD 0 T<4,.predef_I4,4> T<36,anon_ptr.,8>
+   I4INTCONST 6 (0x6)
+  I4I4EQ
+ THEN
+  BLOCK
+ LOC 1 22     write(*,*) 'OK'
+  COMMENT <2,7,write(*,*) 'OK'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,27,"OK"> T<44,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 2 (0x2)
+   IO_ITEM <96,CHAR> T<43,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ ELSE
+ LOC 1 21
+  BLOCK
+ LOC 1 23  else
+ LOC 1 24     write(*,*) 'failed; yields', y(6), ' expected 6'
+  COMMENT <2,8,write(*,*) 'failed; yields', y(6), ' expected 6'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,29,"failed;_yields"> T<49,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 14 (0xe)
+   IO_ITEM <96,CHAR> T<46,.ch_str.,1>
+      U8LDA 0 <2,2,Y> T<33,anon_ptr.,8>
+      I4INTCONST 10 (0xa)
+      I4INTCONST 6 (0x6)
+     U8ARRAY 1 4
+    I4I4ILOAD 0 T<4,.predef_I4,4> T<36,anon_ptr.,8>
+    I8INTCONST 562958543355904 (0x2000200000000)
+   IO_ITEM <98,EXPR> T<4,.predef_I4,4>
+    U8LDA 0 <1,30,"_expected_6"> T<48,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 11 (0xb)
+   IO_ITEM <96,CHAR> T<47,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ END_IF
+ LOC 1 25  end if 
+ LOC 1 26 end program
+ VCALL 2174 <1,25,_END> # flags 0x87e
+ RETURN
+ RETURN
+ END_BLOCK

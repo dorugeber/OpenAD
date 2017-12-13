@@ -1,0 +1,144 @@
+ LOC 0 0 source files:	1	"/sandbox/Argonne/Dev/Current/OpenAD/Open64/osprey1.0/tests/opOrder.f90"
+ LOC 1 1 program opOrder
+FUNC_ENTRY <1,20,oporder_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 2 double precision :: v(3),s1,s2
+ LOC 1 3 v(1)=5.0D0
+  F8CONST <1,22,____5.000000000000000>
+   U8LDA 0 <2,3,V> T<30,anon_ptr.,8>
+   I4INTCONST 3 (0x3)
+   I4INTCONST 1 (0x1)
+  U8ARRAY 1 8
+ F8ISTORE 0 T<31,anon_ptr.,8>
+ LOC 1 4 v(2)=5.0D0
+  F8CONST <1,22,____5.000000000000000>
+   U8LDA 0 <2,3,V> T<30,anon_ptr.,8>
+   I4INTCONST 3 (0x3)
+   I4INTCONST 2 (0x2)
+  U8ARRAY 1 8
+ F8ISTORE 0 T<31,anon_ptr.,8>
+ LOC 1 5 v(3)=1.0D17
+  F8CONST <1,23,1.000000000000000d+17>
+   U8LDA 0 <2,3,V> T<30,anon_ptr.,8>
+   I4INTCONST 3 (0x3)
+   I4INTCONST 3 (0x3)
+  U8ARRAY 1 8
+ F8ISTORE 0 T<31,anon_ptr.,8>
+ LOC 1 6 s1=(v(1)+v(2))+v(3)
+     U8LDA 0 <2,3,V> T<30,anon_ptr.,8>
+     I4INTCONST 3 (0x3)
+     I4INTCONST 3 (0x3)
+    U8ARRAY 1 8
+   F8F8ILOAD 0 T<11,.predef_F8,8> T<31,anon_ptr.,8>
+       U8LDA 0 <2,3,V> T<30,anon_ptr.,8>
+       I4INTCONST 3 (0x3)
+       I4INTCONST 1 (0x1)
+      U8ARRAY 1 8
+     F8F8ILOAD 0 T<11,.predef_F8,8> T<31,anon_ptr.,8>
+       U8LDA 0 <2,3,V> T<30,anon_ptr.,8>
+       I4INTCONST 3 (0x3)
+       I4INTCONST 2 (0x2)
+      U8ARRAY 1 8
+     F8F8ILOAD 0 T<11,.predef_F8,8> T<31,anon_ptr.,8>
+    F8ADD
+   F8PAREN
+  F8ADD
+ F8STID 0 <2,1,S1> T<11,.predef_F8,8>
+ LOC 1 7 s2=v(1)+(v(2)+v(3))
+     U8LDA 0 <2,3,V> T<30,anon_ptr.,8>
+     I4INTCONST 3 (0x3)
+     I4INTCONST 1 (0x1)
+    U8ARRAY 1 8
+   F8F8ILOAD 0 T<11,.predef_F8,8> T<31,anon_ptr.,8>
+       U8LDA 0 <2,3,V> T<30,anon_ptr.,8>
+       I4INTCONST 3 (0x3)
+       I4INTCONST 2 (0x2)
+      U8ARRAY 1 8
+     F8F8ILOAD 0 T<11,.predef_F8,8> T<31,anon_ptr.,8>
+       U8LDA 0 <2,3,V> T<30,anon_ptr.,8>
+       I4INTCONST 3 (0x3)
+       I4INTCONST 3 (0x3)
+      U8ARRAY 1 8
+     F8F8ILOAD 0 T<11,.predef_F8,8> T<31,anon_ptr.,8>
+    F8ADD
+   F8PAREN
+  F8ADD
+ F8STID 0 <2,2,S2> T<11,.predef_F8,8>
+ LOC 1 8 if (s1>=v(3) .and. s2==v(3)) then 
+ IF
+      U8LDA 0 <2,3,V> T<30,anon_ptr.,8>
+      I4INTCONST 3 (0x3)
+      I4INTCONST 3 (0x3)
+     U8ARRAY 1 8
+    F8F8ILOAD 0 T<11,.predef_F8,8> T<31,anon_ptr.,8>
+    F8F8LDID 0 <2,2,S2> T<11,.predef_F8,8>
+   I4F8EQ
+      U8LDA 0 <2,3,V> T<30,anon_ptr.,8>
+      I4INTCONST 3 (0x3)
+      I4INTCONST 3 (0x3)
+     U8ARRAY 1 8
+    F8F8ILOAD 0 T<11,.predef_F8,8> T<31,anon_ptr.,8>
+    F8F8LDID 0 <2,1,S1> T<11,.predef_F8,8>
+   I4F8LE
+  I4LAND
+ THEN
+  BLOCK
+ LOC 1 9 print *,'OK'
+  COMMENT <2,5,print *,'OK'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,25,"OK"> T<35,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 2 (0x2)
+   IO_ITEM <96,CHAR> T<34,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ ELSE
+ LOC 1 8
+  BLOCK
+ LOC 1 10 else 
+ LOC 1 11 print *,'FAILED', s1,s2
+  COMMENT <2,6,print *,'FAILED', s1,s2> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,27,"FAILED"> T<38,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 6 (0x6)
+   IO_ITEM <96,CHAR> T<37,.ch_str.,1>
+    F8F8LDID 0 <2,1,S1> T<11,.predef_F8,8>
+    I8INTCONST 1127012303372288 (0x4010300000000)
+   IO_ITEM <98,EXPR> T<11,.predef_F8,8>
+    F8F8LDID 0 <2,2,S2> T<11,.predef_F8,8>
+    I8INTCONST 1127012303372288 (0x4010300000000)
+   IO_ITEM <98,EXPR> T<11,.predef_F8,8>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ END_IF
+ LOC 1 12 end if
+ LOC 1 13 end program
+ VCALL 2174 <1,21,_END> # flags 0x87e
+ RETURN
+ RETURN
+ END_BLOCK

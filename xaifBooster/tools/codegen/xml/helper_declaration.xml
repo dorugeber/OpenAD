@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- UN-10-27-03 -->
+
+<CodeGen:Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:CodeGen="http://www.mcs.anl.gov/CodeGen"
+       xsi:schemaLocation="http://www.mcs.anl.gov/CodeGen CodeGenerator.xsd"
+       nr_entries="8" nr_templates="2" outfile="helper_declaration.inc">
+
+  <CodeGen:NonRepeatableCodeOrLineBreak text="public:"/>
+  <CodeGen:NonRepeatableCodeOrLineBreak/>
+  <CodeGen:NonRepeatableCodeOrLineBreak/>
+  <CodeGen:RepeatableCode nr_versions="36">
+   <CodeGen:CodeTemplate nr_entries="15">
+      <CodeGen:StaticCode text="void set"/>
+      <CodeGen:DynamicCodePlaceholder hook="1"/>
+      <CodeGen:StaticCode text="("/>
+      <CodeGen:DynamicCodePlaceholder hook="1"/>
+      <CodeGen:StaticCode text="&amp; whatToSet);"/>
+      <CodeGen:LineBreak/>
+      <CodeGen:DynamicCodePlaceholder hook="1"/>
+      <CodeGen:StaticCode text="&amp; get"/>
+      <CodeGen:DynamicCodePlaceholder hook="1"/>
+      <CodeGen:StaticCode text="() const;"/>
+      <CodeGen:LineBreak/>
+      <CodeGen:StaticCode text="bool has"/>
+      <CodeGen:DynamicCodePlaceholder hook="1"/>
+      <CodeGen:StaticCode text="() const;"/>
+      <CodeGen:LineBreak/>
+    </CodeGen:CodeTemplate>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="AliasMap"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="AliasMapEntry"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="ArgumentList"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="ArrayAccess"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="Assignment"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="BaseLoop"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="BasicBlock"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="Branch"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="CallGraph"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="ConcreteArgument"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="Condition"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="ControlFlowGraph"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="DoMap"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="DuUdMap"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="Expression"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="ExpressionEdge"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="ForLoop"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="Goto"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="IfStatement"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="IndexTriplet"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="Initialization"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="Label"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="PostLoop"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="PreLoop"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="Scope"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="Scopes"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="SideEffectList"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="StatementIdSetMap"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="StatementIdSetMapEntry"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="SubroutineCall"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="Symbol"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="SymbolReferenceProperty"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="SymbolTable"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="Update"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="Variable"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="VariableEdge"/>
+    </CodeGen:CodeVersion>
+  </CodeGen:RepeatableCode>
+  <CodeGen:NonRepeatableCodeOrLineBreak/>
+  <CodeGen:NonRepeatableCodeOrLineBreak text="private:"/>
+  <CodeGen:NonRepeatableCodeOrLineBreak/>
+  <CodeGen:RepeatableCode nr_versions="36" use_versions="3">
+    <CodeGen:CodeTemplate nr_entries="5">
+      <CodeGen:DynamicCodePlaceholder hook="1"/>
+      <CodeGen:StaticCode text="* my"/>
+      <CodeGen:DynamicCodePlaceholder hook="1"/>
+      <CodeGen:StaticCode text="_p;"/>
+      <CodeGen:LineBreak/>
+    </CodeGen:CodeTemplate>
+  </CodeGen:RepeatableCode>
+
+</CodeGen:Document>

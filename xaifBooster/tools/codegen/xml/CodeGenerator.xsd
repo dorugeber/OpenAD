@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<!-- *********************************************************** -->
+<!-- Code Generator			                         -->
+<!-- Uwe Naumann                                                 -->
+<!-- MCS, ANL, 2003                                              -->
+<!-- *********************************************************** -->
+
+<xsd:schema xmlns="http://www.mcs.anl.gov/CodeGen"
+	    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	    targetNamespace="http://www.mcs.anl.gov/CodeGen"
+	    xmlns:CodeGen="http://www.mcs.anl.gov/CodeGen"
+            version="Code Generator"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">       
+
+<!-- *********************************************************** -->
+<!-- Document -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="DocumentType" mixed="true">
+  <xsd:choice minOccurs="1" maxOccurs="unbounded">
+    <xsd:element name="NonRepeatableCodeOrLineBreak">
+      <xsd:complexType>
+        <xsd:attribute name="text" type="xsd:string" use="optional"/>
+      </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="RepeatableCode" type="RepeatableCodeType"/>
+  </xsd:choice>
+  <xsd:attribute name="nr_entries" type="xsd:positiveInteger" use="required"/>
+  <xsd:attribute name="nr_templates" type="xsd:positiveInteger" use="required"/>
+  <xsd:attribute name="outfile" type="xsd:string" use="required"/>
+</xsd:complexType>
+
+<xsd:element name="Document" type="DocumentType"/>
+
+<!-- *********************************************************** -->
+<!-- RepeatableCode -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="RepeatableCodeType" mixed="true">
+  <xsd:sequence> 
+    <xsd:element name="CodeTemplate" type="CodeTemplateType"/>
+    <xsd:element name="CodeVersion" type="CodeVersionType" minOccurs="0" maxOccurs="unbounded"/>
+  </xsd:sequence> 
+  <xsd:attribute name="nr_versions" type="xsd:positiveInteger" use="required"/>
+  <xsd:attribute name="use_versions" type="xsd:integer" use="optional" default="-1"/>
+</xsd:complexType>
+
+
+<!-- *********************************************************** -->
+<!-- CodeTemplate -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="CodeTemplateType" mixed="true">
+  <xsd:choice minOccurs="1" maxOccurs="unbounded">
+    <xsd:element name="StaticCode">
+      <xsd:complexType>
+        <xsd:attribute name="text" type="xsd:string" use="required"/>
+      </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="DynamicCodePlaceholder">
+      <xsd:complexType>
+        <xsd:attribute name="hook" type="xsd:string" use="required"/>
+      </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="LineBreak"/>
+  </xsd:choice>
+  <xsd:attribute name="nr_entries" type="xsd:positiveInteger" use="required"/>
+</xsd:complexType>
+
+<!-- *********************************************************** -->
+<!-- CodeVersionType -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="CodeVersionType" mixed="true">
+  <xsd:sequence> 
+    <xsd:element name="DynamicCode" minOccurs="0" maxOccurs="unbounded">
+      <xsd:complexType>
+        <xsd:attribute name="hook_ref" type="xsd:string" use="required"/>
+        <xsd:attribute name="text" type="xsd:string" use="required"/>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:sequence> 
+</xsd:complexType>
+
+</xsd:schema>

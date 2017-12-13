@@ -1,0 +1,166 @@
+ LOC 0 0 source files:	1	"/m_home/m_utkej/Argonne/Dev/Current/OpenAD/Open64/osprey1.0/tests/controlflow_loop2.f90"
+ LOC 1 6 
+ LOC 1 7 subroutine compute(x, y)
+FUNC_ENTRY <1,20,compute_>
+ IDNAME 0 <2,1,X>
+ IDNAME 0 <2,2,Y>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 8   double precision, intent(inout) :: x, y
+ LOC 1 9   x = x / y
+   F8F8LDID 0 <2,1,X> T<11,.predef_F8,8>
+   F8F8LDID 0 <2,2,Y> T<11,.predef_F8,8>
+  F8DIV
+ F8STID 0 <2,1,X> T<11,.predef_F8,8>
+ LOC 1 10   y = ( y * .789 ) - 2
+     F8F8LDID 0 <2,2,Y> T<11,.predef_F8,8>
+     F8CONST <1,22,___0.7889999747276306>
+    F8MPY
+   F8PAREN
+   F8CONST <1,24,___-2.000000000000000>
+  F8ADD
+ F8STID 0 <2,2,Y> T<11,.predef_F8,8>
+ LOC 1 11 end subroutine
+ RETURN
+ END_BLOCK
+ LOC 1 12 
+ LOC 1 13 
+ LOC 1 14 subroutine myloop(x, y)
+FUNC_ENTRY <1,25,myloop_>
+ IDNAME 0 <2,1,X>
+ IDNAME 0 <2,2,Y>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 15   double precision, intent(inout) :: x, y
+ LOC 1 16   
+ LOC 1 17   do while (x > 0)
+   F8F8LDID 0 <2,1,X> T<11,.predef_F8,8>
+   F8CONST <1,26,____0.000000000000000>
+  I4F8GT
+ I4STID 0 <2,4,t__1> T<27,.log.4,4>
+ WHILE_DO
+   F8F8LDID 0 <2,1,X> T<11,.predef_F8,8>
+   F8CONST <1,26,____0.000000000000000>
+  I4F8GT
+ BODY
+  BLOCK
+ LOC 1 18 
+ LOC 1 19      call compute(x, y)
+    F8F8LDID 0 <2,1,X> T<11,.predef_F8,8>
+   U8PARM 257 T<11,.predef_F8,8> #  by_reference PASS_ADDRESS 
+    F8F8LDID 0 <2,2,Y> T<11,.predef_F8,8>
+   U8PARM 257 T<11,.predef_F8,8> #  by_reference PASS_ADDRESS 
+  VCALL 2174 <1,20,compute_> # flags 0x87e
+ LOC 1 20 
+ LOC 1 21      if (y < 0) exit
+    F8F8LDID 0 <2,2,Y> T<11,.predef_F8,8>
+    F8CONST <1,26,____0.000000000000000>
+   I4F8LT
+  TRUEBR L2
+ LOC 1 22 
+ LOC 1 23   end do
+    F8F8LDID 0 <2,1,X> T<11,.predef_F8,8>
+    F8CONST <1,26,____0.000000000000000>
+   I4F8GT
+  I4STID 0 <2,4,t__1> T<27,.log.4,4>
+  END_BLOCK
+LABEL L2 0
+ LOC 1 24   
+ LOC 1 25 end subroutine
+ RETURN
+ END_BLOCK
+ LOC 1 26 
+ LOC 1 27 
+ LOC 1 28 program controlflow
+FUNC_ENTRY <1,27,controlflow_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 29   double precision :: x, y
+ LOC 1 30   x = 2
+  F8CONST <1,23,____2.000000000000000>
+ F8STID 0 <2,2,X> T<11,.predef_F8,8>
+ LOC 1 31   y = 8
+  F8CONST <1,29,____8.000000000000000>
+ F8STID 0 <2,3,Y> T<11,.predef_F8,8>
+ LOC 1 32 
+ LOC 1 33   call myloop(x, y)
+   F8F8LDID 0 <2,2,X> T<11,.predef_F8,8>
+  U8PARM 257 T<11,.predef_F8,8> #  by_reference PASS_ADDRESS 
+   F8F8LDID 0 <2,3,Y> T<11,.predef_F8,8>
+  U8PARM 257 T<11,.predef_F8,8> #  by_reference PASS_ADDRESS 
+ VCALL 2174 <1,25,myloop_> # flags 0x87e
+ LOC 1 34 
+ LOC 1 35   if ( -0.89 .gt. y .and. -.9 .lt.y) then 
+ IF
+    F8F8LDID 0 <2,3,Y> T<11,.predef_F8,8>
+    F8CONST <1,33,__-0.8999999761581421>
+   I4F8GT
+    F8F8LDID 0 <2,3,Y> T<11,.predef_F8,8>
+    F8CONST <1,31,__-0.8899999856948853>
+   I4F8LT
+  I4LAND
+ THEN
+  BLOCK
+ LOC 1 36 	print *,'OK'
+  COMMENT <2,5,print *,'OK'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,35,"OK"> T<35,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 2 (0x2)
+   IO_ITEM <96,CHAR> T<34,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ ELSE
+ LOC 1 35
+  BLOCK
+ LOC 1 37   else
+ LOC 1 38        print *,'failed'
+  COMMENT <2,6,print *,'failed'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,37,"failed"> T<38,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 6 (0x6)
+   IO_ITEM <96,CHAR> T<37,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ END_IF
+ LOC 1 39   end if
+ LOC 1 40 
+ LOC 1 41 end program
+ VCALL 2174 <1,28,_END> # flags 0x87e
+ RETURN
+ RETURN
+ END_BLOCK

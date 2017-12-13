@@ -1,0 +1,41 @@
+# -*-Mode: makefile;-*-
+# $Header: /m_home/m_utkej/Argonne/cvs2svn/cvs/OpenADFortTk/src/Makeinclude.rules,v 1.1 2005-06-10 17:44:32 eraxxon Exp $
+
+#############################################################################
+#
+# File:
+#   $Source: /m_home/m_utkej/Argonne/cvs2svn/cvs/OpenADFortTk/src/Makeinclude.rules,v $
+#
+# Description:
+#   Include file for package Makefile.in
+# 
+#   *Assumes presence of Automake variables!*
+#
+#############################################################################
+
+#############################################################################
+# OpenADFortTk Extra rules
+#############################################################################
+
+############################################################
+# C Preprocessor
+############################################################
+
+# Assumes includer sets MYCXXFLAGS and MYCFLAGS
+
+MYCPPFLAGS_CXX = $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) \
+	$(MYCXXFLAGS)
+
+MYCPPFLAGS_CC  = $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) \
+	$(MYCFLAGS)
+
+%.cpp.pp : %.cpp
+	$(CXXCPP) $(MYCPPFLAGS_CXX) $< > $@
+
+%.cxx.pp : %.cxx
+	$(CXXCPP) $(MYCPPFLAGS_CXX) $< > $@
+
+%.c.pp : %.c
+	$(CXXCPP) $(MYCPPFLAGS_CC) $< > $@
+
+#############################################################################

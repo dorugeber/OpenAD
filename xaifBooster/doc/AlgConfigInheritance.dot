@@ -1,0 +1,34 @@
+Digraph {
+  graph [size="8,8"];
+  edge [penwidth=2,fontsize=9];
+  node [penwidth=2,fontsize=9,shape=rect,style=filled,fillcolor=white];
+
+  BasicBlockPreaccumulationReverse       [fillcolor=tomato2,URL="http://www.mcs.anl.gov/OpenAD/xaifBoosterDox/namespacexaifBoosterBasicBlockPreaccumulationReverse.html"];
+  PushPop                                [fillcolor=indianred1,URL="http://www.mcs.anl.gov/OpenAD/xaifBoosterDox/namespacexaifBoosterPushPop.html"];
+  AddressArithmetic                      [fillcolor=beige,URL="http://www.mcs.anl.gov/OpenAD/xaifBoosterDox/namespacexaifBoosterAddressArithmetic.html"];
+  {
+    rank = same;
+    ControlFlowReversal                  [fillcolor=plum,URL="http://www.mcs.anl.gov/OpenAD/xaifBoosterDox/namespacexaifBoosterControlFlowReversal.html"];
+    BasicBlockPreaccumulationTapeAdjoint [fillcolor=lightgreen,URL="http://www.mcs.anl.gov/OpenAD/xaifBoosterDox/namespacexaifBoosterBasicBlockPreaccumulationTapeAdjoint.html"];
+  }
+  BasicBlockPreaccumulationTape          [fillcolor=lightgoldenrod,URL="http://www.mcs.anl.gov/OpenAD/xaifBoosterDox/namespacexaifBoosterBasicBlockPreaccumulationTape.html"];
+  BasicBlockPreaccumulation              [fillcolor=lightcyan,URL="http://www.mcs.anl.gov/OpenAD/xaifBoosterDox/namespacexaifBoosterBasicBlockPreaccumulation.html"];
+  Linearization                          [fillcolor=dimgray,URL="http://www.mcs.anl.gov/OpenAD/xaifBoosterDox/namespacexaifBoosterLinearization.html"];
+  TypeChange                             [fillcolor=palevioletred,URL="http://www.mcs.anl.gov/OpenAD/xaifBoosterDox/namespacexaifBoosterTypeChange.html"];
+  Base                                   [fillcolor=lightblue,URL="http://www.mcs.anl.gov/OpenAD/xaifBoosterDox/namespacexaifBooster.html"];
+
+  BasicBlockPreaccumulationReverse->PushPop;
+  PushPop->AddressArithmetic;
+  AddressArithmetic->ControlFlowReversal;
+  ControlFlowReversal->Base [label="virtual"];
+
+  AddressArithmetic->BasicBlockPreaccumulationTapeAdjoint;
+  BasicBlockPreaccumulationTapeAdjoint->BasicBlockPreaccumulationTape;
+  //MemOpsTradeoffPreaccumulation->BasicBlockPreaccumulation;
+  BasicBlockPreaccumulationTape->BasicBlockPreaccumulation;
+  BasicBlockPreaccumulation->Linearization;
+  Linearization->TypeChange;
+  TypeChange->Base [label="virtual"];
+
+}
+

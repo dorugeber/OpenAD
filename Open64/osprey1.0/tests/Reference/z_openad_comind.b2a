@@ -1,0 +1,33 @@
+ LOC 0 0 source files:	1	"/m_home/m_utkej/Argonne/Dev/Current/OpenAD/Open64/osprey1.0/tests/fortran90/single_file_tests/comind.f"
+ LOC 1 1        program foobar
+FUNC_ENTRY <1,20,foobar_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 2 	     parameter (imap=501)
+ LOC 1 3 		 common /coord/ rright, barea(0:imap)
+ LOC 1 4 		 print *, "OK"
+ COMMENT <2,3,print *, "OK"> # 
+ PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+  IO_ITEM <1,NONE>
+  IO_ITEM <10,NONE>
+   I4INTCONST 3 (0x3)
+  IO_ITEM <73,FIRST_LAST_FLAG>
+   I4INTCONST 0 (0x0)
+  IO_ITEM <70,END_EOR_EOF_FLAG>
+   I4INTCONST 0 (0x0)
+  IO_ITEM <76,ENCODE_DECODE_FLAG>
+   U8LDA 0 <1,27,"OK"> T<34,anon_ptr.,8>
+   I8INTCONST 140763258159104 (0x800600000000)
+   U4INTCONST 2 (0x2)
+  IO_ITEM <96,CHAR> T<33,.ch_str.,1>
+ IO <22,FORMATTED_WRITE,cray> 2
+ PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+ LOC 1 5 	   end VCALL 2174 <1,25,_END> # flags 0x87e
+ RETURN
+ RETURN
+ END_BLOCK

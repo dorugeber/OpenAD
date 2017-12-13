@@ -1,0 +1,154 @@
+ LOC 0 0 source files:	1	"/m_home/m_utkej/Argonne/Dev/Current/OpenAD/Open64/osprey1.0/tests/doVar.f90"
+ LOC 1 1 program doUp
+FUNC_ENTRY <1,20,doup_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 2   integer :: i,l,u,s
+ LOC 1 3   integer :: j=1, k=1
+ LOC 1 4 
+ LOC 1 5   l=1
+  I4INTCONST 1 (0x1)
+ I4STID 0 <2,4,L> T<4,.predef_I4,4>
+ LOC 1 6   u=3
+  I4INTCONST 3 (0x3)
+ I4STID 0 <2,6,U> T<4,.predef_I4,4>
+ LOC 1 7   s=1
+  I4INTCONST 1 (0x1)
+ I4STID 0 <2,5,S> T<4,.predef_I4,4>
+ LOC 1 8   do i=l,u,s
+  I4I4LDID 0 <2,4,L> T<4,.predef_I4,4>
+ I4STID 0 <2,8,t__1> T<4,.predef_I4,4>
+  I4I4LDID 0 <2,6,U> T<4,.predef_I4,4>
+ I4STID 0 <2,9,t__2> T<4,.predef_I4,4>
+  I4I4LDID 0 <2,5,S> T<4,.predef_I4,4>
+ I4STID 0 <2,10,t__3> T<4,.predef_I4,4>
+ DO_LOOP
+  IDNAME 0 <2,1,I>
+ INIT
+   I4I4LDID 0 <2,8,t__1> T<4,.predef_I4,4>
+  I4STID 0 <2,1,I> T<4,.predef_I4,4>
+ COMP
+   I4I4LDID 0 <2,1,I> T<4,.predef_I4,4>
+   I4I4LDID 0 <2,9,t__2> T<4,.predef_I4,4>
+  I4I4NE
+ INCR
+ LOC 1 9     j=j+i
+ LOC 1 10   end do
+    I4I4LDID 0 <2,1,I> T<4,.predef_I4,4>
+    I4I4LDID 0 <2,10,t__3> T<4,.predef_I4,4>
+   I4ADD
+  I4STID 0 <2,1,I> T<4,.predef_I4,4>
+ BODY
+ LOC 1 8
+  BLOCK
+ LOC 1 9
+    I4I4LDID 0 <2,1,I> T<4,.predef_I4,4>
+    I4I4LDID 0 <2,2,J> T<4,.predef_I4,4>
+   I4ADD
+  I4STID 0 <2,2,J> T<4,.predef_I4,4>
+  END_BLOCK
+ LOC 1 11   l=3
+  I4INTCONST 3 (0x3)
+ I4STID 0 <2,4,L> T<4,.predef_I4,4>
+ LOC 1 12   u=1
+  I4INTCONST 1 (0x1)
+ I4STID 0 <2,6,U> T<4,.predef_I4,4>
+ LOC 1 13   s=-1
+  I4INTCONST -1 (0xffffffffffffffff)
+ I4STID 0 <2,5,S> T<4,.predef_I4,4>
+ LOC 1 14   do i=l,u,s
+  I4I4LDID 0 <2,4,L> T<4,.predef_I4,4>
+ I4STID 0 <2,11,t__4> T<4,.predef_I4,4>
+  I4I4LDID 0 <2,6,U> T<4,.predef_I4,4>
+ I4STID 0 <2,12,t__5> T<4,.predef_I4,4>
+  I4I4LDID 0 <2,5,S> T<4,.predef_I4,4>
+ I4STID 0 <2,13,t__6> T<4,.predef_I4,4>
+ DO_LOOP
+  IDNAME 0 <2,1,I>
+ INIT
+   I4I4LDID 0 <2,11,t__4> T<4,.predef_I4,4>
+  I4STID 0 <2,1,I> T<4,.predef_I4,4>
+ COMP
+   I4I4LDID 0 <2,1,I> T<4,.predef_I4,4>
+   I4I4LDID 0 <2,12,t__5> T<4,.predef_I4,4>
+  I4I4NE
+ INCR
+ LOC 1 15     k=k+i
+ LOC 1 16   end do
+    I4I4LDID 0 <2,1,I> T<4,.predef_I4,4>
+    I4I4LDID 0 <2,13,t__6> T<4,.predef_I4,4>
+   I4ADD
+  I4STID 0 <2,1,I> T<4,.predef_I4,4>
+ BODY
+ LOC 1 14
+  BLOCK
+ LOC 1 15
+    I4I4LDID 0 <2,1,I> T<4,.predef_I4,4>
+    I4I4LDID 0 <2,3,K> T<4,.predef_I4,4>
+   I4ADD
+  I4STID 0 <2,3,K> T<4,.predef_I4,4>
+  END_BLOCK
+ LOC 1 17 
+ LOC 1 18   if (j==7 .and. k==7) then 
+ IF
+    I4I4LDID 0 <2,2,J> T<4,.predef_I4,4>
+    I4INTCONST 7 (0x7)
+   I4I4EQ
+    I4I4LDID 0 <2,3,K> T<4,.predef_I4,4>
+    I4INTCONST 7 (0x7)
+   I4I4EQ
+  I4LAND
+ THEN
+  BLOCK
+ LOC 1 19     print *, 'OK'
+  COMMENT <2,14,print *, 'OK'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,23,"OK"> T<32,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 2 (0x2)
+   IO_ITEM <96,CHAR> T<31,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ ELSE
+ LOC 1 18
+  BLOCK
+ LOC 1 20   else 
+ LOC 1 21     print *, 'failed'
+  COMMENT <2,15,print *, 'failed'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,25,"failed"> T<35,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 6 (0x6)
+   IO_ITEM <96,CHAR> T<34,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ END_IF
+ LOC 1 22   end if
+ LOC 1 23 end program
+ VCALL 2174 <1,21,_END> # flags 0x87e
+ RETURN
+ RETURN
+ END_BLOCK

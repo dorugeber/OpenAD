@@ -1,0 +1,137 @@
+This is the README for the stripped down Open64 
+set of sources used for OpenAD.  
+
+Contents:
+  0. Overview of Open64
+  1. Getting started with Open64
+  2. For More Information
+
+=============================================================================
+
+0. Overview of Open64:
+--------------------
+
+Rice University's Open64 version is a multi-platform version of the SGI
+Pro64/Open64 compiler suite that includes new support for
+source-to-source transformation.  
+
+The Open64 web site is at:
+  http://www.hipersoft.rice.edu/open64
+
+We started with Pro64 0.01.0-11, and then performed a partial merge
+with version 0.01.0-13 (we were only interested in the Fortran front
+end, unparser, and common directories).  
+Because this version is used only for OpenAD 
+most of the optimization and back end related sources 
+are removed. 
+
+The OpenAD web site is at: 
+  http://www.mcs.anl.gov/openad
+
+Open64 runs on the following platforms:
+  *-Linux (x86, IA64, Opteron)
+  sparc-Solaris
+  x86-cygwin
+
+=============================================================================
+
+1. Getting started with Open64:
+--------------------
+
+Prerequisites:
+  * to obtain the sources either use the tar ball or SVN
+  * Recent version of GCC (e.g. 3.3.3) on Linux or vendor compiler on
+    IRIX, Solaris, Tru64.  GCC should generally work on non-Linux
+    systems, but will at least require a small change in the makefiles.
+  * a compatible Fortran77 compiler (if your gcc installation doesn't 
+    have its own)
+  * GNU make
+
+Probably the most pain-free platform to build on is Linux with a
+recent version of GCC.
+
+
+1.1. Obtaining the Source
+----
+
+In order to reduce maintenance time, we distribute the source via SVN.
+Please follow the instructions at: 
+
+  http://www.mcs.anl.gov/openadnstructions at
+
+
+
+1.2. Build Instructions
+----
+
+The build system has not been changed significantly 
+compared to the initial imported version.
+Unfortunately, within a multi-platform context, it 
+leaves quite a lot to be desired.
+
+A. 
+Choose an appropriate target directory depending on your platform
+
+  osprey1.0/targ_ia32_ia64_linux/  (32-bit Linux and 32-bit Cygwin)
+  osprey1.0/targ_ia64_ia64_linux/  (64-bit Linux)
+  osprey1.0/targ_sparc_solaris/
+
+and set in your environment
+ 
+  OPEN64ROOT 
+
+to the absolute path to that target directory, e.g. in sh/bash
+
+  export OPEN64ROOT=/sandbox/svn/Open64/osprey1.0/targ_ia32_ia64_linux
+
+B. 
+Compile by running 
+  
+  make 
+
+in the top level directory.  
+Or, you can compile individual components:
+
+  F90 front end (mfef90):
+    cd crayf90/sgi && make
+
+  WHIRL IR tools (e.g., ir_b2a):
+    cd ir_tools && make
+
+  WHIRL-to-Fortran unparser (whirl2f)
+    cd whirl2f && make
+
+
+1.3. Usage
+----
+
+We do not  support the original Open64 driver.  
+
+A sample pipeline might include:
+ 
+  mfef90 foo1.f90     --> creates foo1.B (a WHIRL file)
+
+  [ir_b2a -pre foo1.B       --> dumps ASCII WHIRL to stdout]
+
+  [my_transformation foo1.B --> transform WHIRL into WHIRL]
+
+  whirl2f foo1.B      --> creates foo1.w2f.f
+
+=============================================================================
+
+2. For More Information:
+--------------------
+
+You can find more information on our web site.
+
+Here is a list of some partially outdated yet still useful documentation:
+  documentation/pro64-docs/*
+    This directory contains overviews of Pro64, which are helpful for
+    understanding the big picture.
+
+  documentation/open64A.pdf 
+    A reference on the WHIRL abstract syntax tree and the WHIRL
+    symbol table, including Rices changes.  Although it is not
+    completely up to date, the good news is that it is very accurate
+    (i.e. while it does not contain some new details, it does not
+    generally mislead).

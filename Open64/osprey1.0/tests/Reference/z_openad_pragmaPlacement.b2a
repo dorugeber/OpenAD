@@ -1,0 +1,74 @@
+ LOC 0 0 source files:	1	"/m_home/m_utkej/Argonne/Dev/Current/OpenAD/Open64/osprey1.0/tests/pragmaPlacement.f90"
+ LOC 1 1 !$openad xxx p1end
+FUNC_ENTRY <1,20,a_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 188 <1,22,"P1end"> 0 (0x0) # OPENAD_XXX
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 2 !$openad xxx file_start p1a p1aend
+ PRAGMA 0 188 <1,23,"File_start_p1a_p1aend"> 0 (0x0) # OPENAD_XXX
+ END_BLOCK
+ LOC 1 3 module a
+ LOC 1 4   integer ai
+ LOC 1 5 end module 
+ LOC 1 6 !$openad xxx FILE_start p2 p2end 
+FUNC_ENTRY <1,24,b_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 188 <1,26,"FILE_start_p2_p2end"> 0 (0x0) # OPENAD_XXX
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 7 !$openad xxx p2a p2aend
+ PRAGMA 0 188 <1,27,"P2a_p2aend"> 0 (0x0) # OPENAD_XXX
+ END_BLOCK
+ LOC 1 8 module b 
+ LOC 1 9   integer bi 
+ LOC 1 10 end module 
+ LOC 1 11 !$openad xxx file_start  p3a p3aend
+FUNC_ENTRY <1,28,p_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 188 <1,30,"File_start__p3a_p3aend"> 0 (0x0) # OPENAD_XXX
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 12 !$openad xxx p3 p3end
+ PRAGMA 0 188 <1,31,"P3_p3end"> 0 (0x0) # OPENAD_XXX
+ LOC 1 13 program p 
+ LOC 1 14  use a
+ VUSE <1,20,a_>
+ USE!!!!!
+ LOC 1 15  use b 
+ VUSE <1,24,b_>
+ USE!!!!!
+ LOC 1 16  print *, 'OK'
+ COMMENT <2,2,print *, 'OK'> # 
+ PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+  IO_ITEM <1,NONE>
+  IO_ITEM <10,NONE>
+   I4INTCONST 3 (0x3)
+  IO_ITEM <73,FIRST_LAST_FLAG>
+   I4INTCONST 0 (0x0)
+  IO_ITEM <70,END_EOR_EOF_FLAG>
+   I4INTCONST 0 (0x0)
+  IO_ITEM <76,ENCODE_DECODE_FLAG>
+   U8LDA 0 <1,33,"OK"> T<32,anon_ptr.,8>
+   I8INTCONST 140763258159104 (0x800600000000)
+   U4INTCONST 2 (0x2)
+  IO_ITEM <96,CHAR> T<31,.ch_str.,1>
+ IO <22,FORMATTED_WRITE,cray> 2
+ PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+ LOC 1 17 end program
+ VCALL 2174 <1,29,_END> # flags 0x87e
+ RETURN
+ RETURN
+ END_BLOCK

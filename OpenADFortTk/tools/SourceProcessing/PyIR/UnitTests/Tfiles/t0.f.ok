@@ -1,0 +1,10 @@
+      subroutine foo(x,y,z)
+          type(active) :: x,xx1
+          real y,z
+          use w2f__types
+          use active_module
+
+          y = z * z
+          x%v = z * x%v
+          call goo(y,x,z)
+      end

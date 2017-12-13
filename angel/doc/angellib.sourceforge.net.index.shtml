@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+
+</head>
+
+
+<body style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);" alink="#ff0000" link="#0000ef" vlink="#990000">
+
+<h1 style="color: rgb(0, 153, 0); text-align: center;">
+ANGEL</h1>
+
+<h3>
+Synopsis</h3>
+
+ANGEL
+stands for <span style="font-weight: bold; color: rgb(0, 153, 0);">A</span>utomatic
+differentiation <span style="font-weight: bold; color: rgb(0, 153, 0);">N</span>ested
+<span style="font-weight: bold; color: rgb(0, 153, 0);">G</span>raph
+<span style="font-weight: bold; color: rgb(0, 153, 0);">E</span>limination
+<span style="font-weight: bold; color: rgb(0, 153, 0);">L</span>ibrary.
+It implements graph elimination techniques in
+order to find the cheapest accumulation of Jacobian matrices.
+It provides:
+<ul>
+
+  <li>
+Sparse representation of c-graphs and their dual
+line graphs including many helper functions to work with them</li>
+
+  <li>
+Vertex, edge, and face elimination</li>
+
+  <ul>
+
+  </ul>
+
+  <li>
+Structured graph generator</li>
+
+  <li>
+Heuristics for selecting next vertex, edge or face
+to eliminate</li>
+
+  <ul>
+
+    <li>
+Lowest Markowitz degree first</li>
+
+    <li>
+Lowest relative Markowitz degree first</li>
+
+    <li>
+Minimal Fill-in</li>
+
+    <li>
+Maximal overall path length reduction</li>
+
+    <li>
+Maximal overall Markowitz degree reduction</li>
+
+    <li>
+Lowest Markowitz minimal damage</li>
+
+<li> Scarcity-aware edge eliminations </li>
+
+  </ul>
+
+  <li>
+Stochastic methods</li>
+
+  <ul>
+
+    <li>
+It is intended to optimize elimination sequences
+but written as universally as possible and can be applied to any
+problem
+where neighborhood relation and objective function are provided as
+functor</li>
+
+    <li>
+Metropolis with fixed temperature</li>
+
+    <li>
+Logarithmic simulated annealing</li>
+
+  </ul>
+
+</ul>
+
+ANGEL
+has been developed as an independent library but is primarily used by
+the <b><a href="http://www.mcs.anl.gov/openad">OpenAD</a>
+framework for automatic differentiation</b>. <br>
+
+Note, that the Unix name for this <a href="https://sourceforge.net/projects/angellib/">sourceforge project is <tt>angellib</tt></a>. 
+<h3>Downloads</h3>
+
+All of the <b>current development work</b> for the core library  with detailed descriptions of  the changes, is kept 
+in a <a href="http://mercurial.mcs.anl.gov/ad/angel">Mercurial repository hosted at Argonne National Laboratory</a>.
+<br/>
+<br/>
+While we find <a href="http://www.selenic.com/mercurial/wiki/">Mercurial</a> to be  much more  convenient than subversion 
+for our development is still is somewhat unknown and therefore 
+we use a <b><a href="http://angellib.svn.sourceforge.net/viewvc/angellib/trunk/">SVN repository hosted at sourceforge</a> for distribution</b>.
+<br/>
+<br/>
+To checkout the sources execute: <br/>
+<span style="font-family: courier new,courier,monospace; color: rgb(255, 0, 0);">svn co https://angellib.svn.sourceforge.net/svnroot/angellib/trunk angel</span>
+<br/>
+The SVN repository is updated whenever a set of changes has passed regression testing.   
+More infrequently we provide snapshots of the angel library as a <a href="https://sourceforge.net/project/platformdownload.php?group_id=69452">dated release</a>.
+
+<br/><br/>
+Prior to  Feb/09/2010 the library source was distributed via a CVS repository with the module name <tt>angel</tt>.
+The CVS source code repository is no longer updated but still available together with other unmaintained modules. 
+Sourceforge provides <a href="http://sourceforge.net/projects/angellib/develop">instructions to checkout sources from SVN and the obsoleted CVS repositories</a>.
+None of the CVS repositories are used by OpenAD. 
+The repositories listed below  have last been updated in 2003 and are compatible with <tt>angel_base</tt> 
+but are not compatible with the current version of <tt>angel</tt>. 
+<ul>
+<li> <tt>angel_base</tt>: a 2003 baseline version of angel</li>
+<li> <tt>angel_paper_programs</tt>: example programs </li>
+<li> <tt>cgraphs</tt>: example graphs</li>
+<li> <tt>lsaface</tt>: draft on randomized face elimination </li>
+<li> <tt>papers</tt>: drafts of randomized edge elimination etc.</li>
+</ul>
+
+The module <tt>programs</tt> has been partially updated in March 2008 for purposes unrelated to OpenAD. 
+The sourceforge CVS repository is frequently synchronized to the latest changes in the Mercurial development repository.
+<br/><br/>
+Dependencies: 
+<ol>
+
+  <li><a href="http://www.gnu.org/software/make/">GNU
+make</a></li>
+
+
+  <li><a href="http://www.boost.org">boost libraries</a></li>
+  <li><a href="http://www.mcs.anl.gov/openad">OpenAD</a> : this
+dependency&nbsp; can be avoided by commenting out<br>
+
+    <tt> CPPFLAGS += -DUSEXAIFBOOSTER</tt> <br>
+
+and the lines below that one in <br>
+
+    <tt>angel/specs/lib_usage.conf</tt></li>
+
+</ol>
+<h3>Documentation</h3>
+
+For
+details on classes and functions
+in ANGEL see
+the reference manual <a href="refman.pdf">PDF</a> or <a href="html/index.html">html pages</a> (last
+generated on  <!--#flastmod file="html/index.html" -->)
+<h3>Author &amp;&nbsp;Acknowledgments</h3>
+
+<ul>
+
+  <li>the main author of the original version is Peter Gottschling</li>
+
+  <li>further contributions have been made by Uwe Naumann, Jean Utke and Andrew Lyons</li>
+
+  <li>the initial development of ANGEL was part of the XCOp
+project and was supported
+by the Engineering and Physical Sciences Research Council (EPSRC - UK)
+under grant number GR/R/38101/01.</li>
+
+  <li>further development was supported under the <a target="_parent" href="http://www.nsf.gov/">NSF</a>'s
+    <a target="_parent" href="http://www.nsf.gov/itr">Information
+Technology Research (ITR)</a> program under contract OCE-0205590</li>
+
+</ul>
+
+<a href="http://sourceforge.net/projects/angellib"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=69452&type=12" width="120" height="30" border="0" alt="Get ANGEL at SourceForge.net. Fast, secure and Free Open Source software downloads" /></a>
+
+<br/>
+This page was last updated on <!--#flastmod file="index.shtml" -->.
+</body>
+</html>

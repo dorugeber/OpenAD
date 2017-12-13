@@ -1,0 +1,108 @@
+ LOC 0 0 source files:	1	"/m_home/m_utkej/Argonne/Dev/Current/OpenAD/Open64/osprey1.0/tests/fortran90/single_file_tests/inout.f"
+ LOC 1 1 ! from http://www.cs.rpi.edu/~szymansk/oof90.html
+ LOC 1 2 		program intent_gotcha
+FUNC_ENTRY <1,21,intent_gotcha_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 5            real :: y
+ LOC 1 6          end type mytype
+ LOC 1 7 
+ LOC 1 8          type (mytype) :: a
+ LOC 1 9          a%x = 1 ; a%y = 2.
+  I4INTCONST 1 (0x1)
+   U8LDA 0 <2,1,A> T<32,anon_ptr.,8>
+  U8U8STRCTFLD T<4,.predef_I4,4> T<29,MYTYPE,4> <field_id:1>
+ I4ISTORE 0 T<32,anon_ptr.,8>
+  F4CONST <1,22,____2.000000>
+   U8LDA 0 <2,1,A> T<33,anon_ptr.,8>
+  U8U8STRCTFLD T<10,.predef_F4,4> T<29,MYTYPE,4> <field_id:2>
+ F4ISTORE 0 T<33,anon_ptr.,8>
+ LOC 1 10          call assign(a)
+   MMLDID 0 <2,1,A> T<29,MYTYPE,4>
+  U8PARM 257 T<29,MYTYPE,4> #  by_reference PASS_ADDRESS 
+ VCALL 2174 <1,20,ASSIGN> # flags 0x87e
+ LOC 1 11 ! a%y COULD BE UNDEFINED HERE IF NOT SET IN ASSIGN
+ LOC 1 12          if(a%x.EQ.2) then
+ IF
+    U8LDA 0 <2,1,A> T<32,anon_ptr.,8>
+   U8U8STRCTFLD T<4,.predef_I4,4> T<29,MYTYPE,4> <field_id:1>
+   U8INTCONST 2 (0x2)
+  I4U8EQ
+ THEN
+  BLOCK
+ LOC 1 13 		   print *, "OK"
+  COMMENT <2,3,print *, "OK"> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,26,"OK"> T<37,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 2 (0x2)
+   IO_ITEM <96,CHAR> T<36,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ ELSE
+ LOC 1 12
+  BLOCK
+ LOC 1 14 		 else
+ LOC 1 15 		   print *, "failed"
+  COMMENT <2,4,print *, "failed"> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,28,"failed"> T<40,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 6 (0x6)
+   IO_ITEM <96,CHAR> T<39,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ END_IF
+ LOC 1 21          type (mytype), intent (out) :: this
+ LOC 1 22 ! THIS IS THE RIGHT WAY
+ LOC 1 23          this%x = 2 ; this%y = 2.
+ LOC 1 24          end subroutine assign
+ LOC 1 25          end program intent_gotcha VCALL 2174 <1,24,_END> # flags 0x87e
+ RETURN
+ RETURN
+ END_BLOCK
+ LOC 1 20
+FUNC_ENTRY <1,20,ASSIGN>
+ IDNAME 0 <3,1,THIS>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 23
+  I4INTCONST 2 (0x2)
+   U8LDA 0 <3,1,THIS> T<32,anon_ptr.,8>
+  U8U8STRCTFLD T<4,.predef_I4,4> T<29,MYTYPE,4> <field_id:1>
+ I4ISTORE 0 T<32,anon_ptr.,8>
+  F4CONST <1,22,____2.000000>
+   U8LDA 0 <3,1,THIS> T<33,anon_ptr.,8>
+  U8U8STRCTFLD T<10,.predef_F4,4> T<29,MYTYPE,4> <field_id:2>
+ F4ISTORE 0 T<33,anon_ptr.,8>
+ LOC 1 24
+ RETURN
+ END_BLOCK

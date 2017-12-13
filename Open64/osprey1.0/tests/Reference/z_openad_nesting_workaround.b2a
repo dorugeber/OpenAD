@@ -1,0 +1,129 @@
+ LOC 0 0 source files:	1	"/sandbox/Argonne/Dev/Current/OpenAD/Open64/osprey1.0/tests/nesting_workaround.f90"
+ LOC 1 1 module m 
+FUNC_ENTRY <1,22,m_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ END_BLOCK
+ LOC 1 6    integer i
+ LOC 1 7    i=2
+ LOC 1 8    call bar(x)
+ LOC 1 9    contains 
+ LOC 1 10      subroutine bar(x)
+FUNC_ENTRY <1,20,BAR>
+ IDNAME 0 <3,1,X>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 30 <2,1,I> 4294967296 (0x100000000) # ACCESSED_ID, 0, 1
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 11       implicit none
+ LOC 1 12       integer x
+ LOC 1 13        x=x*i
+   I4I4LDID 0 <2,1,I> T<4,.predef_I4,4>
+   I4I4LDID 0 <3,1,X> T<4,.predef_I4,4>
+  I4MPY
+ I4STID 0 <3,1,X> T<4,.predef_I4,4>
+ LOC 1 14      end subroutine
+ RETURN
+ END_BLOCK
+ LOC 1 3
+FUNC_ENTRY <1,21,FOO>
+ IDNAME 0 <3,1,X>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 30 <2,1,I> 8589934592 (0x200000000) # ACCESSED_ID, 0, 2
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 7
+  I4INTCONST 2 (0x2)
+ I4STID 0 <2,1,I> T<4,.predef_I4,4>
+ LOC 1 8
+   I4I4LDID 0 <3,1,X> T<4,.predef_I4,4>
+  U8PARM 257 T<4,.predef_I4,4> #  by_reference PASS_ADDRESS 
+ VCALL 2174 <1,20,BAR> # flags 0x87e
+ LOC 1 15    end subroutine 
+ RETURN
+ END_BLOCK
+ LOC 1 16 end module 
+ LOC 1 17 
+ LOC 1 18 program p 
+FUNC_ENTRY <1,23,p_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 19   use m, only: foo
+ BUSE <1,22,m_>
+ USE!!!!!
+ LOC 1 20   integer :: i=2
+ LOC 1 21   call foo(i)
+   I4I4LDID 0 <2,1,I> T<4,.predef_I4,4>
+  U8PARM 257 T<4,.predef_I4,4> #  by_reference PASS_ADDRESS 
+ VCALL 2174 <1,21,FOO> # flags 0x87e
+ LOC 1 22   if (i==4) then 
+ IF
+   I4I4LDID 0 <2,1,I> T<4,.predef_I4,4>
+   I4INTCONST 4 (0x4)
+  I4I4EQ
+ THEN
+  BLOCK
+ LOC 1 23     print *,'OK'
+  COMMENT <2,5,print *,'OK'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,26,"OK"> T<35,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 2 (0x2)
+   IO_ITEM <96,CHAR> T<34,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ ELSE
+ LOC 1 22
+  BLOCK
+ LOC 1 24   else 
+ LOC 1 25     print *,i
+  COMMENT <2,6,print *,i> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    I4I4LDID 0 <2,1,I> T<4,.predef_I4,4>
+    I8INTCONST 562958543355904 (0x2000200000000)
+   IO_ITEM <98,EXPR> T<4,.predef_I4,4>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ END_IF
+ LOC 1 26  end if 
+ LOC 1 27 end program
+ VCALL 2174 <1,24,_END> # flags 0x87e
+ RETURN
+ RETURN
+ END_BLOCK

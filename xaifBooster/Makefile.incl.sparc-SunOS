@@ -1,0 +1,15 @@
+# ========== begin copyright notice ===================
+# This file is part of
+# ---------------
+# xaifBooster
+# ---------------
+# which is distributed under the BSD license.
+# The full COPYRIGHT notice can be found in the top
+# level directory of the xaifBooster distribution.
+# ========== end copyright notice =====================
+export CC = CC 
+export CCFLAGS=-g 
+export MAKEDEPEND=$(CC) $(IPATH) -xM1
+export AR = $(CC) 
+export ARFLAGS=-xar -o
+

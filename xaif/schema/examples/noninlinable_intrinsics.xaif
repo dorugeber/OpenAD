@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xaifnii:NonInlinableIntrinsicDefinitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xaifnii="http://www.mcs.anl.gov/XAIFNonInlinableIntrinsics"
+       xmlns:xaif="http://www.mcs.anl.gov/XAIF"
+       xsi:schemaLocation="http://www.mcs.anl.gov/XAIFNonInlinableIntrinsics ../xaif_noninlinable_intrinsics.xsd">     
+
+  <!-- transpose *************************************************** -->
+  <xaifnii:DirectAction name="transpose_arr" derivAction="transpose_arr"/>
+
+  <!-- reshape *************************************************** -->
+  <xaifnii:DirectAction name="reshape_arr" derivAction="reshape_arr"/>
+
+</xaifnii:NonInlinableIntrinsicDefinitions>

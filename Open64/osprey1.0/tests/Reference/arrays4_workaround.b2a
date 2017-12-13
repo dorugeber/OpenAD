@@ -1,0 +1,167 @@
+ LOC 0 0 source files:	1	"/sandbox/Argonne/Dev/Quick/OpenAD/Open64/osprey1.0/tests/arrays4_workaround.f90"
+ LOC 1 1 module m1
+FUNC_ENTRY <1,20,m1_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ END_BLOCK
+ LOC 1 2  integer m1_i
+ LOC 1 3 end module
+ LOC 1 4 module m2
+FUNC_ENTRY <1,24,m2_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 5 use m1 
+ VUSE <1,20,m1_>
+ USE!!!!!
+ END_BLOCK
+ LOC 1 9   integer, dimension(m1_i) :: foo_local
+ LOC 1 10   foo_local=foo_arg
+ LOC 1 11   call bar(foo_local)
+ LOC 1 12   contains 
+ LOC 1 13   subroutine bar(bar_arg) 
+FUNC_ENTRY <1,22,BAR>
+ IDNAME 0 <3,3,BAR_ARG>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+  I8I8LDID 0 <3,1,t__2> T<5,.predef_I8,8>
+ XPRAGMA 0 161 <null-st> # COPYIN_BOUND
+  I8I8LDID 0 <3,2,t__4> T<5,.predef_I8,8>
+ XPRAGMA 0 161 <null-st> # COPYIN_BOUND
+  I8I4LDID 0 <1,21,M1_I> T<4,.predef_I4,4>
+ I8STID 0 <3,1,t__2> T<5,.predef_I8,8>
+   I8I8LDID 0 <3,1,t__2> T<5,.predef_I8,8>
+   I8INTCONST 0 (0x0)
+  I8MAX
+ I8STID 0 <3,2,t__4> T<5,.predef_I8,8>
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 14     integer, dimension(m1_i) :: bar_arg
+ LOC 1 15     if (bar_arg(2)==4) print *, 'OK'
+ IF
+     U8U8LDID 0 <3,3,BAR_ARG> T<31,anon_ptr.,8>
+     I8I8LDID 0 <3,2,t__4> T<5,.predef_I8,8>
+     I4INTCONST 2 (0x2)
+    U8ARRAY 1 4
+   I4I4ILOAD 0 T<4,.predef_I4,4> T<34,anon_ptr.,8>
+   I4INTCONST 4 (0x4)
+  I4I4EQ
+ THEN
+  BLOCK
+  COMMENT <3,5,if (bar_arg(2)==4) print *, 'OK'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,26,"OK"> T<38,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 2 (0x2)
+   IO_ITEM <96,CHAR> T<37,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ ELSE
+  BLOCK
+  END_BLOCK
+ END_IF
+ LOC 1 16   end subroutine 
+ RETURN
+ END_BLOCK
+ LOC 1 7
+FUNC_ENTRY <1,23,FOO>
+ IDNAME 0 <3,3,FOO_ARG>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+  I8I8LDID 0 <3,1,t__1> T<5,.predef_I8,8>
+ XPRAGMA 0 161 <null-st> # COPYIN_BOUND
+  I8I8LDID 0 <3,2,t__3> T<5,.predef_I8,8>
+ XPRAGMA 0 161 <null-st> # COPYIN_BOUND
+  I8I4LDID 0 <1,21,M1_I> T<4,.predef_I4,4>
+ I8STID 0 <3,1,t__1> T<5,.predef_I8,8>
+   I8I8LDID 0 <3,1,t__1> T<5,.predef_I8,8>
+   I8INTCONST 0 (0x0)
+  I8MAX
+ I8STID 0 <3,2,t__3> T<5,.predef_I8,8>
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 10
+     U8U8LDID 0 <3,3,FOO_ARG> T<31,anon_ptr.,8>
+     I8I8LDID 0 <3,2,t__3> T<5,.predef_I8,8>
+      I4INTCONST 1 (0x1)
+      I8I8LDID 0 <3,1,t__1> T<5,.predef_I8,8>
+      I4INTCONST 1 (0x1)
+     I8SRCTRIPLET
+    U8ARRSECTION 1 4
+   I4I4ILOAD 0 T<4,.predef_I4,4> T<34,anon_ptr.,8>
+   I4INTCONST 1 (0x1)
+  I4ARRAYEXP 2
+    U8LDA 0 <3,4,FOO_LOCAL> T<31,anon_ptr.,8>
+    I8I8LDID 0 <3,2,t__3> T<5,.predef_I8,8>
+     I4INTCONST 1 (0x1)
+     I8I8LDID 0 <3,1,t__1> T<5,.predef_I8,8>
+     I4INTCONST 1 (0x1)
+    I8SRCTRIPLET
+   U8ARRSECTION 1 4
+   I4INTCONST 1 (0x1)
+  U8ARRAYEXP 2
+ I4ISTORE 0 T<34,anon_ptr.,8>
+ LOC 1 11
+    U8LDA 0 <3,4,FOO_LOCAL> T<31,anon_ptr.,8>
+   I4I4ILOAD 0 T<4,.predef_I4,4> T<34,anon_ptr.,8>
+  U8PARM 257 T<4,.predef_I4,4> #  by_reference PASS_ADDRESS 
+ VCALL 2174 <1,22,BAR> # flags 0x87e
+ LOC 1 17 end subroutine
+ RETURN
+ END_BLOCK
+ LOC 1 18 end module 
+ LOC 1 19 
+ LOC 1 20 program arrays4
+FUNC_ENTRY <1,27,arrays4_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 21   use m1
+ VUSE <1,20,m1_>
+ USE!!!!!
+ LOC 1 22   use m2
+ VUSE <1,24,m2_>
+ USE!!!!!
+ LOC 1 23   integer program_local(2)
+ LOC 1 24   m1_i=2
+  I4INTCONST 2 (0x2)
+ I4STID 0 <1,21,M1_I> T<4,.predef_I4,4>
+ LOC 1 25   DATA program_local  / 3,4 /
+ LOC 1 26   call foo(program_local)
+    U8LDA 0 <2,1,PROGRAM_LOCAL> T<41,anon_ptr.,8>
+   I4I4ILOAD 0 T<4,.predef_I4,4> T<34,anon_ptr.,8>
+  U8PARM 257 T<4,.predef_I4,4> #  by_reference PASS_ADDRESS 
+ VCALL 2174 <1,23,FOO> # flags 0x87e
+ LOC 1 27 end program
+ VCALL 2174 <1,28,_END> # flags 0x87e
+ RETURN
+ RETURN
+ END_BLOCK

@@ -1,0 +1,25 @@
+# ========== begin copyright notice ===================
+# This file is part of
+# ---------------
+# xaifBooster
+# ---------------
+# which is distributed under the BSD license.
+# The full COPYRIGHT notice can be found in the top
+# level directory of the xaifBooster distribution.
+# ========== end copyright notice =====================
+export UNDEF_ENV_VARS=""
+ifndef XERCESJROOT
+UNDEF_ENV_VARS+=" XERCESJROOT "
+endif
+
+ifndef XAIFBOOSTERROOT
+UNDEF_ENV_VARS+=" XAIFBOOSTERROOT "
+endif
+
+ifneq ($(UNDEF_ENV_VARS),"")
+export COMPLAIN=@echo "***detect undefined environment variables: "$(UNDEF_ENV_VARS); exit 1
+endif
+
+export CLASSPATH=$(XERCESJROOT)/xercesImpl.jar:$(XAIFBOOSTERROOT)/xaifBooster/tools/codegen/classes
+
+

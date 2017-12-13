@@ -1,0 +1,3 @@
+#povray -Icircle_r.pov +d
+povray -Icircle_r.pov -H480 -W640 +d
+

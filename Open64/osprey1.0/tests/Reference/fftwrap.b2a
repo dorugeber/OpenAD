@@ -1,0 +1,428 @@
+ LOC 0 0 source files:	1	"/m_home/m_utkej/Argonne/Dev/Current/OpenAD/Open64/osprey1.0/tests/fortran90/single_file_tests/fftwrap.f"
+ LOC 1 2 
+ LOC 1 3       module fft1r_module
+FUNC_ENTRY <1,26,fft1r_module_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ END_BLOCK
+ LOC 1 4       integer, save, private :: saved_indx = -1
+ LOC 1 5       integer, dimension(:), allocatable, save, private :: mixup
+ LOC 1 6       complex, dimension(:), allocatable, save, private :: sct
+ LOC 1 7       contains
+ LOC 1 8          subroutine fft1r_init(indx)
+FUNC_ENTRY <1,20,FFT1R_INIT>
+ IDNAME 0 <3,1,INDX>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+  I8I8LDID 0 <3,2,t__1> T<5,.predef_I8,8>
+ XPRAGMA 0 161 <null-st> # COPYIN_BOUND
+  I8I8LDID 0 <3,3,t__4> T<5,.predef_I8,8>
+ XPRAGMA 0 161 <null-st> # COPYIN_BOUND
+  I8I8LDID 0 <3,9,t__2> T<5,.predef_I8,8>
+ XPRAGMA 0 161 <null-st> # COPYIN_BOUND
+  I8I8LDID 0 <3,10,t__5> T<5,.predef_I8,8>
+ XPRAGMA 0 161 <null-st> # COPYIN_BOUND
+     I4INTCONST 2 (0x2)
+    I4PARM 2 T<4,.predef_I4,4> #  by_value 
+     I4I4LDID 0 <3,1,INDX> T<4,.predef_I4,4>
+    I4PARM 2 T<4,.predef_I4,4> #  by_value 
+   I4INTRINSIC_OP 2 <1,I4EXPEXPR> 0
+  I8I4CVT
+ I8STID 0 <3,2,t__1> T<5,.predef_I8,8>
+   I8I8LDID 0 <3,2,t__1> T<5,.predef_I8,8>
+   I8INTCONST 0 (0x0)
+  I8MAX
+ I8STID 0 <3,3,t__4> T<5,.predef_I8,8>
+     I4INTCONST 2 (0x2)
+    I4PARM 2 T<4,.predef_I4,4> #  by_value 
+      I4I4LDID 0 <3,1,INDX> T<4,.predef_I4,4>
+      I4INTCONST -1 (0xffffffffffffffff)
+     I4ADD
+    I4PARM 2 T<4,.predef_I4,4> #  by_value 
+   I4INTRINSIC_OP 2 <1,I4EXPEXPR> 0
+  I8I4CVT
+ I8STID 0 <3,9,t__2> T<5,.predef_I8,8>
+   I8I8LDID 0 <3,9,t__2> T<5,.predef_I8,8>
+   I8INTCONST 0 (0x0)
+  I8MAX
+ I8STID 0 <3,10,t__5> T<5,.predef_I8,8>
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 11          integer :: nx, nxh, ierr, isign=0
+ LOC 1 12 ! allocate f and t: old, ugly fft requires them as arguments
+ LOC 1 13          real, dimension(2**indx) :: f
+ LOC 1 14          complex, dimension(2**(indx-1)) :: t
+ LOC 1 15          if (indx.lt.0) then
+ IF
+   I4I4LDID 0 <3,1,INDX> T<4,.predef_I4,4>
+   I4INTCONST 0 (0x0)
+  I4I4LT
+ THEN
+  BLOCK
+ LOC 1 16             print *,'indx must be non-negative'
+  COMMENT <3,14,print *,'indx must be non-negative'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,28,"indx_must_be_non-negative"> T<40,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 25 (0x19)
+   IO_ITEM <96,CHAR> T<39,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+ LOC 1 17             stop
+    U8LDA 0 <1,29,""> T<42,anon_ptr.,8>
+   U8PARM 1 T<42,anon_ptr.,8> #  by_reference 
+    U4INTCONST 0 (0x0)
+   U4PARM 2 T<8,.predef_U4,4> #  by_value 
+  VINTRINSIC_CALL <746,STOP_F90> 127 # flags 0x7f
+  RETURN
+  END_BLOCK
+ ELSE
+ LOC 1 15
+  BLOCK
+  END_BLOCK
+ END_IF
+ LOC 1 18          endif
+ LOC 1 19          nx = 2**indx ; nxh = nx/2 ; saved_indx = indx
+    I4INTCONST 2 (0x2)
+   I4PARM 2 T<4,.predef_I4,4> #  by_value 
+    I4I4LDID 0 <3,1,INDX> T<4,.predef_I4,4>
+   I4PARM 2 T<4,.predef_I4,4> #  by_value 
+  I4INTRINSIC_OP 2 <1,I4EXPEXPR> 0
+ I4STID 0 <3,7,NX> T<4,.predef_I4,4>
+   I4I4LDID 0 <3,7,NX> T<4,.predef_I4,4>
+   I4INTCONST 2 (0x2)
+  I4DIV
+ I4STID 0 <3,8,NXH> T<4,.predef_I4,4>
+  I4I4LDID 0 <3,1,INDX> T<4,.predef_I4,4>
+ I4STID 0 <1,22,SAVED_INDX> T<4,.predef_I4,4>
+ LOC 1 20          if (allocated(mixup)) deallocate(mixup)
+ IF
+     U8LDA 0 <1,21,MIXUP> T<32,anon_ptr.,8>
+    I4I4ILOAD 0 T<4,.predef_I4,4> T<29,anon_ptr.,8>
+   U8PARM 1 T<4,.predef_I4,4> #  by_reference 
+  I4CALL 2174 <1,30,ALLOCATED> # flags 0x87e
+ THEN
+  BLOCK
+    U8LDA 0 <1,21,MIXUP> T<32,anon_ptr.,8>
+   U8PARM 1 T<32,anon_ptr.,8> #  by_reference 
+    I4INTCONST 0 (0x0)
+   U8PARM 1 T<4,.predef_I4,4> #  by_reference 
+  VCALL 2174 <1,24,_DEALLOCATE> # flags 0x87e
+  END_BLOCK
+ ELSE
+  BLOCK
+  END_BLOCK
+ END_IF
+ LOC 1 21          if (allocated(sct)) deallocate(sct)
+ IF
+     U8LDA 0 <1,23,SCT> T<34,anon_ptr.,8>
+    C4C4ILOAD 0 T<17,.predef_C4,4> T<44,anon_ptr.,8>
+   U8PARM 1 T<17,.predef_C4,4> #  by_reference 
+  I4CALL 2174 <1,30,ALLOCATED> # flags 0x87e
+ THEN
+  BLOCK
+    U8LDA 0 <1,23,SCT> T<34,anon_ptr.,8>
+   U8PARM 1 T<34,anon_ptr.,8> #  by_reference 
+    I4INTCONST 0 (0x0)
+   U8PARM 1 T<4,.predef_I4,4> #  by_reference 
+  VCALL 2174 <1,24,_DEALLOCATE> # flags 0x87e
+  END_BLOCK
+ ELSE
+  BLOCK
+  END_BLOCK
+ END_IF
+ LOC 1 22          allocate(mixup(nxh),sct(nxh),stat=ierr)
+    U8LDA 0 <1,21,MIXUP> T<32,anon_ptr.,8>
+    IMPLICIT_BND
+    I4I4LDID 0 <3,8,NXH> T<4,.predef_I4,4>
+   U8ARRAY 1 4
+  U8PARM 1 T<32,anon_ptr.,8> #  by_reference 
+    U8LDA 0 <1,23,SCT> T<34,anon_ptr.,8>
+    IMPLICIT_BND
+    I4I4LDID 0 <3,8,NXH> T<4,.predef_I4,4>
+   U8ARRAY 1 8
+  U8PARM 1 T<34,anon_ptr.,8> #  by_reference 
+   U8LDA 0 <3,5,IERR> T<29,anon_ptr.,8>
+  U8PARM 1 T<29,anon_ptr.,8> #  by_reference 
+ VCALL 2174 <1,25,_ALLOCATE> # flags 0x87e
+ LOC 1 23          if (ierr.ne.0) then
+ IF
+   I4I4LDID 0 <3,5,IERR> T<4,.predef_I4,4>
+   I4INTCONST 0 (0x0)
+  I4I4NE
+ THEN
+  BLOCK
+ LOC 1 24             print *,'allocation error'
+  COMMENT <3,15,print *,'allocation error'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,32,"allocation_error"> T<47,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 16 (0x10)
+   IO_ITEM <96,CHAR> T<46,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+ LOC 1 25             stop
+    U8LDA 0 <1,29,""> T<42,anon_ptr.,8>
+   U8PARM 1 T<42,anon_ptr.,8> #  by_reference 
+    U4INTCONST 0 (0x0)
+   U4PARM 2 T<8,.predef_U4,4> #  by_value 
+  VINTRINSIC_CALL <746,STOP_F90> 127 # flags 0x7f
+  RETURN
+  END_BLOCK
+ ELSE
+ LOC 1 23
+  BLOCK
+  END_BLOCK
+ END_IF
+ LOC 1 26          endif
+ LOC 1 27 ! call old, ugly but fast fft here
+ LOC 1 28 !         call lib_fft1r(f,t,isign,mixup,sct,saved_indx,nx,nxh)
+ LOC 1 29          end subroutine fft1r_init
+ RETURN
+ END_BLOCK
+ LOC 1 30 !
+ LOC 1 31          subroutine fft1r_end
+FUNC_ENTRY <1,33,FFT1R_END>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 32 ! deallocate internal data
+ LOC 1 33          saved_indx = -1
+  I4INTCONST -1 (0xffffffffffffffff)
+ I4STID 0 <1,22,SAVED_INDX> T<4,.predef_I4,4>
+ LOC 1 34          deallocate(mixup,sct)
+   U8LDA 0 <1,21,MIXUP> T<32,anon_ptr.,8>
+  U8PARM 1 T<32,anon_ptr.,8> #  by_reference 
+   U8LDA 0 <1,23,SCT> T<34,anon_ptr.,8>
+  U8PARM 1 T<34,anon_ptr.,8> #  by_reference 
+   I4INTCONST 0 (0x0)
+  U8PARM 1 T<4,.predef_I4,4> #  by_reference 
+ VCALL 2174 <1,24,_DEALLOCATE> # flags 0x87e
+ LOC 1 35          end subroutine fft1r_end
+ RETURN
+ END_BLOCK
+ LOC 1 36 !
+ LOC 1 37          subroutine fft1r(f,isign)
+FUNC_ENTRY <1,34,FFT1R>
+ IDNAME 0 <3,1,F>
+ IDNAME 0 <3,2,ISIGN>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+  I8I8LDID 0 <3,5,t__3> T<5,.predef_I8,8>
+ XPRAGMA 0 161 <null-st> # COPYIN_BOUND
+  I8I8LDID 0 <3,6,t__6> T<5,.predef_I8,8>
+ XPRAGMA 0 161 <null-st> # COPYIN_BOUND
+       U8U8LDID 0 <3,1,F> T<50,anon_ptr.,8>
+      F4F4ILOAD 0 T<10,.predef_F4,4> T<53,anon_ptr.,8>
+     U8PARM 1 T<10,.predef_F4,4> #  by_reference 
+    I4CALL 2174 <1,35,SIZE> # flags 0x87e
+    I4INTCONST 2 (0x2)
+   I4DIV
+  I8I4CVT
+ I8STID 0 <3,5,t__3> T<5,.predef_I8,8>
+   I8I8LDID 0 <3,5,t__3> T<5,.predef_I8,8>
+   I8INTCONST 0 (0x0)
+  I8MAX
+ I8STID 0 <3,6,t__6> T<5,.predef_I8,8>
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 38          real, dimension(:), intent(inout) :: f
+ LOC 1 39          integer, intent(in) :: isign
+ LOC 1 40          integer :: nx, nxh
+ LOC 1 41          complex, dimension(size(f)/2) :: t
+ LOC 1 42          nx = size(f) ; nxh = nx/2
+ BODY
+     U8U8LDID 0 <3,1,F> T<50,anon_ptr.,8>
+    F4F4ILOAD 0 T<10,.predef_F4,4> T<53,anon_ptr.,8>
+   U8PARM 1 T<10,.predef_F4,4> #  by_reference 
+  I4CALL 2174 <1,35,SIZE> # flags 0x87e
+ I4STID 0 <3,3,NX> T<4,.predef_I4,4>
+   I4I4LDID 0 <3,3,NX> T<4,.predef_I4,4>
+   I4INTCONST 2 (0x2)
+  I4DIV
+ I4STID 0 <3,4,NXH> T<4,.predef_I4,4>
+ LOC 1 43 ! do nothing if isign is invalid
+ LOC 1 44          if (isign.eq.0) return
+ IF
+   I4I4LDID 0 <3,2,ISIGN> T<4,.predef_I4,4>
+   I4INTCONST 0 (0x0)
+  I4I4EQ
+ THEN
+  BLOCK
+  RETURN
+  END_BLOCK
+ ELSE
+  BLOCK
+  END_BLOCK
+ END_IF
+ LOC 1 45          if (saved_indx.lt.0) then
+ IF
+   I4I4LDID 0 <1,22,SAVED_INDX> T<4,.predef_I4,4>
+   I4INTCONST 0 (0x0)
+  I4I4LT
+ THEN
+  BLOCK
+ LOC 1 46             print *,'fft tables not initialized!'
+  COMMENT <3,8,print *,'fft tables not initialized!'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,37,"fft_tables_not_initialized!"> T<56,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 27 (0x1b)
+   IO_ITEM <96,CHAR> T<55,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+ LOC 1 47             stop
+    U8LDA 0 <1,29,""> T<42,anon_ptr.,8>
+   U8PARM 1 T<42,anon_ptr.,8> #  by_reference 
+    U4INTCONST 0 (0x0)
+   U4PARM 2 T<8,.predef_U4,4> #  by_value 
+  VINTRINSIC_CALL <746,STOP_F90> 127 # flags 0x7f
+  RETURN
+  END_BLOCK
+ ELSE
+ LOC 1 45
+  BLOCK
+  END_BLOCK
+ END_IF
+ LOC 1 48          endif
+ LOC 1 49 ! call old, ugly but fast fft here
+ LOC 1 50 !         call lib_fft1r(f,t,isign,mixup,sct,saved_indx,nx,nxh)
+ LOC 1 51          end subroutine fft1r
+ RETURN
+ END_BLOCK
+ LOC 1 53 	  
+ LOC 1 54 	  
+ LOC 1 55 	  
+ LOC 1 56 
+ LOC 1 57       program main
+FUNC_ENTRY <1,38,main_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 58       use fft1r_module
+ VUSE <1,26,fft1r_module_>
+ USE!!!!!
+ LOC 1 62 ! write prompt without linefeed
+ LOC 1 63 !      write (6,'(a)',advance='no') 'enter indx: '
+ LOC 1 64 ! obtain indx from input device
+ LOC 1 65 !      read (5,*) indx
+ LOC 1 66        indx=4
+  I4INTCONST 4 (0x4)
+ I4STID 0 <2,3,INDX> T<4,.predef_I4,4>
+ LOC 1 67 ! allocate array f
+ LOC 1 68       nx = 2**indx
+    I4INTCONST 2 (0x2)
+   I4PARM 2 T<4,.predef_I4,4> #  by_value 
+    I4I4LDID 0 <2,3,INDX> T<4,.predef_I4,4>
+   I4PARM 2 T<4,.predef_I4,4> #  by_value 
+  I4INTRINSIC_OP 2 <1,I4EXPEXPR> 0
+ I4STID 0 <2,4,NX> T<4,.predef_I4,4>
+ LOC 1 69       allocate(f(nx))
+    U8LDA 0 <2,1,F> T<58,anon_ptr.,8>
+    IMPLICIT_BND
+    I4I4LDID 0 <2,4,NX> T<4,.predef_I4,4>
+   U8ARRAY 1 4
+  U8PARM 1 T<58,anon_ptr.,8> #  by_reference 
+   I4INTCONST 0 (0x0)
+  U8PARM 1 T<4,.predef_I4,4> #  by_reference 
+ VCALL 2174 <1,25,_ALLOCATE> # flags 0x87e
+ LOC 1 70 ! initialize data using array constructor
+ LOC 1 71       f = (/(i,i=1,nx)/)
+    I4I4LDID 0 <2,7,I> T<4,.predef_I4,4>
+    I4I4LDID 0 <2,7,I> T<4,.predef_I4,4>
+    I4INTCONST 1 (0x1)
+    I4I4LDID 0 <2,4,NX> T<4,.predef_I4,4>
+    I4INTCONST 1 (0x1)
+   VIMPLIED_DO
+  I4ARRAY_CONSTRUCT
+    U8LDA 0 <2,1,F> T<58,anon_ptr.,8>
+    IMPLICIT_BND
+     IMPLICIT_BND
+     IMPLICIT_BND
+     I4INTCONST 1 (0x1)
+    I8SRCTRIPLET
+   U8ARRSECTION 1 4
+   I4INTCONST 1 (0x1)
+  U8ARRAYEXP 2
+ F4ISTORE 0 T<53,anon_ptr.,8>
+ LOC 1 72 ! initialize fft
+ LOC 1 73       call fft1r_init(indx)
+   I4I4LDID 0 <2,3,INDX> T<4,.predef_I4,4>
+  U8PARM 257 T<4,.predef_I4,4> #  by_reference PASS_ADDRESS 
+ VCALL 2174 <1,20,FFT1R_INIT> # flags 0x87e
+ LOC 1 74 ! call fft
+ LOC 1 75       call fft1r(f,-1)
+    U8LDA 0 <2,1,F> T<58,anon_ptr.,8>
+   F4F4ILOAD 0 T<10,.predef_F4,4> T<53,anon_ptr.,8>
+  U8PARM 2049 T<10,.predef_F4,4> #  by_reference PASS_DV_COPY 
+   I4INTCONST -1 (0xffffffffffffffff)
+  U8PARM 8193 T<4,.predef_I4,4> #  by_reference COPY_IN 
+ VCALL 2174 <1,34,FFT1R> # flags 0x87e
+ LOC 1 76 ! terminate fft
+ LOC 1 77       call fft1r_end
+ VCALL 2174 <1,33,FFT1R_END> # flags 0x87e
+ LOC 1 78       print *, "OK"
+ COMMENT <2,8,print *, "OK"> # 
+ PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+  IO_ITEM <1,NONE>
+  IO_ITEM <10,NONE>
+   I4INTCONST 3 (0x3)
+  IO_ITEM <73,FIRST_LAST_FLAG>
+   I4INTCONST 0 (0x0)
+  IO_ITEM <70,END_EOR_EOF_FLAG>
+   I4INTCONST 0 (0x0)
+  IO_ITEM <76,ENCODE_DECODE_FLAG>
+   U8LDA 0 <1,41,"OK"> T<61,anon_ptr.,8>
+   I8INTCONST 140763258159104 (0x800600000000)
+   U4INTCONST 2 (0x2)
+  IO_ITEM <96,CHAR> T<60,.ch_str.,1>
+ IO <22,FORMATTED_WRITE,cray> 2
+ PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+ LOC 1 79       end
+ VCALL 2174 <1,39,_END> # flags 0x87e
+ RETURN
+ RETURN
+ END_BLOCK

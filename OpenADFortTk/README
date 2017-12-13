@@ -1,0 +1,10 @@
+This is part of OpenAD. Please refer to 
+
+        http://www.mcs.anl.gov/OpenAD 
+
+for instructions on downloading / building / using OpenAD
+
+-------------------------------------------------------------------------------------
+
+whirl2xaif links with be.so from Open64. Building whirl2f in Open64 will ensure the 
+correct -Ddefines/symbols are included in be.so.

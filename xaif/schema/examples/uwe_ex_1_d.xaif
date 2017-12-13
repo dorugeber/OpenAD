@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Demonstration of use of Derivative Accumulator
+-->
+
+<xaif:CallGraph xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xaif="http://www.mcs.anl.gov/XAIF"
+       xsi:schemaLocation="http://www.mcs.anl.gov/XAIF ../xaif_output.xsd"
+       program_name="slp_head">
+
+  <xaif:ScopeHierarchy>
+
+    <xaif:Scope vertex_id="1">
+      <xaif:SymbolTable>
+        <xaif:Symbol symbol_id="head" kind="subroutine" type="void"/>
+        <xaif:Symbol symbol_id="x"/>
+        <xaif:Symbol symbol_id="y"/>
+      </xaif:SymbolTable>
+    </xaif:Scope>
+
+    <xaif:Scope vertex_id="2">
+      <xaif:SymbolTable>
+        <xaif:Symbol symbol_id="x"/>
+        <xaif:Symbol symbol_id="y"/>
+        <xaif:Symbol symbol_id="dydx"/>
+      </xaif:SymbolTable>
+    </xaif:Scope>
+
+    <xaif:ScopeEdge edge_id="1" source="2" target="1"/>
+
+  </xaif:ScopeHierarchy>
+
+  <xaif:AliasSetMap>
+    <xaif:AliasSet key="0">
+      <xaif:AliasRange from_virtual_address="1" to_virtual_address="1"/>
+    </xaif:AliasSet>
+  </xaif:AliasSetMap>
+
+  <xaif:DUUDSetMap>
+    <xaif:StmtIdSet key="0">
+    </xaif:StmtIdSet>
+  </xaif:DUUDSetMap>
+
+  <xaif:DOSetMap>
+    <xaif:StmtIdSet key="0">
+    </xaif:StmtIdSet>
+  </xaif:DOSetMap>
+
+
+
+  <xaif:ControlFlowGraph vertex_id="1" symbol_id="head" scope_id="1" controlflowgraph_scope_id="2">
+
+     <xaif:ArgumentList>
+       <xaif:ArgumentSymbolReference position="1" symbol_id="0" scope_id="2"/>
+       <xaif:ArgumentSymbolReference position="2" symbol_id="1" scope_id="2"/>
+     </xaif:ArgumentList>
+
+     <xaif:Entry vertex_id="1"/>
+
+     <xaif:BasicBlock vertex_id="2" scope_id="2">
+
+       <xaif:Assignment statement_id="whatever_1">
+         <xaif:AssignmentLHS>
+           <xaif:SymbolReference vertex_id="1" symbol_id="y" scope_id="2"/>
+         </xaif:AssignmentLHS>
+         <xaif:AssignmentRHS>
+           <xaif:VariableReference vertex_id="1">
+             <xaif:SymbolReference vertex_id="1" symbol_id="x" scope_id="2"/>
+           </xaif:VariableReference>
+           <xaif:Intrinsic vertex_id="2" name="sin_scal"/>
+           <xaif:ExpressionEdge edge_id="1" source="1" target="2" position="1"/>
+         </xaif:AssignmentRHS>
+       </xaif:Assignment>      
+
+       <xaif:Assignment statement_id="sage_2">
+         <xaif:AssignmentLHS>
+           <xaif:SymbolReference vertex_id="1" symbol_id="dydx" scope_id="2"/>
+         </xaif:AssignmentLHS>
+         <xaif:AssignmentRHS>
+           <xaif:VariableReference vertex_id="1">
+             <xaif:SymbolReference vertex_id="1" symbol_id="x" scope_id="2"/>
+           </xaif:VariableReference>
+           <xaif:Intrinsic vertex_id="2" name="cos_scal"/>
+           <xaif:ExpressionEdge edge_id="1" source="1" target="2" position="1"/>
+         </xaif:AssignmentRHS>
+       </xaif:Assignment>      
+
+       <xaif:DerivativePropagator>
+         <xaif:Saxpy>
+	   <xaif:AX>
+             <xaif:A>
+               <xaif:VariableReference>
+                 <xaif:SymbolReference symbol_id="dydx" scope_id="2"/>
+               </xaif:VariableReference>
+             </xaif:A>
+             <xaif:X>
+               <xaif:SymbolReference symbol_id="y" scope_id="2"/>
+             </xaif:X>
+	   </xaif:AX>
+           <xaif:Y>
+             <xaif:SymbolReference symbol_id="y" scope_id="2"/>
+           </xaif:Y>
+         </xaif:Saxpy>
+       </xaif:DerivativePropagator>                        
+
+     </xaif:BasicBlock>
+
+     <xaif:Exit vertex_id="3"/>
+
+     <xaif:ControlFlowEdge edge_id="1" source="1" target="2"/>
+     <xaif:ControlFlowEdge edge_id="2" source="2" target="3"/>
+
+  </xaif:ControlFlowGraph>
+
+</xaif:CallGraph>

@@ -1,0 +1,23 @@
+SHELL = /bin/sh
+
+BUILD_ABI      = 32BIT
+BUILD_ARCH     = SPARC
+BUILD_TARGET   = IA64
+BUILD_OS       = SOLARIS
+#BUILD_COMPILER = GNU
+BUILD_COMPILER = VENDOR
+BUILD_TYPE     = SHARED
+BUILD_OPTIMIZE = DEBUG
+BUILD_INSTALL  = DEFAULT
+BUILD_VARIANT  = DEFAULT
+BUILD_SB       = NO
+
+#-----------------------------------------------------------------------
+#  If C++ Standard Template Library Extension (slist, hashtable, etc)
+#  is not in the default search path of chosen compiler, define it
+#-----------------------------------------------------------------------
+
+# Use $(MAKE), automatically defined by GNU make
+#MAKE = gmake
+
+PLATFORM_DIRTS_SPECIFIC = # SunWS_*

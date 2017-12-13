@@ -1,0 +1,8 @@
+*.orig
+.d_*
+*.o
+*.a
+*.so
+*.B
+*.mod-whirl
+*.w2f.f

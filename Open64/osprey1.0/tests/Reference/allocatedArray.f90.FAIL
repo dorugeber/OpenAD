@@ -1,0 +1,1 @@
+Open64 unparse error - tests for variable being 'referenced' (wn2f_stmt.cxx:1293) but wrongly concludes it isn't and skips the ST entry.

@@ -1,0 +1,144 @@
+# $Id: DependenceVerify,v 1.1.1.1 2002-05-22 20:10:41 dsystem Exp $
+# ===========================================================================
+#   Copyright (C) 2003 Rice University. All rights reserved.
+# 
+#   This program is free software; you can redistribute it and/or modify it
+#   under the terms of version 2 of the GNU General Public License as
+#   published by the Free Software Foundation.
+# 
+#   This program is distributed in the hope that it would be useful, but
+#   WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# 
+#   Further, this software is distributed without any warranty that it is
+#   free of the rightful claim of any third person regarding infringement
+#   or the like.  Any license provided herein, whether implied or
+#   otherwise, applies only to this software file.  Patent licenses, if
+#   any, provided herein do not apply to combinations of this program with
+#   other software, or any other product whatsoever.
+# 
+#   You should have received a copy of the GNU General Public License along
+#   with this program; if not, write the Free Software Foundation, Inc., 59
+#   Temple Place - Suite 330, Boston MA 02111-1307, USA.
+# 
+# ===========================================================================
+
+###########################################################################
+#         Copyright (c) 1990, 1991, 1992, 1993, 1994 Rice University
+#                            All Rights Reserved
+###########################################################################
+
+###########################################################################
+#                                                                         #
+#  File:    DependenceVerify                                              #
+#  Author:  Kevin Cureton                                                 #
+#           Taken from verifydepends.C by John Mellor-Crummey             #
+#                                                                         #
+###########################################################################
+#                                                                         #
+#   Process a list of files containing compilation dependences.           #
+#                                                                         #
+#   Each file contains a list of dependences and a list of files          #
+#   that would shadow the dependents.                                     #
+#                                                                         #
+#   for each DEP file                                                     #
+#   {                                                                     #
+#     if a dependent does not exist or is newer than a DEP file           #
+#     citing it, remove the DEP file                                      #
+#                                                                         #
+#     if a nearer file exists, remove the DEP file citing it              #
+#   }                                                                     #
+#                                                                         #
+###########################################################################
+
+###########################################################################
+#
+# Set the needed environment variables
+#
+###########################################################################
+
+
+###########################################################################
+
+     # get the command line arguments
+  @depend_files = split(/\s/, $ARGV[0]);
+
+
+     # check each of the dependence files for dpendency changes
+  DO_FILES: for $depend_file (@depend_files)
+  {
+     next DO_FILES if (! -e $depend_file);
+
+     @stat_buffer = stat($depend_file);
+
+     $last_mod_time = $stat_buffer[9];
+
+     $has_a_dependence = "false";
+
+     open(DEPEND_FILE, $depend_file);
+        
+        # check to see if the file is empty and if it is delete it
+     if (eof(DEPEND_FILE) == 1)
+     {
+        close(DEPEND_FILE);
+        unlink($depend_file);
+        next DO_FILES;
+     }
+
+        # begin reading the dependencies from the file and check them
+     READ_FILE: while (<DEPEND_FILE>)
+     {
+        next READ_FILE if /^\n$/;
+
+        #---------------------------------------------------
+        # check the dependences for the file
+        # if they don't exist or if they are newer than the 
+        # dependence file, remove the dependence file
+        #---------------------------------------------------
+        if (/^# dependences.*\n/)
+        {
+           READ_DEPENDS: while (<DEPEND_FILE>)
+           {
+              next READ_DEPENDS if /^\n$/;
+              last READ_DEPENDS if /^# files.*\n/;
+
+              $has_a_dependence = "true";
+
+              $current_file = $_; 
+              $current_file =~ s/\n$//;
+
+              if (! -e $current_file)
+              {
+                 close(DEPEND_FILE);
+                 unlink($depend_file);
+                 next DO_FILES;
+              }
+
+              @file_stat = stat($current_file);
+
+              $file_last_mod_time = $file_stat[9];
+
+              if ($file_last_mod_time > $last_mod_time)
+              {
+                 close(DEPEND_FILE);
+                 unlink($depend_file);
+                 next DO_FILES;
+              }
+           }
+        }
+
+        #---------------------------------------------------
+        # if there are no dependences in the file, it is a bogus file
+        # so delete it.
+        #---------------------------------------------------
+        if ($has_a_dependence eq "false")
+        {
+           close(DEPEND_FILE);
+           unlink($depend_file); 
+           last READ_FILE;
+        }
+
+     }
+
+     close(DEPEND_FILE);
+  }

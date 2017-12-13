@@ -1,0 +1,1 @@
+parser logic does not propagate REAL as an elemental intrinsic, will require fix similar to changeset 819

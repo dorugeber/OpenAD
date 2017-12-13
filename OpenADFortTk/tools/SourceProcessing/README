@@ -1,0 +1,21 @@
+Need to refactor Python portion of canon,pp, etc into (more) usable
+org.
+
+Suggested by Jean:
+
+    PyFort        Scanning,Parsing,Unparsing, 
+    PyIR          Various tree manipulations, processing
+    PySymtab      symbol table
+    PyUtil        misc utilities like chomp, flatten, assembler, ...
+    Canon         canonicalizer specific
+    PP            postprocessor specific
+
+
+Deliver on 22feb07: 
+   PyFort
+   PyIR
+   PyUtil
+   Canon
+   PP
+
+Installed mercurial, added some info

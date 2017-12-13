@@ -1,0 +1,14 @@
+# -*-Mode: sh;-*-
+# $Header: /m_home/m_utkej/Argonne/cvs2svn/cvs/OpenADFortTk/Sourceme-csh,v 1.5 2005-06-10 17:44:51 eraxxon Exp $
+
+#############################################################################
+
+if ( ! $?OPENADFORTTK ) then
+  echo "You must set your OPENADFORTTK environment variable before sourcing"
+  echo "this file."
+  exit 1
+endif
+
+#############################################################################
+
+setenv PATH "${OPENADFORTTK}/bin:${PATH}"

@@ -1,0 +1,371 @@
+#! /usr/bin/env python
+##########################################################
+# This file is part of OpenAD released under the LGPL.   #
+# The full COPYRIGHT notice can be found in the top      #
+# level directory of the OpenAD distribution             #
+##########################################################
+
+import os
+import sys
+if (not os.environ.has_key("OPENADROOT")):
+  sys.stderr.write("ERROR: no OPENADROOT environment variable set, please use the setenv scripts and refer to the manual for details.\n")
+  sys.exit(-1)
+sys.path.append(os.environ["OPENADROOT"])
+sys.path.append(os.path.join(os.environ["OPENADROOT"],"tools","libpythontk"))
+import RunCmds
+
+class MajorMode:
+  forward=0
+  reverse=1
+  trace=2
+
+
+class DShape:
+  scalar=0
+  vector=1
+
+
+class CGReversal:
+  none=-1
+  split=0
+  joint=1
+  
+
+class Mode:
+  def __init__(self,major):
+    self.major=major
+    self.dShape=DShape.scalar
+    self.cgRev=CGReversal.none
+
+
+class RunOpenAD:
+
+    @staticmethod
+    def _getRtFilesCommon():
+      import glob
+      fileList=glob.glob(os.path.join(os.environ["OPENADROOT"],"runTimeSupport","all","*.f90"))
+      fileList+=glob.glob(os.path.join(os.environ["OPENADROOT"],"runTimeSupport","all","*.c"))
+      return fileList
+
+    def getRtFileActive(self):
+      if self.mode.dShape==DShape.scalar:
+        if self.mode.major==MajorMode.forward:
+          return os.path.join(os.environ["OPENADROOT"],
+                              "runTimeSupport",
+                              "scalar",
+                              "OAD_active.f90")
+        elif self.mode.major==MajorMode.trace:
+          return os.path.join(os.environ["OPENADROOT"],
+                              "runTimeSupport",
+                              "trace",
+                              "OAD_active.f90")
+        else : 
+          return os.path.join(os.environ["OPENADROOT"],
+                              "runTimeSupport",
+                              "scalar",
+                              "OAD_active.f90")
+      elif self.mode.dShape==DShape.vector: 
+        return os.path.join(os.environ["OPENADROOT"],
+                            "runTimeSupport",
+                            "vector",
+                            "OAD_active.f90")
+      else:
+        raise Exception("unknown mode.dShape="+str(self.mode.dShape))
+
+    def __init__(self,name,options):
+        import time
+        self.fileName=name
+        (self.baseName,self.extension)=os.path.splitext(name)
+        self.stage=''
+        self.options=options
+        self.ii_xaif=os.path.join(os.environ['XAIFSCHEMAROOT'],
+                                  'schema',
+                                  'examples',
+                                  'inlinable_intrinsics.xaif')
+        self.commandDescriptions=[]
+        dir = os.getcwd();
+        snm="openad."+time.strftime('%Y-%m-%d_%H:%M:%S', time.localtime())+".log~"
+        if not options.noAction:
+            print "openad log: "+ snm
+        self.logfnm = os.path.join(dir,snm)
+        if options.copy:
+            self.runTimeFileCmd="cp -f"
+        else:
+            self.runTimeFileCmd="ln -sf"
+        self.mode=Mode(MajorMode.forward)
+        if options.mode[0]=='f' and len(options.mode)==2 and options.mode[1]=='v':
+          self.mode.dShape=DShape.vector
+        if options.mode[0]=='r':
+          self.mode.major=MajorMode.reverse
+          if options.mode[1]=='s':
+            self.mode.cgRev=CGReversal.split
+          if options.mode[1]=='j':
+            self.mode.cgRev=CGReversal.joint
+        if options.mode[0]=='t':
+          self.mode.major=MajorMode.trace
+          
+    def preProcess(self):
+        ppOpt=""
+        if self.mode.major==MajorMode.forward:
+          ppOpt+="-m f "
+        else:
+          ppOpt+="-m r "
+        if self.extension=='.f90':
+          ppOpt+="--inputFormat=free "
+        aCmdDesc=RunCmds.CmdDesc()
+        self.stage+='.pre'
+        aCmdDesc.setCmd(os.path.join(os.environ['OPENADFORTTK_BASE'],
+                                     'tools',
+                                     'SourceProcessing',
+                                     'preProcess.py')+
+                        " "+ppOpt+"-o "+self.baseName+self.stage+self.extension+" "+self.fileName)
+        aCmdDesc.setDesc("preprocessing fortran")
+        self.commandDescriptions.append(aCmdDesc)
+
+    def mfef90(self):
+        aCmdDesc=RunCmds.CmdDesc()
+        aCmdDesc.setCmd(os.path.join(os.environ['OPEN64ROOT'],
+                                     'crayf90',
+                                     'sgi',
+                                     'mfef90')+
+                        " -z -F -N132 "+self.baseName+self.stage+self.extension)
+        aCmdDesc.setDesc("parsing preprocessed fortran")
+        self.commandDescriptions.append(aCmdDesc)
+
+    def whirl2xaif(self):
+        aCmdDesc=RunCmds.CmdDesc()
+        flags="-n "
+        if self.mode.major==MajorMode.trace: 
+          flags+="-v "
+        aCmdDesc.setCmd(os.path.join(os.environ['OPENADFORTTKROOT'],
+                                     'bin',
+                                     'whirl2xaif')+
+                        " -o "+self.baseName+self.stage+".xaif "+flags+self.baseName+self.stage+".B")
+        aCmdDesc.setDesc("analyzing source code and translating to xaif")
+        self.commandDescriptions.append(aCmdDesc)
+
+    def forward(self):
+        aCmdDesc=RunCmds.CmdDesc()
+        aCmdDesc.setCmd(os.path.join(os.environ['XAIFBOOSTERROOT'],
+                                     'xaifBooster',
+                                     'algorithms',
+                                     'BasicBlockPreaccumulation',
+                                     'driver',
+                                     'oadDriver')+
+                        " -c "+self.ii_xaif+
+                        " -s "+os.path.join(os.environ["XAIFSCHEMAROOT"],"schema")+
+                        " -i "+self.baseName+self.stage+".xaif"+
+                        " -o "+self.baseName+self.stage+".xb.xaif")
+        self.stage+=".xb"
+        aCmdDesc.setDesc("tangent linear transformation")
+        self.commandDescriptions.append(aCmdDesc)
+        # link run time support files
+        fileList=[]
+        fileList.append(self.getRtFileActive())
+        fileList+=RunOpenAD._getRtFilesCommon()
+        for file in fileList:
+            aCmdDesc=RunCmds.CmdDesc()
+            aCmdDesc.setCmd(self.runTimeFileCmd+" "+file+" ./")
+            aCmdDesc.setDesc(" getting runtime support file "+os.path.basename(file))
+            self.commandDescriptions.append(aCmdDesc)
+
+    def reverse(self):
+        aCmdDesc=RunCmds.CmdDesc()
+        aCmdDesc.setCmd(os.path.join(os.environ['XAIFBOOSTERROOT'],
+                                     'xaifBooster',
+                                     'algorithms',
+                                     'BasicBlockPreaccumulationReverse',
+                                     'driver',
+                                     'oadDriver')+
+                        " -c "+self.ii_xaif+
+                        " -s "+os.path.join(os.environ["XAIFSCHEMAROOT"],"schema")+
+                        " -i "+self.baseName+self.stage+".xaif"+
+                        " -o "+self.baseName+self.stage+".xb.xaif")
+        self.stage+=".xb"
+        aCmdDesc.setDesc("adjoint transformation")
+        self.commandDescriptions.append(aCmdDesc)
+        # link run time support files
+        fileList=[]
+        fileList.append(self.getRtFileActive())
+        fileList+=RunOpenAD._getRtFilesCommon()
+        fileList.append(os.path.join(os.environ["OPENADROOT"],"runTimeSupport","simple","ad_inline.f"))
+        fileList.append(os.path.join(os.environ["OPENADROOT"],"runTimeSupport","simple","OAD_cp.f90"))
+        fileList.append(os.path.join(os.environ["OPENADROOT"],"runTimeSupport","simple","OAD_rev.f90"))
+        fileList.append(os.path.join(os.environ["OPENADROOT"],"runTimeSupport","simple","OAD_tape.f90"))
+        for file in fileList:
+            aCmdDesc=RunCmds.CmdDesc()
+            aCmdDesc.setCmd(self.runTimeFileCmd+" "+file+" ./")
+            aCmdDesc.setDesc(" getting runtime support file "+os.path.basename(file))
+            self.commandDescriptions.append(aCmdDesc)
+        # copy the template file
+        aCmdDesc=RunCmds.CmdDesc()
+        templFile=""
+        if self.mode.cgRev == CGReversal.split:
+          templFile="ad_template.split.f"
+        elif self.mode.cgRev == CGReversal.joint:
+          templFile="ad_template.joint.f"
+        else: 
+          raise Exception("unknown cgRev: "+str(self.mode.cgRev))
+        aCmdDesc.setCmd(self.runTimeFileCmd+" "+os.path.join(os.environ["OPENADROOT"],
+                                                             "runTimeSupport",
+                                                             "simple",
+                                                             templFile)+
+                        " ad_template.f")
+        aCmdDesc.setDesc(" getting template file")
+        self.commandDescriptions.append(aCmdDesc)
+
+    def traceDiff(self):
+        aCmdDesc=RunCmds.CmdDesc()
+        aCmdDesc.setCmd(os.path.join(os.environ['XAIFBOOSTERROOT'],
+                                     'xaifBooster',
+                                     'algorithms',
+                                     'TraceDiff',
+                                     'driver',
+                                     'oadDriver')+
+                        " -c "+self.ii_xaif+
+                        " -s "+os.path.join(os.environ["XAIFSCHEMAROOT"],"schema")+
+                        " -i "+self.baseName+self.stage+".xaif"+
+                        " -o "+self.baseName+self.stage+".xb.xaif")
+        self.stage+=".xb"
+        aCmdDesc.setDesc("tracing transformation")
+        self.commandDescriptions.append(aCmdDesc)
+        # link run time support files
+        fileList=[]
+        fileList.append(self.getRtFileActive())
+        fileList+=RunOpenAD._getRtFilesCommon()
+        fileList.append(os.path.join(os.environ["OPENADROOT"],"runTimeSupport","simple","OAD_rev.f90"))
+        fileList.append(os.path.join(os.environ["OPENADROOT"],"runTimeSupport","simple","OAD_trace.f90"))
+        for file in fileList:
+            aCmdDesc=RunCmds.CmdDesc()
+            aCmdDesc.setCmd(self.runTimeFileCmd+" "+file+" ./")
+            aCmdDesc.setDesc(" getting runtime support file "+os.path.basename(file))
+            self.commandDescriptions.append(aCmdDesc)
+        # copy the template file
+        aCmdDesc=RunCmds.CmdDesc()
+        aCmdDesc.setCmd(self.runTimeFileCmd+" "+os.path.join(os.environ["OPENADROOT"],
+                                                             "runTimeSupport",
+                                                             "simple",
+                                                             "ad_template.trace.f")+
+                        " ad_template.f")
+        aCmdDesc.setDesc(" getting template file")
+        self.commandDescriptions.append(aCmdDesc)
+
+    def xaif2whirl(self):
+        aCmdDesc=RunCmds.CmdDesc()
+        aCmdDesc.setCmd(os.path.join(os.environ['OPENADFORTTKROOT'],
+                                     'bin',
+                                     'xaif2whirl')+
+                        " "+self.baseName+".pre.B "+self.baseName+self.stage+".xaif")
+        self.stage+=".x2w"
+        aCmdDesc.setDesc("translating transformed xaif to whirl")
+        self.commandDescriptions.append(aCmdDesc)
+
+    def whirl2f(self):
+        aCmdDesc=RunCmds.CmdDesc()
+        aCmdDesc.setCmd(os.path.join(os.environ['OPEN64ROOT'],
+                                     'whirl2f',
+                                     'whirl2f')+
+                        " -openad "+self.baseName+self.stage+".B")
+        self.stage+=".w2f"
+        aCmdDesc.setDesc("unparsing transformed whirl to fortran")
+        self.commandDescriptions.append(aCmdDesc)
+
+    def postProcess(self):
+        ppOpt="--infoUnitFile=w2f__types.f90 "
+        if self.mode.major==MajorMode.forward:
+          ppOpt+="-m f "
+        else:
+          ppOpt+="-m r "
+        if self.mode.major==MajorMode.trace: 
+          ppOpt+="--noInline "
+        if self.extension=='.f90':
+          ppOpt+="--outputFormat=free "
+        aCmdDesc=RunCmds.CmdDesc()
+        aCmdDesc.setCmd(os.path.join(os.environ['OPENADFORTTK_BASE'],
+                                     'tools',
+                                     'SourceProcessing',
+                                     'postProcess.py')+
+                        " "+ppOpt+"-o "+self.baseName+self.stage+".post"+self.extension+" "+self.baseName+self.stage+".f")
+        aCmdDesc.setDesc("postprocessing transformed fortran")
+        self.commandDescriptions.append(aCmdDesc)
+        
+    def composePipeline(self):
+        self.preProcess()
+        self.mfef90()
+        self.whirl2xaif()
+        if self.mode.major==MajorMode.forward:
+            self.forward()
+        elif self.mode.major==MajorMode.reverse:
+            self.reverse()
+        elif self.mode.major==MajorMode.trace:
+            self.traceDiff()
+        else:
+            raise RuntimeError("no valid basic transformation mode selected")
+        self.xaif2whirl()
+        self.whirl2f()
+        self.postProcess()
+
+    def runPipeline(self):    
+        RunCmds.Runner(self.options.debug+1,
+                        self.options.interactive,
+                        self.logfnm,
+                        self.options.keepGoing).doit(self.commandDescriptions)
+
+    def show(self):
+        for i in self.commandDescriptions:
+            sys.stdout.write('# '+i.getDesc()+'\n')
+            sys.stdout.write(i.getCmd()+'\n')
+
+def main():
+  from optparse import OptionParser
+  usage = '%prog [options] <fortran-file>'
+  modes={'f':'forward','fv':'forward vector','rs':'reverse split','rj':'reverse joint','t':'tracing'}
+  modeChoices=modes.keys()
+  modeChoicesHelp=""
+  for k,v in modes.items():
+      modeChoicesHelp+=k+" = "+v+"; "
+  modeChoicesHelp += "(default is forward) "
+  opt = OptionParser(usage=usage)
+  opt.add_option('-m','--mode',dest='mode',
+                 type='choice', choices=modeChoices,
+                 help="basic transformation mode with MODE being one of: "+ modeChoicesHelp,
+                 default='f')
+  opt.add_option('-d', '--debug',dest='debug',
+                 type='int',
+                 help='the debugging level',
+                 action="store",default='0')
+  opt.add_option('-i','--interactive',dest='interactive',
+                 help="requires to confirm each command",
+                 action='store_true',default=False)
+  opt.add_option('-k','--keepGoing',dest='keepGoing',
+                 help="keep going despite errors",
+                 action='store_true',default=False)
+  opt.add_option('-c','--copy',dest='copy',
+                 help="copy run time support files instead of linking them",
+                 action='store_true',default=False)
+  opt.add_option('-n','--noAction',dest='noAction',
+                 help="display the pipeline commands, do not run them",
+                 action='store_true',default=False)
+  (options, args) = opt.parse_args()
+  if (len(args)!=1) :
+    opt.error("expect 1 input file name argument")
+  name=args[0]
+  try: 
+    ro  = RunOpenAD(name,options)
+    ro.composePipeline()
+    if (options.noAction):
+        ro.show()
+    else:    
+        ro.runPipeline()
+  except (RunCmds.RunnerException), e:
+    sys.stderr.write('ERROR: '+str(e)+'\n')
+    return -1
+  except RuntimeError, e:
+      print 'ERROR: ',e
+      return -1
+  return 0
+
+if __name__ == "__main__":
+  sys.exit(main())
+
+

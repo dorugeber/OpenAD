@@ -1,0 +1,17 @@
+This directory is a part of a testsuite that can be used 
+for regression testing. It contains single-file test programs 
+and a python script testAll.py that automates the testing.
+
+About the test cases in TestSources
+  These are short programs that take no input. One file = one program.
+  The only output allowed is either "OK" or "failed". 
+  Please do not add any files that produce different 
+  output or that require input. Each file has to contain a complete program 
+  that can be compiled into an executable that can be run without
+  any command line arguments.
+  
+the script is self explanatory. It requires OPEN64ROOT 
+to be set to the architecture specific  
+  Open64/osprey1.0/targ... directory 
+If set in your environment it 
+picks up your settings of F90C and F90FLAGS

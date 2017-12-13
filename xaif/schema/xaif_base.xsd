@@ -1,0 +1,2070 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<!--
+ ##########################################################
+ # This file is part of xaif.                             #
+ # The full COPYRIGHT notice can be found in the top      #
+ # level directory of the xaif source tree.               #
+ # For more information visit                             #
+ # http://www.mcs.anl.gov/xaif       and                  #
+ # http://www.mcs.anl.gov/openad                          #
+ ##########################################################
+-->
+
+<xsd:schema xmlns="http://www.mcs.anl.gov/XAIF"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://www.mcs.anl.gov/XAIF"
+  xmlns:xaif="http://www.mcs.anl.gov/XAIF"
+  version="xaif 1.0"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified">       
+
+<!-- *********************************************************** -->
+<!-- Front-end tags                                              -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="FrontEndAnnotationType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      This is used by the front-end to annotate elements in the
+      XAIF file.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:attribute name="annotation" type="xsd:string" use="optional" default=""/>
+</xsd:complexType>
+
+<!-- *********************************************************** -->
+<!-- Vertices -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="VertexType">
+
+ <xsd:complexContent>
+    <xsd:extension base="FrontEndAnnotationType">       
+	    
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+	    VertexType is abstract base type for vertices in XAIF graphs.
+	    Each vertex has a vertex_id that must be unique within the current
+	    graph. Whenever the graph consists of a single vertex only the
+	    vertex_id does not have to be specified and the default value
+	    "1" is used.
+        </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:attribute name="vertex_id" type="xsd:string" use="optional" default="1"/>
+    </xsd:extension>
+  </xsd:complexContent>   
+</xsd:complexType>
+
+<!-- *********************************************************** -->
+<!-- Edges -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="EdgeType">
+
+ <xsd:complexContent>
+    <xsd:extension base="FrontEndAnnotationType">       
+	    
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          EdgeType is abstract base type for edges in XAIF graphs.
+          Its attributes comprise a locally unique edge_id, the source, and 
+          the target. If only one edge is present, then the edge_id does not
+          have to be specified and the default value "1" is used.
+          Both source and target are vertex_id's of vertices in 
+          the corresponding XAIF graph. 
+        </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:attribute name="edge_id" type="xsd:string" use="required"/>
+      <xsd:attribute name="source" type="xsd:string" use="required"/>
+      <xsd:attribute name="target" type="xsd:string" use="required"/>
+    </xsd:extension>
+  </xsd:complexContent>   
+</xsd:complexType>
+
+<!-- *********************************************************** -->
+<!-- Symbols -->
+<!-- *********************************************************** -->
+
+<xsd:simpleType name="SymbolKindType">
+
+  <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+		  We distinguish between the following kinds of symbols:
+		  1. "subroutine" - the name of a subroutine
+		  2. "variable" - the name of a variable
+		  3. "pointer" - the name of a pointer
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="subroutine"/>
+    <xsd:enumeration value="variable"/>
+    <xsd:enumeration value="pointer"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="SymbolTypeType">
+
+  <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+		  Symbol types as they appear in the declaration. "void" is
+		  for subroutines / user-defined functions only.
+		  "opaque" data types are used for variables of (structured)
+		  types that do not occur in xaif numerical expressions
+		  but can occur in subroutine signatures. 
+		  Note that access to elements of structured types 
+		  are to be canonicalized away by the front end. 
+          </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="void"/>
+    <xsd:enumeration value="integer"/>
+    <xsd:enumeration value="real"/>
+    <xsd:enumeration value="complex"/>
+    <xsd:enumeration value="bool"/>
+    <xsd:enumeration value="char"/>
+    <xsd:enumeration value="string"/>
+    <xsd:enumeration value="opaque"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:simpleType name="SymbolShapeType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+	    The shape of a symbol. So far, we are dealing with scalar 
+	    symbols only. When introducing vectors, matrices, and tensors
+	    we intend to take a C-like approach, that is matrices are vectors
+	    of vectors; three tensors are vectors of matrices, etc.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="void"/>
+    <xsd:enumeration value="scalar"/>
+    <xsd:enumeration value="vector"/>
+    <xsd:enumeration value="matrix"/>
+    <xsd:enumeration value="three_tensor"/>
+    <xsd:enumeration value="four_tensor"/>
+    <xsd:enumeration value="five_tensor"/>
+    <xsd:enumeration value="six_tensor"/>
+    <xsd:enumeration value="seven_tensor"/>
+  </xsd:restriction>
+
+</xsd:simpleType>
+
+<xsd:complexType name="DimensionBoundsType">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+       For vectors, matrices, etc that have fixed dimensions 
+       we provide dimension bounds.
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:attribute name="lower"  type="xsd:integer" use="required"/>
+  <xsd:attribute name="upper"  type="xsd:integer" use="required"/>
+</xsd:complexType>
+
+<xsd:group name="DimensionBoundsGroup">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+       The sequence of dimension bounds. Since we only go up to 
+       five_tensor for now it is limited to 5 entries. The order 
+       in the list implies dimension bounds starting from the 
+       top level, e.g. reverse of the index order in column major mode.
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:sequence>
+    <xsd:element name="DimensionBounds" type="DimensionBoundsType" 
+       minOccurs="0" maxOccurs="7">
+    </xsd:element>  
+  </xsd:sequence>
+</xsd:group>
+
+<xsd:complexType name="SymbolType">
+  <xsd:complexContent>
+    <xsd:extension base="FrontEndAnnotationType">       
+      <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+		  Symbols are stored in the symbol table. They are uniquely
+		  identified within the current scope (the current symbol 
+		  table) by their symbol_id. Furthermore, we store their
+		  kind, type, and shape. By default, we consider real scalar
+    		  variables.  
+                  Vectors, matrices etc. can have variable dimensions
+                  and then there is nothing in the DimensionBoundsGroup.
+		  But if they are fixed we assume we have fixed bounds for ALL 
+                  dimensions and expect a list of (max 5, because we only have 
+	          five_tensor right now) all dimension bounds.  
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:group ref="DimensionBoundsGroup" minOccurs="0" maxOccurs="1"/>
+      <xsd:attribute name="symbol_id"          type="xsd:string"      use="required"/>
+      <xsd:attribute name="kind"               type="SymbolKindType"  use="optional" default="variable"/>
+      <xsd:attribute name="type"               type="SymbolTypeType"  use="optional" default="real"/>
+      <xsd:attribute name="feType"             type="xsd:string"      use="optional" default="">      
+        <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+             For cases where the front-end distinguishes 
+             machine dependent types, e.g. sizes in bytes, the front-end 
+             can use the optional fe_type attribute. We do not assign 
+             any particular meaning to values other than the empty 
+             string which means unspecified.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>       
+      <xsd:attribute name="shape"              type="SymbolShapeType" use="optional" default="scalar"/>
+      <xsd:attribute name="active"             type="xsd:boolean"     use="optional" default="true"/>
+      <xsd:attribute name="temp"               type="xsd:boolean"     use="optional" default="false"/>
+      <xsd:attribute name="pointer"            type="xsd:boolean"     use="optional" default="false"/>
+    </xsd:extension>       
+  </xsd:complexContent>
+</xsd:complexType>
+
+<!-- *********************************************************** -->
+<!-- Symbol Table -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="SymbolTableType">
+  <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+		  The symbol table is a list of one or more symbols.
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:sequence>
+    <xsd:element name="Symbol" type="SymbolType" 
+      minOccurs="0" maxOccurs="unbounded">
+    </xsd:element>  
+  </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="SymbolTable" type="SymbolTableType">
+  <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+		  symbol_id's of symbols must be unique within the current
+		  symbol table. SymbolReference's and FunctionCall's refer
+		  to these symbol_id's.
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:unique name="st_unique">
+    <xsd:selector xpath="Symbol"/>
+    <xsd:field xpath="@symbol_id"/>
+  </xsd:unique>
+  <xsd:key name="st_symbolId">
+    <xsd:selector xpath="Symbol"/> 
+    <xsd:field xpath="@symbol_id"/>
+  </xsd:key>
+  <xsd:keyref name="st_keyref1" refer="st_symbolId">
+    <xsd:selector xpath="SymbolReference"/>
+     <xsd:field xpath="@symbol_id"/>  
+  </xsd:keyref>
+</xsd:element>
+
+<!-- *********************************************************** -->
+<!-- Scope Hierarchy -->
+<!-- *********************************************************** -->
+
+<xsd:group name="ScopeVertexAndEdgeGroup">
+  <xsd:choice>
+    <xsd:element name="Scope" minOccurs="0" maxOccurs="unbounded">
+
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+		Scopes are the vertices in a single scope tree.
+	 	The root of the tree is the global scope, i.e. the 
+		scope with no 'out' edges. 
+		Scopes are derived from the abstract base types VertexType.
+		Scopes are identified uniquely by their vertex_id's.
+		Each scope contains exactly one symbol table.
+        </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:complexType>
+        <xsd:complexContent>
+          <xsd:extension base="VertexType">
+            <xsd:sequence>
+              <xsd:element ref="SymbolTable" 
+    		   minOccurs="1" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="ScopeEdge" type="EdgeType" 
+    		   minOccurs="0" maxOccurs="1">
+
+      <xsd:annotation>
+	<xsd:documentation xml:lang="en">
+          There is an edge connecting scope i (as source) with scope j 
+	  (as target) if i is contained in j. 
+	  All scopes have to be connected in the scope tree.
+        </xsd:documentation>
+      </xsd:annotation>
+
+    </xsd:element>
+  </xsd:choice>
+</xsd:group>
+
+<xsd:complexType name="ScopeHierarchyType">
+
+  <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+		  The scope hierarchy is a tree with a root representing
+		  the global scope. The global scope usually contains
+		  the name of the top-level routine, the names of its
+		  arguments, and any global symbols. 
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:sequence>
+    <xsd:group ref="ScopeVertexAndEdgeGroup" minOccurs="0" maxOccurs="unbounded"/>
+  </xsd:sequence>
+
+</xsd:complexType>
+
+<xsd:element name="ScopeHierarchy" type="ScopeHierarchyType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+	    The vertex_id's of single scopes must be unique within the scope 
+	    hierarchy. Scopes are referenced via their vertex_id's.
+	    Both the source and the target of a scope edge must be 
+	    vertex_id's of scopes.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:unique name="scv_unique">
+    <xsd:selector xpath="Scope"/><xsd:field xpath="@vertex_id"/>
+  </xsd:unique>
+  <xsd:unique name="sce_unique">
+    <xsd:selector xpath="ScopeEdge"/><xsd:field xpath="@edge_id"/>
+  </xsd:unique>
+  <xsd:key name='sc_vertexId'>
+    <xsd:selector xpath="Scope"/><xsd:field xpath="@vertex_id"/>
+  </xsd:key>
+  <xsd:keyref name="sc_keyref1" refer='sc_vertexId'>
+    <xsd:selector xpath="ScopeEdge"/><xsd:field xpath="@source"/>  
+  </xsd:keyref>
+  <xsd:keyref name="sc_keyref2" refer='sc_vertexId'>
+    <xsd:selector xpath="ScopeEdge"/><xsd:field xpath="@target"/>  
+  </xsd:keyref>
+  <xsd:keyref name="sc_keyref3" refer='sc_vertexId'>
+    <xsd:selector xpath="SymbolReference"/><xsd:field xpath="@scope_id"/>  
+  </xsd:keyref>
+  <xsd:keyref name="sc_keyref4" refer='sc_vertexId'>
+    <xsd:selector xpath="BasicBlock"/><xsd:field xpath="@scope_id"/>  
+  </xsd:keyref>
+
+</xsd:element>  
+
+<!-- *********************************************************** -->
+<!-- DU/UD Chains                                                -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="StatementIdRefType">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+	a reference to a statementId in an Assignment;
+	can be an empty string if we refer to an out-of-scope
+	Assignment
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:attribute name="idRef" type="xsd:string"/>
+</xsd:complexType>
+
+<xsd:complexType name="StmtIdSetWithKeyType">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      a set of statement IDs
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:sequence>
+      <xsd:element name="StatementId" type="StatementIdRefType" minOccurs="0" maxOccurs="unbounded"/>
+  </xsd:sequence>
+  <xsd:attribute name="key" type="xsd:nonNegativeInteger">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        a unique key into a map consisting of StmtIdSetWithKeyType instances
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:attribute>
+</xsd:complexType>
+
+<xsd:complexType name="StmtIdSetMapType">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      a map of StmtIdSet elements
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:sequence>
+    <xsd:element name="StmtIdSet" type="StmtIdSetWithKeyType" minOccurs="1" maxOccurs="unbounded"/>
+  </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="DUUDSetMap" type="StmtIdSetMapType">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      DU: For LHS of assignments it contains the statement ids of possible uses. 
+      UD: For VariablesReferences on RHS it contains statement ids of possible definitions. 
+      Key '0' is a dummy entry that should be there to satisfy the default key values  
+      in VariableReference and AssignmentLHS. 
+      A '0' key means we do not have any du/ud information. 
+      The chain can be empty.
+      An empty chain signifies dead code for a DU chain or an uninitialized use for a UD chain.
+      An empty StatementId in the chain, i.e. "", signifies a definition/use outside of 
+      the scope of interest. The scope of interest can either be the basic block 
+      or at most the control flow graph in which the variable reference occurs.  
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:unique name="duud_unique">
+    <xsd:selector xpath="xaif:StmtIdSet"/><xsd:field xpath="@key"/>
+  </xsd:unique>
+  <xsd:key name="duud_key">
+    <xsd:selector xpath="xaif:StmtIdSet"/><xsd:field xpath="@key"/>
+  </xsd:key>
+</xsd:element>  
+
+<xsd:element name="DOSetMap" type="StmtIdSetMapType">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      For the LHS defined by an assignment it contains the statement ids of possible overwritin statements. 
+      Key '0' is a dummy entry that should be there to satisfy the default key values.
+      A '0' key means we do not have any du/ud information. 
+      The chain can be empty.
+      An empty StatementId in the chain, i.e. "", signifies an overwrite outside of 
+      the scope of interest. The scope of interest can either be the basic block 
+      or at most the control flow graph in which the variable reference occurs.  
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:unique name="do_unique">
+    <xsd:selector xpath="xaif:StmtIdSet"/><xsd:field xpath="@key"/>
+  </xsd:unique>
+  <xsd:key name="do_key">
+    <xsd:selector xpath="xaif:StmtIdSet"/><xsd:field xpath="@key"/>
+  </xsd:key>
+</xsd:element>  
+
+<!-- *********************************************************** -->
+<!-- Alias Table                                                 -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="AliasRangeType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+	An alias range is a range of virtual addresses 
+	where we assume 
+	from_virtual_address less than or equal to_virtual_address
+	or the range is interpreted to be empty.
+	The "partial" attribute signifies a partial reference, 
+	as opposed to a full reference, e.g. when we talk about 
+	a vector that has an address range and the 
+	entire vector is read or written.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:attribute name="from_virtual_address" use="required" type="xsd:positiveInteger"/>
+  <xsd:attribute name="to_virtual_address" use="required" type="xsd:positiveInteger"/>
+  <xsd:attribute name="partial" type="xsd:boolean" use="optional" default="true"/>
+
+</xsd:complexType>
+
+<xsd:complexType name="AliasSetType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+	A set of alias information consisting of 
+	ranges of virtual addresses.
+	The "0" key entry 
+	signifies the "alias all". This entry 
+	may or may not be empty, its content is irrelevant.
+        It needs to exist to satisfy the referential
+        integrity constraints (as_keyref1/2) for "alias" foreign
+        key attributes defaulting to "0" in case
+        no actual alias information is available.
+	There may be empty AliasSets, for instance for the 
+	case of "address being taken", i.e. a computed 
+	value that does not have a storage location.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:sequence> 
+    <xsd:element name="AliasRange" type="AliasRangeType" minOccurs="0" maxOccurs="unbounded"/>
+  </xsd:sequence>
+  <xsd:attribute name="key" type="xsd:nonNegativeInteger"/>
+</xsd:complexType>
+
+<xsd:complexType name="AliasSetMapType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+	a map of Alias Sets with key as a unique 
+	identifier to be referenced from variables. 
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:sequence>
+    <xsd:element name="AliasSet" type="AliasSetType" minOccurs="1" maxOccurs="unbounded"/>
+  </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="AliasSetMap" type="AliasSetMapType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+	The AliasSetMap is associated with CallGraph, 
+	the top level element. 
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:unique name="as_unique">
+    <xsd:selector xpath="xaif:AliasSet"/><xsd:field xpath="@key"/>
+  </xsd:unique>
+  <xsd:key name="as_key">
+    <xsd:selector xpath="xaif:AliasSet"/><xsd:field xpath="@key"/>
+  </xsd:key>
+
+</xsd:element>  
+
+<!-- *********************************************************** -->
+<!-- Call Graph -->
+<!-- *********************************************************** -->
+<xsd:group name="CallGraphVertexAndEdgeGroup">
+  <xsd:choice>
+    <xsd:element ref="CallGraphVertex" minOccurs="1" maxOccurs="unbounded">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+  	  Call graph vertices are abstract base types for
+	  control flow graphs that represent the subroutines 
+	  in the program.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="CallGraphEdge" type="EdgeType" minOccurs="0" maxOccurs="unbounded">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          An edge connects two call graph vertices if the target is
+          called within the source.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:element>
+  </xsd:choice>
+</xsd:group>
+
+<xsd:group name="CallGraphContentGroup">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+	We group the ScopeHierarchy, the various SetMaps, and 
+	the VertexEdgeGroup to ensure the VertexEdgeGroup comes last. 
+	The order between the other elements does not really matter 
+	but the schema does not allow to grouping with a partial order. 
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:sequence>
+      <xsd:element ref="ScopeHierarchy" minOccurs="1" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+            The scope hierarchy is always attached to the call graph.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element> 
+      <xsd:element ref="AliasSetMap" minOccurs="1" maxOccurs="1"/>
+      <xsd:element ref="DUUDSetMap" minOccurs="1" maxOccurs="1"/>
+      <xsd:element ref="DOSetMap" minOccurs="1" maxOccurs="1"/>
+      <xsd:group ref="CallGraphVertexAndEdgeGroup" minOccurs="0" maxOccurs="unbounded"/>
+  </xsd:sequence>
+</xsd:group>
+
+<xsd:complexType name="CallGraphType">
+
+  <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+		  The call graph is the root element of any XAIF file.
+		  It contains the scope hierarchy, lists of independent
+		  and dependent variables, call graph vertices and edges.
+		  The name of the top-level routine must be specified. 
+		  Optionally, a program_name can be assigned.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:group ref="CallGraphContentGroup" minOccurs="1" maxOccurs="1"/>
+  
+  <xsd:attribute name="program_name" type="xsd:string" use="optional"/>
+
+  <xsd:attribute name="prefix" type="xsd:string" use="optional" default="GetRidOfThisDefault">
+    <xsd:annotation>
+      <xsd:documentation>
+        An attribute specifying a prefix for any symbol created 
+	by xaifbooster.It should be unique for each pass through 
+	xaifbooster to avoid name clashes. The default will be 
+	removed and it will be changed to 'required'.
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:attribute>
+
+</xsd:complexType>
+
+<xsd:element name="CallGraph" type="CallGraphType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      The vertex_id's of vertices must be unique within the call graph.
+      Call graph vertices are referenced via their vertex_id's.
+      Both the source and the target of a call graph edge must be vertex_id's.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:unique name="cgv_unique">
+    <xsd:selector xpath="xaif:CallGraphVertex"/><xsd:field xpath="@vertex_id"/>
+  </xsd:unique>
+  <xsd:unique name="cge_unique">
+    <xsd:selector xpath="xaif:CallGraphEdge"/><xsd:field xpath="@edge_id"/>
+  </xsd:unique>
+  <xsd:key name="cg_vertexId">
+    <xsd:selector xpath="xaif:ControlFlowGraph|xaif:ReplacementList"/><xsd:field xpath="@vertex_id"/>
+  </xsd:key>
+  <xsd:keyref name="cg_keyref1" refer="xaif:cg_vertexId">
+    <xsd:selector xpath="xaif:CallGraphEdge"/><xsd:field xpath="@source"/>  
+  </xsd:keyref>
+  <xsd:keyref name="cg_keyref2" refer="xaif:cg_vertexId">
+    <xsd:selector xpath="xaif:CallGraphEdge"/><xsd:field xpath="@target"/>  
+  </xsd:keyref>
+
+  <xsd:keyref name="as_keyref1" refer="xaif:as_key">
+    <xsd:selector xpath="xaif:ControlFlowGraph/xaif:BasicBlock/xaif:Assignment/xaif:AssignmentRHS/xaif:VariableReference"/><xsd:field xpath="@alias"/>  
+  </xsd:keyref>
+
+  <xsd:keyref name="as_keyref2" refer="xaif:as_key">
+    <xsd:selector xpath="xaif:ControlFlowGraph/xaif:BasicBlock/xaif:Assignment/xaif:AssignmentLHS"/><xsd:field xpath="@alias"/>  
+  </xsd:keyref>
+
+  <xsd:keyref name="duud_keyref1" refer="xaif:duud_key">
+    <xsd:selector xpath="xaif:ControlFlowGraph/xaif:BasicBlock/xaif:Assignment/xaif:AssignmentRHS/xaif:VariableReference"/><xsd:field xpath="@du_ud"/>  
+  </xsd:keyref>
+
+  <xsd:keyref name="duud_keyref2" refer="xaif:duud_key">
+    <xsd:selector xpath="xaif:ControlFlowGraph/xaif:BasicBlock/xaif:Assignment/xaif:AssignmentLHS"/><xsd:field xpath="@du_ud"/>  
+  </xsd:keyref>
+
+  <xsd:keyref name="do_keyref1" refer="xaif:do_key">
+    <xsd:selector xpath="xaif:ControlFlowGraph/xaif:BasicBlock/xaif:Assignment"/><xsd:field xpath="@do_chain"/>  
+  </xsd:keyref>
+
+</xsd:element>  
+
+<xsd:element name="CallGraphVertex" type="VertexType">
+  <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+		  Call graph vertices are declared as abstract types, that
+		  is elements of this type will never appear in the XAIF
+		  file. Elements that are based on CallGraphVertex as
+		  a substitution group (for example, ControlFlowGraph) are
+		  used instead.
+    </xsd:documentation>
+  </xsd:annotation>
+</xsd:element>  
+
+<!-- *********************************************************** -->
+<!-- Control Flow Graph -->
+<!-- *********************************************************** -->
+
+<xsd:simpleType name="IntentType">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      The intent of subroutine arguments, in concept similar 
+      to the an intent qualifier found in Fortran but not 
+      restricted to it.
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="in">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          The value assigned insight may not be 
+	  passed back, i.e. this can be pass by value.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:enumeration>
+    <xsd:enumeration value="out">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          The value assigned will be
+          passed back, i.e. this can be pass by value 
+	  or copy return value but the value 
+	  on entry may not be copied in.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:enumeration>
+    <xsd:enumeration value="inout">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          The values on entry an exit are passed either 
+	  by reference or by copy.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:enumeration>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:complexType name="ArgumentSymbolReferenceType">
+  <xsd:complexContent>
+    <xsd:extension base="FrontEndAnnotationType">       
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+	  An argument of a subroutine is a SymbolReference augmented 
+	  by its position within the argument list where 
+          position is greater than 0 and less or equal number of elements in ArgumentListType.
+	  Additionally, its intent (default: inout) may be specified.
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:attribute name="position"  type="xsd:positiveInteger" use="required"/>
+      <xsd:attribute name="symbol_id" type="xsd:string"          use="required"/>
+      <xsd:attribute name="scope_id"  type="xsd:positiveInteger" use="required"/>
+      <xsd:attribute name="deriv"     type="xsd:boolean"         use="optional" default="false"/>
+      <xsd:attribute name="intent"    type="IntentType"          use="optional" default="inout"/>
+    </xsd:extension>       
+  </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="ArgumentListType">
+  <xsd:sequence>
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        The argument list.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:element name="ArgumentSymbolReference" type="ArgumentSymbolReferenceType" minOccurs="0" maxOccurs="unbounded"/>
+  </xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="SideEffectListType">	
+  <xsd:sequence>
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        A list of VariableReferences to express the 
+	results of sideeffect analysis.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:element name="SideEffectReference" type="VariableReferenceType" minOccurs="0" maxOccurs="unbounded"/>
+  </xsd:sequence>
+</xsd:complexType>
+
+<xsd:group name="ControlFlowVertexAndEdgeGroup">
+  <xsd:choice> 
+    <xsd:element ref="ControlFlowVertex">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+   	  Control flow graph vertices represent the basic 
+	  blocks or certain control flow statements contained 
+	  within a subroutine. (loops, branches, entry, exit etc.) 
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="ControlFlowEdge" type="ControlFlowEdgeType">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          Control flow graph edges represent the flow of control within the
+          corresponding subroutine. An edge connects two control flow graph 
+          vertex substitutes i and j if there are values for the subroutine 
+          arguments such that j is executed immediately after i.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:element>
+  </xsd:choice>
+</xsd:group>
+
+<xsd:complexType name="ControlFlowGraphType">
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">       
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+	  Subroutines are represented by control flow graphs.
+	  The name of the subroutine must be specified with 
+          the attributes below just like a SymbolReference.
+	  Subroutine arguments (if any) are specified in ArgumentList.
+          We have four lists as the result of sideeffect analysis:
+          ModLocal:  modifications in this subroutine
+          Mod:       modifications in this subroutine and its callees
+          ReadLocal: reads in this subroutine
+          Read:      reads in this subroutine and its callees	
+          and one list provided by the front-end:
+          OnEntry:   reads in this subroutine that have to be 
+                     set on entry, e.g. because of uses in the declaration block
+	  The control flow graph itself is contained in ControlFlowVertexAndEdgeGroup.
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+        <xsd:element name="ArgumentList" type="ArgumentListType"   minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="ModLocal"     type="SideEffectListType" minOccurs="0" maxOccurs="1"/> 
+        <xsd:element name="Mod"          type="SideEffectListType" minOccurs="0" maxOccurs="1"/> 
+        <xsd:element name="ReadLocal"    type="SideEffectListType" minOccurs="0" maxOccurs="1"/> 
+        <xsd:element name="Read"         type="SideEffectListType" minOccurs="0" maxOccurs="1"/> 
+        <xsd:element name="OnEntry"      type="SideEffectListType" minOccurs="0" maxOccurs="1"/> 
+        <xsd:group ref="ControlFlowVertexAndEdgeGroup" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="active"                    type="xsd:boolean"         use="optional" default="true"/>
+      <xsd:attribute name="symbol_id"                 type="xsd:string"          use="required"/>
+      <xsd:attribute name="scope_id"                  type="xsd:positiveInteger" use="required"/>
+      <xsd:attribute name="controlflowgraph_scope_id" type="xsd:positiveInteger" use="required"/>
+      <xsd:attribute name="structured"                type="xsd:boolean"         use="optional" default="true">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+            The control flow graph is considered structured if loops and branches 
+            are nested or arranged in a sequence so that for every loop and branch node
+            there is corresponding end node so that each  control flow path through
+            a given loop or branch has to traverse the corresponding endLoop or endBranch
+            node.  This excludes early returns, alternative entries, ...
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:extension>
+  </xsd:complexContent>   
+</xsd:complexType>
+
+<xsd:element name="ControlFlowGraph" type="ControlFlowGraphType" substitutionGroup="CallGraphVertex">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+       On the level of a single ControlFlowGraph we impose the following constraints:
+       - The vertex_id's of control flow graph vertex substitutes must be unique with
+         the current control flow graph. (cfgv_unique)
+       - The edge_id's of control flow graph vertex substitutes must be unique with
+         the current control flow graph. (cfge_unique)
+       - Both the source (cfg_keyref1) and the target (cfg_keyref2) of an edge must be vertex_id's.
+       - statement IDs must be unique within a CFG
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:unique name="cfgv_unique">
+     <xsd:selector xpath="xaif:BasicBlock|xaif:Entry|xaif:Exit|xaif:Branch|xaif:If|xaif:ForLoop|xaif:PreLoop|xaif:PostLoop|xaif:EndBranch|xaif:EndLoop|xaif:Goto|xaif:Label"/>
+     <xsd:field xpath="@vertex_id"/>
+  </xsd:unique>
+
+  <xsd:unique name="cfge_unique">
+    <xsd:selector xpath="ControlFlowEdge"/>
+    <xsd:field xpath="@edge_id"/>
+  </xsd:unique>
+
+  <xsd:key name="cfg_vertexId">
+    <xsd:selector xpath="xaif:BasicBlock|xaif:Entry|xaif:Exit|xaif:Branch|xaif:If|xaif:ForLoop|xaif:PreLoop|xaif:PostLoop|xaif:EndBranch|xaif:EndLoop|xaif:Goto|xaif:Label"/>
+    <xsd:field xpath="@vertex_id"/>
+  </xsd:key>
+
+  <xsd:keyref name="cfg_keyref1" refer="xaif:cfg_vertexId">
+    <xsd:selector xpath="xaif:ControlFlowEdge"/><xsd:field xpath="@source"/>  
+  </xsd:keyref>
+
+  <xsd:keyref name="cfg_keyref2" refer="xaif:cfg_vertexId">
+    <xsd:selector xpath="xaif:ControlFlowEdge"/><xsd:field xpath="@target"/>  
+  </xsd:keyref>
+
+  <xsd:unique name="statement_unique">
+    <xsd:selector xpath="xaif:BasicBlock/xaif:Assignment|xaif:BasicBlock/xaif:SubroutineCall|xaif:BasicBlock/xaif:Marker|xaif:ForLoop/xaif:Initialization|xaif:ForLoop/xaif:Update"/>
+     <xsd:field xpath="@statement_id"/>
+  </xsd:unique>
+
+</xsd:element> 
+
+<xsd:element name="ControlFlowVertex" type="VertexType">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+	Control flow graph vertices are abstract. Substitutes are used within the
+	XAIF file.
+    </xsd:documentation>
+  </xsd:annotation>
+</xsd:element> 
+
+<xsd:complexType name="ControlFlowEdgeType">
+  <xsd:complexContent>
+    <xsd:extension base="EdgeType">    
+
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+        </xsd:documentation>
+      </xsd:annotation>
+      
+      <xsd:attribute name="has_condition_value" type="xsd:boolean" use="optional" default="false"/>
+      <xsd:attribute name="condition_value" type="xsd:integer" use="optional" default="1"/>
+     
+    </xsd:extension>
+  </xsd:complexContent>   
+</xsd:complexType>
+
+
+<!-- *********************************************************** -->
+<!-- Basic Block -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="BasicBlockElementType">
+  <xsd:complexContent>
+    <xsd:extension base="FrontEndAnnotationType">       
+      <xsd:annotation>
+    	  <xsd:documentation xml:lang="en">
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:extension>       
+  </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:element name="BasicBlockElement" type="BasicBlockElementType">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      abstract
+    </xsd:documentation>
+  </xsd:annotation>
+</xsd:element> 
+
+<xsd:group name="BasicBlockBody">
+	<xsd:choice>
+          <xsd:element ref="Assignment" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element ref="SubroutineCall" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element ref="Marker" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:choice>
+</xsd:group>
+
+<xsd:complexType name="BasicBlockType">
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">    
+
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+		Basic blocks are sequences of assignments and subroutine calls.
+        </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:sequence>
+      <xsd:group ref="BasicBlockBody" minOccurs="1" maxOccurs="unbounded"/>
+      </xsd:sequence>
+
+      <xsd:attribute name="scope_id" type="xsd:positiveInteger" use="required"/>
+
+    </xsd:extension>
+  </xsd:complexContent>   
+</xsd:complexType>
+
+<xsd:element name="BasicBlock" type="BasicBlockType"
+	substitutionGroup="ControlFlowVertex">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+		Basic blocks are substitutes for control flow vertices.
+        </xsd:documentation>
+      </xsd:annotation>
+</xsd:element>
+
+<!-- *********************************************************** -->
+<!-- ForLoop reversal types. 
+     We distinguish two ForLoops constructions/
+     The purpose of this distinction is  to allow 
+     a direct reversal in terms of the original loop variables
+     as opposed to an anonymous reversal with a dummy loop variable. -->
+<!-- *********************************************************** -->
+
+<xsd:simpleType name="ForLoopReversalType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      The two ForLoop reversal types are 
+      "explicit" for an explicit reversal that retains the loop variables and 
+      "anonymous" for the usual loop reversal with generated loop variables  
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="explicit"/>
+    <xsd:enumeration value="anonymous"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<!-- *********************************************************** -->
+<!-- ForLoop -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="ForLoopType">
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">    
+
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          For loops with a single initialization, condition, and update.
+        </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:sequence>
+         <xsd:element name="Initialization" type="AssignmentType"
+		   minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="Condition" type="ExpressionType"
+		   minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="Update" type="AssignmentType"
+		   minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+      <xsd:attribute name="reversal" type="xaif:ForLoopReversalType" use="optional" default="anonymous"/>
+      <xsd:attribute name="lineNumber" type="xsd:nonNegativeInteger" use="optional" default="0"/>
+    </xsd:extension>
+  </xsd:complexContent>   
+</xsd:complexType>
+
+<xsd:element name="ForLoop" type="ForLoopType"
+	substitutionGroup="ControlFlowVertex">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+		Forloops are substitutes for control flow vertices.
+        </xsd:documentation>
+      </xsd:annotation>
+</xsd:element>
+
+<!-- *********************************************************** -->
+<!-- PreLoop -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="PreLoopType">
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">    
+
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          Loops with test of condition before first execution of loop body.
+        </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:sequence>
+         <xsd:element name="Condition" type="ExpressionType"
+   		   minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+      <xsd:attribute name="lineNumber" type="xsd:nonNegativeInteger" use="optional" default="0"/>
+    </xsd:extension>
+  </xsd:complexContent>   
+</xsd:complexType>
+
+<xsd:element name="PreLoop" type="PreLoopType"
+	substitutionGroup="ControlFlowVertex">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+		Preloops are substitutes for control flow vertices.
+        </xsd:documentation>
+      </xsd:annotation>
+</xsd:element>
+
+<!-- *********************************************************** -->
+<!-- PostLoop -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="PostLoopType">
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">    
+
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          Loops with test of condition after first execution of loop body.
+        </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:sequence>
+         <xsd:element name="Condition" type="ExpressionType"
+		   minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+      <xsd:attribute name="lineNumber" type="xsd:nonNegativeInteger" use="optional" default="0"/>
+    </xsd:extension>
+  </xsd:complexContent>   
+</xsd:complexType>
+
+<xsd:element name="PostLoop" type="PostLoopType"
+	substitutionGroup="ControlFlowVertex">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+		Postloops are substitutes for control flow vertices.
+        </xsd:documentation>
+      </xsd:annotation>
+</xsd:element>
+
+<!-- *********************************************************** -->
+<!-- Branches (Ifs and Selects) -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="BranchType">
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">    
+
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+        </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:sequence>
+         <xsd:element name="Condition" type="ExpressionType"
+		   minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+      <xsd:attribute name="lineNumber" type="xsd:nonNegativeInteger" use="optional" default="0"/>
+    </xsd:extension>
+  </xsd:complexContent>   
+</xsd:complexType>
+
+<xsd:element name="Branch" type="BranchType"
+	substitutionGroup="ControlFlowVertex">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+		Branches are substitutes for control flow vertices.
+        </xsd:documentation>
+      </xsd:annotation>
+</xsd:element>
+
+<!-- *********************************************************** -->
+<!-- If -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="IfType">
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">    
+
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          If tests in control flow graph.
+        </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:sequence>
+         <xsd:element name="Condition" type="ExpressionType"
+		   minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+      <xsd:attribute name="lineNumber" type="xsd:nonNegativeInteger" use="optional" default="0"/>
+    </xsd:extension>
+  </xsd:complexContent>   
+</xsd:complexType>
+
+<xsd:element name="If" type="IfType"
+	substitutionGroup="ControlFlowVertex">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+		If's are substitutes for control flow vertices.
+        </xsd:documentation>
+      </xsd:annotation>
+</xsd:element>
+
+<!-- *********************************************************** -->
+<!-- Entry -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="EntryType">
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">    
+
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          Unique entry node of control flow graph.
+        </xsd:documentation>
+      </xsd:annotation>
+      
+    </xsd:extension>
+  </xsd:complexContent>   
+</xsd:complexType>
+
+<xsd:element name="Entry" type="EntryType"
+	substitutionGroup="ControlFlowVertex">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+		Entry is a substitute for a control flow vertex.
+        </xsd:documentation>
+      </xsd:annotation>
+</xsd:element>
+
+<!-- *********************************************************** -->
+<!-- EndBranch -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="EndBranchType">
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">    
+
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:extension>
+  </xsd:complexContent>   
+</xsd:complexType>
+
+<xsd:element name="EndBranch" type="EndBranchType"
+	substitutionGroup="ControlFlowVertex">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+        </xsd:documentation>
+      </xsd:annotation>
+</xsd:element>
+
+<!-- *********************************************************** -->
+<!-- Goto -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="GotoType">
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">    
+
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:extension>
+  </xsd:complexContent>   
+</xsd:complexType>
+
+<xsd:element name="Goto" type="GotoType"
+	substitutionGroup="ControlFlowVertex">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+        </xsd:documentation>
+      </xsd:annotation>
+</xsd:element>
+
+<!-- *********************************************************** -->
+<!-- Label -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="LabelType">
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">    
+
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:extension>
+  </xsd:complexContent>   
+</xsd:complexType>
+
+<xsd:element name="Label" type="LabelType"
+	substitutionGroup="ControlFlowVertex">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+        </xsd:documentation>
+      </xsd:annotation>
+</xsd:element>
+
+
+<!-- *********************************************************** -->
+<!-- EndLoop -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="EndLoopType">
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">    
+
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:extension>
+  </xsd:complexContent>   
+</xsd:complexType>
+
+<xsd:element name="EndLoop" type="EndLoopType"
+	substitutionGroup="ControlFlowVertex">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+        </xsd:documentation>
+      </xsd:annotation>
+</xsd:element>
+
+<!-- *********************************************************** -->
+<!-- Exit -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="ExitType">
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">    
+
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          Unique exit node in control flow graph.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:extension>
+  </xsd:complexContent>   
+</xsd:complexType>
+
+<xsd:element name="Exit" type="ExitType"
+	substitutionGroup="ControlFlowVertex">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+		Exit is a substitute for a control flow vertex.
+        </xsd:documentation>
+      </xsd:annotation>
+</xsd:element>
+
+<!-- *********************************************************** -->
+<!-- Assignment -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="AssignmentBaseType">
+      <xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+		  Assignments consist of a variable reference on the lhs
+		  and an expression on the rhs. Within the current basic
+		  block they are uniquely identified by their statement_id.
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+        <xsd:element name="AssignmentLHS" minOccurs="1" maxOccurs="1">
+          <xsd:complexType>
+            <xsd:complexContent>
+              <xsd:extension base="VariableReferenceType">
+                <xsd:attribute name="live" type="xsd:boolean" use="optional" default="true">
+                  <xsd:annotation>
+                    <xsd:documentation>
+                         An attribute specifying whether a variable reference occuring
+                         on the left-hand side of an assigment is live at the end of 
+                         the basic block or at the next Marker, whichever is closest.
+                    </xsd:documentation>
+                  </xsd:annotation>
+                </xsd:attribute>
+              </xsd:extension>
+            </xsd:complexContent>
+          </xsd:complexType>
+          <xsd:unique name="lhsv_unique">
+            <xsd:selector xpath="SymbolReference"/>
+             <xsd:field xpath="@vertex_id"/>
+          </xsd:unique>
+          <xsd:unique name="lhse_unique">
+            <xsd:selector xpath="VariableReferenceEdge"/>
+             <xsd:field xpath="@edge_id"/>
+          </xsd:unique>
+          <xsd:key name='lhs_vertexId'>
+            <xsd:selector xpath="SymbolReference"/>
+            <xsd:field xpath="@vertex_id"/>
+          </xsd:key>
+          <xsd:keyref name="lhs_keyref1" refer='lhs_vertexId'>
+            <xsd:selector xpath="VariableReferenceEdge"/>
+            <xsd:field xpath="@source"/>  
+          </xsd:keyref>
+          <xsd:keyref name="lhs_keyref2" refer='lhs_vertexId'>
+            <xsd:selector xpath="VariableReferenceEdge"/>
+            <xsd:field xpath="@target"/>  
+          </xsd:keyref>
+        </xsd:element>
+        <xsd:element name="AssignmentRHS" type="ExpressionType" minOccurs="1" maxOccurs="1">
+          <xsd:unique name="rhsv_unique">
+            <xsd:selector xpath="VariableReference|Constant|Intrinsic|FunctionCall|BooleanOperation"/>
+             <xsd:field xpath="@vertex_id"/>
+          </xsd:unique>
+          <xsd:unique name="rhse_unique">
+            <xsd:selector xpath="ExpressionEdge"/><xsd:field xpath="@edge_id"/>
+          </xsd:unique>
+          <xsd:key name='rhs_vertexId'>
+        	  <xsd:selector xpath="VariableReference|Constant|Intrinsic|FunctionCall|BooleanOperation"/> 
+            <xsd:field xpath="@vertex_id"/>
+          </xsd:key>
+          <xsd:keyref name="rhs_keyref1" refer='rhs_vertexId'>
+            <xsd:selector xpath="ExpressionEdge"/>
+            <xsd:field xpath="@source"/>  
+          </xsd:keyref>
+          <xsd:keyref name="rhs_keyref2" refer='rhs_vertexId'>
+            <xsd:selector xpath="ExpressionEdge"/>
+            <xsd:field xpath="@target"/>  
+          </xsd:keyref>
+        </xsd:element>
+      </xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="AssignmentType">
+  <xsd:complexContent>
+    <xsd:extension base="AssignmentBaseType">
+      <xsd:attribute name="statement_id" type="xsd:string" use="required"/>
+      <xsd:attribute name="do_chain" type="xsd:integer" use="optional" default="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            Key into DOSet for a chain of statements overwriting 
+            the LHS of this assignment. Note, there is no placeholder for 
+            the LHS going out of scope (and subsequent overwrite by reuse) 
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:extension>       
+  </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="BasicBlockAssignmentType">
+  <xsd:complexContent>
+    <xsd:extension base="AssignmentType">
+      <xsd:attribute name="lineNumber" type="xsd:nonNegativeInteger" use="optional" default="0"/>
+    </xsd:extension>       
+  </xsd:complexContent>
+</xsd:complexType>
+<xsd:element name="Assignment" type="BasicBlockAssignmentType"></xsd:element>        
+
+<!-- *********************************************************** -->
+<!-- Expression -->
+<!-- *********************************************************** -->
+<xsd:group name="ExpressionVertexAndEdgeGroup">
+  <xsd:choice>
+    <xsd:element ref="ExpressionVertex" 
+			minOccurs="0" maxOccurs="unbounded">
+
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+		Expression vertices are abstract placeholders for a variety
+		of substitutes (see below).
+        </xsd:documentation>
+      </xsd:annotation>
+
+    </xsd:element>
+
+    <xsd:element name="ExpressionEdge" type="ExpressionEdgeType" 
+			minOccurs="0" maxOccurs="unbounded">
+
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+		Two expression vertices are connected by an expression edge if 
+		the result of the subdag induced by the source is an argument of 
+		the operation represented by the target. 
+		Leafs are always variable references or constants. 
+		The orientation is always operator to operand, e.g. for 
+	        sin(x) it is "x" -> "sin".
+        </xsd:documentation>
+      </xsd:annotation>
+
+    </xsd:element>
+  </xsd:choice>
+</xsd:group>
+
+<xsd:complexType name="ExpressionEdgeType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexContent>
+    <xsd:extension base="EdgeType">
+      <xsd:attribute name="position" type="xsd:integer" use="required"/>
+    </xsd:extension>
+  </xsd:complexContent>               
+
+</xsd:complexType>
+
+<xsd:complexType name="ExpressionType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Expressions are dag's in the classical compiler sense.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:sequence>
+
+    <xsd:group ref="ExpressionVertexAndEdgeGroup" 
+               minOccurs="0" maxOccurs="unbounded"/>
+
+  </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="Expression" type="ExpressionType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+	    The vertex_id's of all expression vertex substitutes must be unique within the
+	    current expression. Substitutes for expression vertices are
+	    elements of type VariableReference, Constant, Intrinsic, FunctionCall, 
+	    BooleanOperation.
+	    Edges reference the respective source and target by
+	    their vertex_id's.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:unique name="egv_unique">
+    <xsd:selector xpath="VariableReference|Constant|Intrinsic|FunctionCall|BooleanOperation"/>
+     <xsd:field xpath="@vertex_id"/>
+  </xsd:unique>
+  <xsd:unique name="ege_unique">
+    <xsd:selector xpath="ExpressionEdge"/><xsd:field xpath="@edge_id"/>
+  </xsd:unique>
+  <xsd:key name='eg_vertexId'>
+	  <xsd:selector xpath="VariableReference|Constant|Intrinsic|FunctionCall|BooleanOperation"/> 
+    <xsd:field xpath="@vertex_id"/>
+  </xsd:key>
+  <xsd:keyref name="eg_keyref1" refer='eg_vertexId'>
+    <xsd:selector xpath="ExpressionEdge"/>
+    <xsd:field xpath="@source"/>  
+  </xsd:keyref>
+  <xsd:keyref name="eg_keyref2" refer='eg_vertexId'>
+    <xsd:selector xpath="ExpressionEdge"/>
+    <xsd:field xpath="@target"/>  
+  </xsd:keyref>
+</xsd:element>     
+
+<xsd:element name="ExpressionVertex" type="VertexType">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+	Expression vertices are abstract. Substitutes are used within the
+	XAIF file.
+    </xsd:documentation>
+  </xsd:annotation>
+</xsd:element> 
+
+<!-- *********************************************************** -->
+<!-- Subroutine Call -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="SubroutineArgumentType">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+	An argument may either be a single variable or 
+	a single constant. More complex 
+	expressions are supposed to be hoisted 
+	by canonicalization.
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexContent>
+    <xsd:extension base="FrontEndAnnotationType">       
+      <xsd:choice minOccurs="1" maxOccurs="1">
+        <xsd:element name="VariableReference" type="VariableReferenceType" minOccurs="0" maxOccurs="1"/>
+        <xsd:element name="Constant" type="ConstantType" minOccurs="0" maxOccurs="1"/>
+      </xsd:choice>               
+      <xsd:attribute name="position" type="xsd:positiveInteger" use="required">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+            To cover possible optional arguments we identify each actual argument 
+            by its respective position in the formal (ordered) argument list.
+            The position must be greater than 0 and less than or equal SubroutineCallType:formalArgCount
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="SubroutineCallType">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+    	    Subroutine calls appear in basic blocks together with assignments. 
+	    They are equivalent to void functions in C/C++ or explicitly CALLed 
+	    subroutines in Fortran. They may have  arguments in the form of 
+	    variable references. The subroutine call is identified uniquely by the 
+	    statement_id within the current basic block, the symbol_id of its 
+	    name within the corresponding symbol table.
+        </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:sequence>
+	  <xsd:element name="Argument" type="SubroutineArgumentType" 
+	    minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="statement_id" type="xsd:string" use="required"/>
+      <xsd:attribute name="symbol_id" type="xsd:string"/>
+      <xsd:attribute name="scope_id" type="xsd:positiveInteger"/>
+      <xsd:attribute name="active" type="xaif:ActiveUseType" use="optional" default="undefined"/>
+      <xsd:attribute name="lineNumber" type="xsd:nonNegativeInteger" use="optional" default="0"/>
+      <xsd:attribute name="formalArgCount"  type="xsd:nonNegativeInteger" use="required">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+	    The number of formal arguments including optional ones that are not present in this call
+            Therefore the number of actual arguments (i.e. Argument elements) may be less.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+
+</xsd:complexType> 
+
+<xsd:element name="SubroutineCall" type="SubroutineCallType"/>
+
+<!-- *********************************************************** -->
+<!-- Dummy node for use by front-end (ignored by xaifbooster) -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="MarkerType">
+  <xsd:complexContent>
+    <xsd:extension base="FrontEndAnnotationType">
+      <xsd:attribute name="statement_id" type="xsd:string" use="required"/>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:element name="Marker" type="MarkerType"/>
+
+<!-- *********************************************************** -->
+<!-- Variable Reference -->
+<!-- *********************************************************** -->
+
+<xsd:simpleType name="ActiveUseType">
+
+  <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+                  We distinguish between the following kinds of symbol uses:
+                  1. "undefined" - no information available; 
+                  2. "true" - the use of the symbol is active
+		  3. "false" - the use of the symbol is passive 
+		  The setting has to be consistent with the active attribute 
+		  specified in the corresponding Symbol element, 
+		  that is a setting of "true" here
+		  requires that in the corresponding Symbol:active be set to 
+		  true as well.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="undefined"/>
+    <xsd:enumeration value="true"/>
+    <xsd:enumeration value="false"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:complexType name="VariableReferenceType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Variable references are in essence representing expressions
+      for address computations. 
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">
+
+      <xsd:sequence>
+
+        <xsd:element ref="VariableReferenceVertex" 
+    			minOccurs="1" maxOccurs="unbounded">
+
+          <xsd:annotation>
+ 	    <xsd:documentation xml:lang="en">
+	       Variable reference vertices are abstract placeholders
+	       for symbol references, array references etc.
+            </xsd:documentation>
+          </xsd:annotation>
+
+        </xsd:element>
+
+        <xsd:element name="VariableReferenceEdge" type="EdgeType" 
+    			minOccurs="0" maxOccurs="unbounded">
+
+          <xsd:annotation>
+	    <xsd:documentation xml:lang="en"> 
+  	      The edge orientation is to be from the operand
+	      to the operator, e.g. for A[i] from the symbol reference "A" -> "[i]", 
+	      the array reference vertex. Note that this is the 
+	      reverse of the direction prescribed for ExpressionEdges.
+            </xsd:documentation>
+          </xsd:annotation>
+
+        </xsd:element>
+
+      </xsd:sequence>
+
+      <xsd:attribute name="active" type="xaif:ActiveUseType" use="optional" default="undefined"/>
+      <xsd:attribute name="alias" type="xsd:integer" use="optional" default="0"/>
+      <xsd:attribute name="du_ud" type="xsd:integer" use="optional" default="0"/>
+      <xsd:attribute name="deriv" type="xsd:boolean" use="optional" default="false"/>
+
+      <xsd:attribute name="constant" type="xsd:boolean" use="optional" default="false">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+  	   The front-end uses constant propagation analysis to determine 
+	   which variable uses have a value that is a unique literal 
+	   constant in which case the flag is set to 'true'. 
+	   This allows to determine cases of constant use for 
+	   variables with non-constant type and distinguishes the case of 
+	   variables with constant type but non-literal initialization 
+	   (e.g. initialization from a subroutine parameter).
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:element name="VariableReference" type="VariableReferenceType"
+	     substitutionGroup="ExpressionVertex">
+
+  <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+		  Variable references appear inside of expressions. Both vertex and
+		  edge id's must be unique inside a variable reference. Edges reference
+		  vertex_id's for source and target.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:unique name="vrv_unique">
+    <xsd:selector xpath="SymbolReference"/>
+     <xsd:field xpath="@vertex_id"/>
+  </xsd:unique>
+  <xsd:unique name="vre_unique">
+    <xsd:selector xpath="VariableReferenceEdge"/>
+     <xsd:field xpath="@edge_id"/>
+  </xsd:unique>
+  <xsd:key name='vr_vertexId'>
+    <xsd:selector xpath="SymbolReference"/>
+    <xsd:field xpath="@vertex_id"/>
+  </xsd:key>
+  <xsd:keyref name="vr_keyref1" refer='vr_vertexId'>
+    <xsd:selector xpath="VariableReferenceEdge"/>
+    <xsd:field xpath="@source"/>  
+  </xsd:keyref>
+  <xsd:keyref name="vr_keyref2" refer='vr_vertexId'>
+    <xsd:selector xpath="VariableReferenceEdge"/>
+    <xsd:field xpath="@target"/>  
+  </xsd:keyref>
+</xsd:element>     
+
+<xsd:element name="VariableReferenceVertex" type="VertexType" abstract="true">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+	Variable reference vertices are abstract.  
+	Substitutes are used within the XAIF file.
+    </xsd:documentation>
+  </xsd:annotation>
+</xsd:element> 
+
+
+
+<!-- *********************************************************** -->
+<!-- Built-in real operations. 
+     These operations are the two basic chain rule operations 
+     that the system has to rely on independent of what 
+     the intrinsic catalogue contains. -->
+<!-- *********************************************************** -->
+
+<xsd:simpleType name="BuiltinRealOperations">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+	    Real operations built into XAIF. "add_scal_scal" and "mul_scal_scal" 
+	    are reserved names to be used in Jacobian codes. 
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="add_scal_scal"/>
+    <xsd:enumeration value="mul_scal_scal"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<!-- *********************************************************** -->
+<!-- Built-in boolean operations. 
+     The first 6 boolean operations are of the type that 
+     we are most interested in since they can involve active 
+     variables. 
+     The last 4 operations are supposed to be applied to 
+     booleans of integer-like types. They are in here to be 
+     able to represent the complete boolean expression and 
+     not burden the front-end with additional canonicalizations. -->
+<!-- *********************************************************** -->
+
+<xsd:simpleType name="BuiltinBooleanOperations">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Boolean operations built into XAIF.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="less_than"/>
+    <xsd:enumeration value="less_or_equal"/>
+    <xsd:enumeration value="greater_than"/>
+    <xsd:enumeration value="greater_or_equal"/>
+    <xsd:enumeration value="equal"/>
+    <xsd:enumeration value="not_equal"/>
+    <xsd:enumeration value="and"/>
+    <xsd:enumeration value="or"/>
+    <xsd:enumeration value="not"/>
+    <xsd:enumeration value="xor"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<!-- *********************************************************** -->
+<!-- Intrinsics. 
+     An intrinsic is any function that we have derivative code
+     for. We distinguish between inlinable a non-inlinable
+     intrinsics. The latter are specified in a different file. -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="IntrinsicType">
+
+  <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+		  Operations are intrinsic if derivative code is available for them.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+      <xsd:attribute name="type" type="xsd:string" use="optional" default="inlinable"/>
+      <xsd:attribute name="rType" type="SymbolTypeType" use="optional" default="real">
+        <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+	    The type of the intrinsic return value
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="rShape" type="SymbolShapeType" use="optional" default="scalar">
+        <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+	    The shape of the intrinsic return value
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:element name="Intrinsic" type="IntrinsicType" 
+	substitutionGroup="ExpressionVertex">
+  <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+		  Intrinsics appear inside expressions as substitutes for
+		  expression vertices.
+    </xsd:documentation>
+  </xsd:annotation>
+</xsd:element>
+
+
+<!-- *********************************************************** -->
+<!-- Boolean operations -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="BooleanOperationType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Boolean operations that are built into XAIF.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">
+      <xsd:attribute name="name" type="BuiltinBooleanOperations" use="required"/>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:element name="BooleanOperation" type="BooleanOperationType" 
+	     substitutionGroup="ExpressionVertex">
+  <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+		  Boolean operations appear inside expressions as substitutes for
+		  expression vertices.
+    </xsd:documentation>
+  </xsd:annotation>
+</xsd:element>
+
+
+<!-- *********************************************************** -->
+<!-- Symbol Reference Properties -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="SymbolReferencePropertyType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      A name-value pair for arbitrary symbol reference properties.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:attribute name="name" type="xsd:string" use="required"/>
+  <xsd:attribute name="value" type="xsd:string" use="required"/>
+</xsd:complexType>
+
+<xsd:element name="SymbolReferenceProperty" type="SymbolReferencePropertyType">
+  <xsd:annotation>
+     <xsd:documentation xml:lang="en">
+       The optional symbol reference properties appear inside symbol
+       references and can be used to annotate them in arbitrary module-specific
+       ways. Some commonly used properties should be considered for  
+       definition as SymbolReference attributes. 
+    </xsd:documentation>
+  </xsd:annotation>
+</xsd:element>
+
+<!-- *********************************************************** -->
+<!-- Symbol Reference -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="SymbolReferenceType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      A symbol is referenced uniquely by its id inside a given scope.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">
+      <xsd:sequence>
+        <xsd:element ref="SymbolReferenceProperty"
+                     minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="symbol_id" type="xsd:string" use="required"/>
+      <xsd:attribute name="scope_id" type="xsd:positiveInteger" use="required"/>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:element name="SymbolReference" type="SymbolReferenceType" 
+	     substitutionGroup="VariableReferenceVertex">
+  <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+		  Symbol references appear inside variable references as substitutes for
+		  variable reference vertices.
+    </xsd:documentation>
+  </xsd:annotation>
+
+</xsd:element>
+
+<!-- *********************************************************** -->
+<!-- Array Element Reference -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="IndexTripletType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      index triplet allowing for simple indices 
+      using just "Index" but also for slicing using 
+      the second position "Bound" as well as "Stride". 
+      An empty expression indicates unknown information 
+      as would be the case when it is implicitly given 
+      by the context. 
+      The assumption in xaifBooster is that anything that is not a 
+      scalar dereference should have at least either 
+      Bound or Stride specified.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:sequence>
+    <xsd:element name="Index" type="ExpressionType" minOccurs="0" maxOccurs="1"/>
+    <xsd:element name="Bound" type="ExpressionType" minOccurs="0" maxOccurs="1"/>
+    <xsd:element name="Stride" type="ExpressionType" minOccurs="0" maxOccurs="1"/>
+  </xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="ArrayElementReferenceType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      a reference to an array element or array slice using subscripts. 
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">
+      <xsd:sequence>
+        <xsd:element name="IndexTriplet" type="IndexTripletType" minOccurs="1" maxOccurs="unbounded">
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:element name="ArrayElementReference" type="ArrayElementReferenceType" 
+	substitutionGroup="VariableReferenceVertex">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+    </xsd:documentation>
+  </xsd:annotation>
+
+</xsd:element>
+
+<!-- *********************************************************** -->
+<!-- Constant -->
+<!-- *********************************************************** -->
+
+<xsd:simpleType name="ConstantTypeType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Types of constants known in XAIF.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="real"/>
+    <xsd:enumeration value="double"/>
+    <xsd:enumeration value="integer"/>
+    <xsd:enumeration value="bool"/>
+    <xsd:enumeration value="char"/>
+    <xsd:enumeration value="string"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+<xsd:complexType name="ConstantType">
+
+  <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+		  Constants in XAIF.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">
+      <xsd:attribute name="type"      type="ConstantTypeType" use="required"/>
+      <xsd:attribute name="feType"    type="xsd:string"       use="optional" default="">      
+        <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+             For cases where the front-end distinguishes 
+             machine dependent types, e.g. sizes in bytes, the front-end 
+             can use the optional fe_type attribute. We do not assign 
+             any particular meaning to values other than the empty 
+             string which means unspecified.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>       
+      <xsd:attribute name="value"     type="xsd:string"       use="required"/>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:element name="Constant" type="ConstantType" 
+	     substitutionGroup="ExpressionVertex">
+  <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+		  Constants appear inside expressions as substitutes for
+		  expression vertices.
+    </xsd:documentation>
+  </xsd:annotation>
+</xsd:element>
+
+<!-- *********************************************************** -->
+<!-- Function Call -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="FunctionCallType">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+	    Function calls are calls to subroutines (call graph vertices) that
+	    have a non-void return type. They are not intrinsics since 
+	    derivative code must be generated by the AD tool. The are 
+	    canonicalized by the front-end.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:complexContent>
+    <xsd:extension base="VertexType">
+      <xsd:sequence>
+        <xsd:element name="Argument" type="VariableReferenceType" 
+          minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="symbol_id" type="xsd:string"/>
+      <xsd:attribute name="scope_id" type="xsd:positiveInteger"/>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:element name="FunctionCall" type="FunctionCallType" 
+	     substitutionGroup="ExpressionVertex">
+  <xsd:annotation>
+	  <xsd:documentation xml:lang="en">
+		  Function calls appear inside expressions as substitutes for
+		  expression vertices.
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:keyref name="st_keyref2" refer='st_symbolId'>
+    <xsd:selector xpath="FunctionCall"/>
+     <xsd:field xpath="@symbol_id"/>  
+  </xsd:keyref>
+</xsd:element>
+
+</xsd:schema>

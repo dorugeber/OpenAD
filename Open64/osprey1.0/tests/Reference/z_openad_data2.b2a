@@ -1,0 +1,98 @@
+ LOC 0 0 source files:	1	"/m_home/m_utkej/Argonne/Dev/Current/OpenAD/Open64/osprey1.0/tests/data2.f"
+ LOC 1 1         program mc
+FUNC_ENTRY <1,20,mc_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 2          real, dimension (2,2) :: g2
+ LOC 1 3          g2=reshape((/1., 2., 3., 4./),(/2,2/))
+ BODY
+     U8LDA 0 <2,3,t__1> T<31,anon_ptr.,8>
+    F4F4ILOAD 0 T<10,.predef_F4,4> T<35,anon_ptr.,8>
+   U8PARM 1 T<10,.predef_F4,4> #  by_reference 
+     U8LDA 0 <2,4,t__2> T<33,anon_ptr.,8>
+    I4I4ILOAD 0 T<4,.predef_I4,4> T<34,anon_ptr.,8>
+   U8PARM 1 T<4,.predef_I4,4> #  by_reference 
+### attention: null WN pointer, place holder
+### attention: null WN pointer, place holder
+  F4CALL 2174 <1,22,RESHAPE> # flags 0x87e
+    U8LDA 0 <2,1,G2> T<31,anon_ptr.,8>
+    I4INTCONST 2 (0x2)
+    I4INTCONST 2 (0x2)
+     I4INTCONST 1 (0x1)
+     I4INTCONST 2 (0x2)
+     I4INTCONST 1 (0x1)
+    I8SRCTRIPLET
+     I4INTCONST 1 (0x1)
+     I4INTCONST 2 (0x2)
+     I4INTCONST 1 (0x1)
+    I8SRCTRIPLET
+   U8ARRSECTION 2 4
+   I4INTCONST 1 (0x1)
+   I4INTCONST 1 (0x1)
+  U8ARRAYEXP 3
+ F4ISTORE 0 T<35,anon_ptr.,8>
+ LOC 1 4          if((g2(2,1).EQ.2.0)) then
+ IF
+     U8LDA 0 <2,1,G2> T<31,anon_ptr.,8>
+     I4INTCONST 2 (0x2)
+     I4INTCONST 2 (0x2)
+     I4INTCONST 1 (0x1)
+     I4INTCONST 2 (0x2)
+    U8ARRAY 2 4
+   F4F4ILOAD 0 T<10,.predef_F4,4> T<35,anon_ptr.,8>
+   F4CONST <1,23,____2.000000>
+  I4F4EQ
+ THEN
+  BLOCK
+ LOC 1 5            print *, "OK"
+  COMMENT <2,5,print *, "OK"> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,25,"OK"> T<39,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 2 (0x2)
+   IO_ITEM <96,CHAR> T<38,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ ELSE
+ LOC 1 4
+  BLOCK
+ LOC 1 6          else
+ LOC 1 7            print *, "failed"
+  COMMENT <2,6,print *, "failed"> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,27,"failed"> T<42,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 6 (0x6)
+   IO_ITEM <96,CHAR> T<41,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ END_IF
+ LOC 1 8          end if
+ LOC 1 9         end program mc  
+ VCALL 2174 <1,21,_END> # flags 0x87e
+ RETURN
+ RETURN
+ END_BLOCK

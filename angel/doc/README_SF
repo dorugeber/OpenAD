@@ -1,0 +1,19 @@
+access to shell: 
+
+	ssh -t jean_utke,angellib@shell.sourceforge.net create
+
+to go to the project dir: 
+	cd /home/project-web/angellib
+
+web pages are in: htdocs
+
+upload via sftp: 
+
+	sftp jean_utke,angellib@web.sourceforge.net
+
+	cd htdocs
+
+	put angellib.sourceforge.net.index.shtml index.shtml
+
+released files are under
+	/home/frs/project/a/an/angellib/angellib/

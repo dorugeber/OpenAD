@@ -1,0 +1,168 @@
+ LOC 0 0 source files:	1	"/m_home/m_utkej/Argonne/Dev/Current/OpenAD/Open64/osprey1.0/tests/interfaceDimExpr.f90"
+ LOC 1 1 module modA
+FUNC_ENTRY <1,20,moda_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+  I8I8LDID 0 <2,2,t__1> T<5,.predef_I8,8>
+ XPRAGMA 0 161 <null-st> # COPYIN_BOUND
+  I8I8LDID 0 <2,3,t__2> T<5,.predef_I8,8>
+ XPRAGMA 0 161 <null-st> # COPYIN_BOUND
+ INTERFACE <2,5,FOO_I>
+ BODY
+  FUNC_ENTRY <1,21,foo_>
+   IDNAME 0 <2,1,SIZEA>
+   IDNAME 0 <2,4,A>
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ END_BLOCK
+ LOC 1 5     end subroutine
+ LOC 1 6   end interface
+ LOC 1 7 end module
+ LOC 1 8 
+ LOC 1 9 subroutine foo(sizeAdef,adef)
+FUNC_ENTRY <1,21,foo_>
+ IDNAME 0 <2,1,SIZEADEF>
+ IDNAME 0 <2,4,ADEF>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+  I8I8LDID 0 <2,2,t__3> T<5,.predef_I8,8>
+ XPRAGMA 0 161 <null-st> # COPYIN_BOUND
+  I8I8LDID 0 <2,3,t__4> T<5,.predef_I8,8>
+ XPRAGMA 0 161 <null-st> # COPYIN_BOUND
+    I4I4LDID 0 <2,1,SIZEADEF> T<4,.predef_I4,4>
+    I4INTCONST 1 (0x1)
+   I4ADD
+  I8I4CVT
+ I8STID 0 <2,2,t__3> T<5,.predef_I8,8>
+   I8I8LDID 0 <2,2,t__3> T<5,.predef_I8,8>
+   I8INTCONST 0 (0x0)
+  I8MAX
+ I8STID 0 <2,3,t__4> T<5,.predef_I8,8>
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 10 integer :: sizeAdef 
+ LOC 1 11 integer :: adef(1:sizeAdef+1)
+ LOC 1 12 adef(1)=adef(1)+1
+     U8U8LDID 0 <2,4,ADEF> T<32,anon_ptr.,8>
+     I8I8LDID 0 <2,3,t__4> T<5,.predef_I8,8>
+     I4INTCONST 1 (0x1)
+    U8ARRAY 1 4
+   I4I4ILOAD 0 T<4,.predef_I4,4> T<30,anon_ptr.,8>
+   I4INTCONST 1 (0x1)
+  I4ADD
+   U8U8LDID 0 <2,4,ADEF> T<32,anon_ptr.,8>
+   I8I8LDID 0 <2,3,t__4> T<5,.predef_I8,8>
+   I4INTCONST 1 (0x1)
+  U8ARRAY 1 4
+ I4ISTORE 0 T<30,anon_ptr.,8>
+ LOC 1 13 end subroutine
+ RETURN
+ END_BLOCK
+ LOC 1 14 
+ LOC 1 15 program p 
+FUNC_ENTRY <1,22,p_>
+BODY
+ BLOCK
+ END_BLOCK
+ BLOCK
+ END_BLOCK
+ BLOCK
+ PRAGMA 0 120 <null-st> 0 (0x0) # PREAMBLE_END
+ LOC 1 16   use modA
+ VUSE <1,20,moda_>
+ USE!!!!!
+ LOC 1 17   integer, parameter ::  n=1
+ LOC 1 18   integer :: a(1:n+1)
+ LOC 1 19   a(1)=1
+  I4INTCONST 1 (0x1)
+   U8LDA 0 <2,1,A> T<35,anon_ptr.,8>
+   I8INTCONST 2 (0x2)
+   I4INTCONST 1 (0x1)
+  U8ARRAY 1 4
+ I4ISTORE 0 T<30,anon_ptr.,8>
+ LOC 1 20   a(2)=2
+  I4INTCONST 2 (0x2)
+   U8LDA 0 <2,1,A> T<35,anon_ptr.,8>
+   I8INTCONST 2 (0x2)
+   I4INTCONST 2 (0x2)
+  U8ARRAY 1 4
+ I4ISTORE 0 T<30,anon_ptr.,8>
+ LOC 1 21   call foo_i(n,a)
+   I4INTCONST 1 (0x1)
+  U8PARM 8193 T<4,.predef_I4,4> #  by_reference COPY_IN 
+    U8LDA 0 <2,1,A> T<35,anon_ptr.,8>
+   I4I4ILOAD 0 T<4,.predef_I4,4> T<30,anon_ptr.,8>
+  U8PARM 257 T<4,.predef_I4,4> #  by_reference PASS_ADDRESS 
+ VCALL 2174 <1,21,foo_> # flags 0x87e
+ LOC 1 22   if (a(1)==2 .and. a(2)==2) then  
+ IF
+      U8LDA 0 <2,1,A> T<35,anon_ptr.,8>
+      I8INTCONST 2 (0x2)
+      I4INTCONST 1 (0x1)
+     U8ARRAY 1 4
+    I4I4ILOAD 0 T<4,.predef_I4,4> T<30,anon_ptr.,8>
+    I4INTCONST 2 (0x2)
+   I4I4EQ
+      U8LDA 0 <2,1,A> T<35,anon_ptr.,8>
+      I8INTCONST 2 (0x2)
+      I4INTCONST 2 (0x2)
+     U8ARRAY 1 4
+    I4I4ILOAD 0 T<4,.predef_I4,4> T<30,anon_ptr.,8>
+    I4INTCONST 2 (0x2)
+   I4I4EQ
+  I4LAND
+ THEN
+  BLOCK
+ LOC 1 23     print *,'OK'
+  COMMENT <2,4,print *,'OK'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,26,"OK"> T<39,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 2 (0x2)
+   IO_ITEM <96,CHAR> T<38,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ ELSE
+ LOC 1 22
+  BLOCK
+ LOC 1 24   else 
+ LOC 1 25     print *,'failure'
+  COMMENT <2,5,print *,'failure'> # 
+  PRAGMA 0 177 <null-st> 0 (0x0) # START_STMT_CLUMP
+   IO_ITEM <1,NONE>
+   IO_ITEM <10,NONE>
+    I4INTCONST 3 (0x3)
+   IO_ITEM <73,FIRST_LAST_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <70,END_EOR_EOF_FLAG>
+    I4INTCONST 0 (0x0)
+   IO_ITEM <76,ENCODE_DECODE_FLAG>
+    U8LDA 0 <1,28,"failure"> T<42,anon_ptr.,8>
+    I8INTCONST 140763258159104 (0x800600000000)
+    U4INTCONST 7 (0x7)
+   IO_ITEM <96,CHAR> T<41,.ch_str.,1>
+  IO <22,FORMATTED_WRITE,cray> 2
+  PRAGMA 0 178 <null-st> 0 (0x0) # END_STMT_CLUMP
+  END_BLOCK
+ END_IF
+ LOC 1 26   end if
+ LOC 1 27 end program
+ VCALL 2174 <1,24,_END> # flags 0x87e
+ RETURN
+ RETURN
+ END_BLOCK

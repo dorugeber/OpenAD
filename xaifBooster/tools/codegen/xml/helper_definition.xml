@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- UN-10-27-03 
+
+&#60; = <
+&#62; = >
+&#39; = '
+&#34; = "
+&#38; = &
+
+-->
+
+<CodeGen:Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:CodeGen="http://www.mcs.anl.gov/CodeGen"
+       xsi:schemaLocation="http://www.mcs.anl.gov/CodeGen CodeGenerator.xsd"
+       nr_entries="1" nr_templates="1" outfile="helper_definition.inc">
+
+  <CodeGen:RepeatableCode nr_versions="36">
+    <CodeGen:CodeTemplate nr_entries="83">
+      <CodeGen:StaticCode text="void "/>
+      <CodeGen:DynamicCodePlaceholder hook="1"/>
+      <CodeGen:StaticCode text="::set"/>
+      <CodeGen:DynamicCodePlaceholder hook="2"/>
+      <CodeGen:StaticCode text="("/>
+      <CodeGen:DynamicCodePlaceholder hook="2"/>
+      <CodeGen:StaticCode text="&amp; whatToSet) {"/>
+      <CodeGen:LineBreak/>
+      <CodeGen:StaticCode text="if (my"/>
+      <CodeGen:DynamicCodePlaceholder hook="2"/>
+      <CodeGen:StaticCode text="_p)"/>
+      <CodeGen:LineBreak/>
+      <CodeGen:StaticCode text="THROW_LOGICEXCEPTION_MACRO("/>
+      <CodeGen:StaticCode text="&#34;"/>
+      <CodeGen:DynamicCodePlaceholder hook="1"/>
+      <CodeGen:StaticCode text="&#34;"/>
+      <CodeGen:StaticCode text=" &#60;&#60; "/>
+      <CodeGen:StaticCode text="&#34; "/>
+      <CodeGen:StaticCode text="::set "/>
+      <CodeGen:StaticCode text="&#34; "/>
+      <CodeGen:StaticCode text="&#60;&#60; "/>
+      <CodeGen:StaticCode text="&#34;"/>
+      <CodeGen:DynamicCodePlaceholder hook="2"/>
+      <CodeGen:StaticCode text="&#34;"/>
+      <CodeGen:StaticCode text=" &#60;&#60; "/>
+      <CodeGen:StaticCode text="&#34; "/>
+      <CodeGen:StaticCode text="item already set"/>
+      <CodeGen:StaticCode text="&#34;);"/>
+      <CodeGen:LineBreak/>
+      <CodeGen:StaticCode text="my"/>
+      <CodeGen:DynamicCodePlaceholder hook="2"/>
+      <CodeGen:StaticCode text="_p=&amp;whatToSet;"/>
+      <CodeGen:LineBreak/>
+      <CodeGen:StaticCode text="}"/>
+      <CodeGen:LineBreak/>
+      <CodeGen:DynamicCodePlaceholder hook="2"/>
+      <CodeGen:StaticCode text="&amp; "/>
+      <CodeGen:DynamicCodePlaceholder hook="1"/>
+      <CodeGen:StaticCode text="::get"/>
+      <CodeGen:DynamicCodePlaceholder hook="2"/>
+      <CodeGen:StaticCode text="() const {"/>
+      <CodeGen:LineBreak/>
+      <CodeGen:StaticCode text="if (!my"/>
+      <CodeGen:DynamicCodePlaceholder hook="2"/>
+      <CodeGen:StaticCode text="_p)"/>
+      <CodeGen:LineBreak/>
+      <CodeGen:StaticCode text="THROW_LOGICEXCEPTION_MACRO("/>
+      <CodeGen:StaticCode text="&#34;"/>
+      <CodeGen:DynamicCodePlaceholder hook="1"/>
+      <CodeGen:StaticCode text="&#34;"/>
+      <CodeGen:StaticCode text=" &#60;&#60; "/>
+      <CodeGen:StaticCode text="&#34; "/>
+      <CodeGen:StaticCode text="::get "/>
+      <CodeGen:StaticCode text="&#34; "/>
+      <CodeGen:StaticCode text="&#60;&#60; "/>
+      <CodeGen:StaticCode text="&#34;"/>
+      <CodeGen:DynamicCodePlaceholder hook="2"/>
+      <CodeGen:StaticCode text="&#34;"/>
+      <CodeGen:StaticCode text=" &#60;&#60; "/>
+      <CodeGen:StaticCode text="&#34; "/>
+      <CodeGen:StaticCode text="item not set"/>
+      <CodeGen:StaticCode text="&#34;);"/>
+      <CodeGen:LineBreak/>
+      <CodeGen:StaticCode text="return *my"/>
+      <CodeGen:DynamicCodePlaceholder hook="2"/>
+      <CodeGen:StaticCode text="_p;"/>
+      <CodeGen:LineBreak/>
+      <CodeGen:StaticCode text="}"/>
+      <CodeGen:LineBreak/>
+      <CodeGen:StaticCode text="bool "/>
+      <CodeGen:DynamicCodePlaceholder hook="1"/>
+      <CodeGen:StaticCode text="::has"/>
+      <CodeGen:DynamicCodePlaceholder hook="2"/>
+      <CodeGen:StaticCode text="() const {"/>
+      <CodeGen:LineBreak/>
+      <CodeGen:StaticCode text="return (my"/>
+      <CodeGen:DynamicCodePlaceholder hook="2"/>
+      <CodeGen:StaticCode text="_p!=0);"/>
+      <CodeGen:LineBreak/>
+      <CodeGen:StaticCode text="}"/>
+      <CodeGen:LineBreak/>
+      <CodeGen:LineBreak/>
+    </CodeGen:CodeTemplate>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="AliasMapEntry"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="AliasMap"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="ArgumentList"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="ArrayAccess"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="Assignment"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="BaseLoop"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="BasicBlock"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="Branch"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="CallGraph"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="ConcreteArgument"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="Condition"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="ControlFlowGraph"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="DoMap"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="DuUdMap"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="Expression"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="ExpressionEdge"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="ForLoop"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="Goto"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="IfStatement"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="IndexTriplet"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="Initialization"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="Label"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="PostLoop"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="PreLoop"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="Scope"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="Scopes"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="SideEffectList"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="StatementIdSetMap"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="StatementIdSetMapEntry"/>
+    </CodeGen:CodeVersion> 
+   <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="SubroutineCall"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="Symbol"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="SymbolReferenceProperty"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="SymbolTable"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="Update"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="Variable"/>
+    </CodeGen:CodeVersion>
+    <CodeGen:CodeVersion>
+      <CodeGen:DynamicCode hook_ref="1" text="XAIFBaseParserHelper"/>
+      <CodeGen:DynamicCode hook_ref="2" text="VariableEdge"/>
+    </CodeGen:CodeVersion>
+  </CodeGen:RepeatableCode>
+</CodeGen:Document>

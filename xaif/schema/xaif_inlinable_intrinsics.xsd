@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ ##########################################################
+ # This file is part of xaif.                             #
+ # The full COPYRIGHT notice can be found in the top      #
+ # level directory of the xaif source tree.               #
+ # For more information visit                             #
+ # http://www.mcs.anl.gov/xaif       and                  #
+ # http://www.mcs.anl.gov/openad                          #
+ ##########################################################
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	    xmlns:xaifii="http://www.mcs.anl.gov/XAIFInlinableIntrinsics"
+	    xmlns:xaif="http://www.mcs.anl.gov/XAIF"
+	    targetNamespace="http://www.mcs.anl.gov/XAIFInlinableIntrinsics"
+	    version="xaif version 1.0 (inlinable intrinsics)"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified">
+
+<xsd:import namespace="http://www.mcs.anl.gov/XAIF" schemaLocation="xaif.xsd"/>
+
+<!-- *********************************************************** -->
+<!-- Inlinable Intrinsics Definition -->
+<!-- *********************************************************** -->
+
+<xsd:simpleType name="InlinableIntrinsicType">
+ 
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Types of intrinsic functions known in XAIF.
+    </xsd:documentation>
+  </xsd:annotation>
+ 
+  <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="builtin"/>
+    <xsd:enumeration value="user_defined"/>
+  </xsd:restriction>
+ 
+</xsd:simpleType>        
+
+<!-- *********************************************************** -->
+<!-- Function evaluation routine -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="FunctionType">
+ <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Specification of function evaluation routine (must be inlinable, that
+      is only calls to inlinable functions can be used).
+    </xsd:documentation>
+  </xsd:annotation>     
+
+  <xsd:complexContent>
+    <xsd:extension base="xaif:ExpressionType">
+      <xsd:attribute name="type" type="xaifii:InlinableIntrinsicType" use="optional" default="user_defined"/>
+      <xsd:attribute name="builtin_name" type="xsd:string" use="optional"/>
+    </xsd:extension>
+  </xsd:complexContent>  
+
+</xsd:complexType>
+
+<xsd:element name="Function" type="xaifii:FunctionType"/>
+
+<!-- *********************************************************** -->
+<!-- Argument References -->
+<!-- *********************************************************** -->
+
+<xsd:complexType name="ArgumentReferenceType">
+ <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Reference to one of the arguments of an intrinsic function.
+      Arguments are counted starting with '1'. A value of '0' refers 
+      to the intrinsic result which is useful for some partial expressions.
+    </xsd:documentation>
+  </xsd:annotation>     
+
+ <xsd:complexContent>
+    <xsd:extension base="xaif:VertexType">
+      <xsd:attribute name="argument" type="xsd:nonNegativeInteger" use="required"/>
+    </xsd:extension>
+  </xsd:complexContent>   
+
+</xsd:complexType>
+
+<xsd:element name="ArgumentReference" type="xaifii:ArgumentReferenceType" 
+  substitutionGroup="xaif:ExpressionVertex"/>
+
+<!-- *********************************************************** -->
+<!-- Partial Derivative  Routines -->
+<!-- *********************************************************** -->
+
+<xsd:simpleType name="PartialTypeType">
+ 
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Types of local partial derivatives
+    </xsd:documentation>
+  </xsd:annotation>
+ 
+  <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="passive"/>
+    <xsd:enumeration value="linear_one"/>
+    <xsd:enumeration value="linear_minus_one"/>
+    <xsd:enumeration value="linear"/>
+    <xsd:enumeration value="nonlinear"/>
+  </xsd:restriction>
+ 
+</xsd:simpleType>           
+
+<xsd:complexType name="PartialType">
+ <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Specification of partial evaluation routine.
+    </xsd:documentation>
+  </xsd:annotation>     
+
+  <xsd:complexContent>
+    <xsd:extension base="xaif:ExpressionType">
+      <xsd:attribute name="partial_id" type="xsd:positiveInteger" use="required"/>
+      <xsd:attribute name="partial_type" type="xaifii:PartialTypeType" use="optional" default="nonlinear"/>
+      <xsd:attribute name="nonValueInquiry" type="xsd:boolean" use="optional" default="false">
+        <xsd:annotation>
+          <xsd:documentation xml:lang="en">
+            true when an argument value is not referenced, e.g. sizeof, ubound
+          </xsd:documentation>
+        </xsd:annotation> 
+      </xsd:attribute>    
+    </xsd:extension>
+  </xsd:complexContent>  
+
+</xsd:complexType>
+
+<xsd:element name="Partial" type="xaifii:PartialType"/>
+
+<!-- *********************************************************** -->
+<!-- Definition of an intrinsic function -->
+<!-- *********************************************************** -->
+
+<xsd:simpleType name="ShapeChangeType">
+ 
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Types of shape change
+    </xsd:documentation>
+  </xsd:annotation>
+ 
+  <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="no_change"/>
+    <xsd:enumeration value="scalar">
+     <xsd:annotation>
+       <xsd:documentation xml:lang="en">
+         scalar output 
+       </xsd:documentation>
+     </xsd:annotation>
+    </xsd:enumeration>
+    <xsd:enumeration value="rank">
+     <xsd:annotation>
+       <xsd:documentation xml:lang="en">
+         output is vector with length equal to the rank of the input
+       </xsd:documentation>
+     </xsd:annotation>
+    </xsd:enumeration>
+  </xsd:restriction>
+ 
+</xsd:simpleType>           
+
+<xsd:complexType name="InlinableIntrinsicDefinitionType">
+   <xsd:sequence>
+     <xsd:element ref="xaifii:Function" minOccurs="1" maxOccurs="1"/>
+     <xsd:element ref="xaifii:Partial" minOccurs="1" maxOccurs="unbounded"/>
+   </xsd:sequence>
+   <xsd:attribute name="name"         type="xsd:string"             use="required"/>
+   <xsd:attribute name="nr_arguments" type="xsd:positiveInteger"    use="required"/>
+   <xsd:attribute name="return_type"  type="xaif:SymbolTypeType"    use="optional" default="real"/>
+   <xsd:attribute name="nonSmooth"    type="xsd:boolean"            use="optional" default="false">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        flags non smooth intrinsic 
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:attribute>
+   <xsd:attribute name="shapeChange"  type="xaifii:ShapeChangeType" use="optional" default="no_change">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        implied kind of shape change 
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:attribute>
+</xsd:complexType>
+
+<xsd:simpleType name="LanguageType">
+ 
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Programming languages known in XAIF
+    </xsd:documentation>
+  </xsd:annotation>
+ 
+  <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="C"/>
+    <xsd:enumeration value="CPP"/>
+    <xsd:enumeration value="F77"/>
+    <xsd:enumeration value="F90"/>
+    <xsd:enumeration value="F95"/>
+  </xsd:restriction>
+ 
+</xsd:simpleType>           
+
+<xsd:element name="InlinableIntrinsic" type="xaifii:InlinableIntrinsicDefinitionType"/>
+
+<xsd:complexType name="InlinableIntrinsicDefinitionsType">
+   <xsd:sequence>
+     <xsd:element ref="xaifii:InlinableIntrinsic" minOccurs="1" maxOccurs="unbounded"/>
+   </xsd:sequence>
+   <xsd:attribute name="language"   type="xaifii:LanguageType" use="required"/>
+</xsd:complexType>
+
+<!-- *********************************************************** -->
+<!-- Top level element -->
+<!-- *********************************************************** -->
+
+<xsd:element name="InlinableIntrinsicDefinitions" type="xaifii:InlinableIntrinsicDefinitionsType">
+  <xsd:unique name="ii_unique">
+    <xsd:selector xpath="xaifii:InlinableIntrinsic"/>
+    <xsd:field xpath="@name"/>
+  </xsd:unique>
+</xsd:element>
+
+</xsd:schema>

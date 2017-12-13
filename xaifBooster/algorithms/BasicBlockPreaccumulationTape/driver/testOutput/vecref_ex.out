@@ -1,0 +1,174 @@
+  <xaif:CallGraph xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xaif="http://www.mcs.anl.gov/XAIF" xsi:schemaLocation="http://www.mcs.anl.gov/XAIF xaif_output.xsd" program_name="Example" prefix="test_prefix">
+    <xaif:ScopeHierarchy>
+      <xaif:Scope vertex_id="1" annotation="">
+        <xaif:SymbolTable>
+          <xaif:Symbol symbol_id="head" kind="subroutine" type="void" feType="" shape="scalar" annotation="" active="1" temp="0">
+          </xaif:Symbol>
+          <xaif:Symbol symbol_id="x" kind="variable" type="real" feType="" shape="matrix" annotation="" active="1" temp="0">
+            <xaif:DimensionBounds lower="1" upper="10"/>
+            <xaif:DimensionBounds lower="1" upper="10"/>
+          </xaif:Symbol>
+          <xaif:Symbol symbol_id="y" kind="variable" type="real" feType="" shape="scalar" annotation="" active="1" temp="0">
+          </xaif:Symbol>
+        </xaif:SymbolTable>
+      </xaif:Scope>
+      <xaif:Scope vertex_id="2" annotation="">
+        <xaif:SymbolTable>
+          <xaif:Symbol symbol_id="test_prefixlin_0" kind="variable" type="real" feType="" shape="scalar" annotation="" active="0" temp="1">
+          </xaif:Symbol>
+          <xaif:Symbol symbol_id="test_prefixlin_1" kind="variable" type="real" feType="" shape="vector" annotation="" active="0" temp="1">
+            <xaif:DimensionBounds lower="1" upper="2"/>
+          </xaif:Symbol>
+          <xaif:Symbol symbol_id="test_prefixprp_0" kind="variable" type="real" feType="" shape="vector" annotation="" active="1" temp="1">
+            <xaif:DimensionBounds lower="1" upper="2"/>
+          </xaif:Symbol>
+          <xaif:Symbol symbol_id="test_prefixprp_1" kind="variable" type="real" feType="" shape="scalar" annotation="" active="1" temp="1">
+          </xaif:Symbol>
+          <xaif:Symbol symbol_id="x" kind="variable" type="real" feType="" shape="matrix" annotation="" active="1" temp="0">
+          </xaif:Symbol>
+          <xaif:Symbol symbol_id="y" kind="variable" type="real" feType="" shape="scalar" annotation="" active="1" temp="0">
+          </xaif:Symbol>
+        </xaif:SymbolTable>
+      </xaif:Scope>
+      <xaif:ScopeEdge edge_id="1" source="2" target="1"/>
+    </xaif:ScopeHierarchy>
+    <xaif:AliasSetMap>
+      <xaif:AliasSet key="0">
+        <xaif:AliasRange from_virtual_address="1" to_virtual_address="1" partial="1"/>
+      </xaif:AliasSet>
+    </xaif:AliasSetMap>
+    <xaif:DUUDSetMap>
+      <xaif:StmtIdSet key="0">
+      </xaif:StmtIdSet>
+    </xaif:DUUDSetMap>
+    <xaif:DOSetMap>
+      <xaif:StmtIdSet key="0">
+      </xaif:StmtIdSet>
+    </xaif:DOSetMap>
+    <xaif:ControlFlowGraph vertex_id="1" symbol_id="head" scope_id="1" controlflowgraph_scope_id="2" annotation="" active="1">
+      <xaif:ArgumentList>
+        <xaif:ArgumentSymbolReference position="1" symbol_id="x" scope_id="2" annotation="" intent="inout"/>
+        <xaif:ArgumentSymbolReference position="2" symbol_id="y" scope_id="2" annotation="" intent="inout"/>
+      </xaif:ArgumentList>
+      <xaif:Entry vertex_id="1" annotation=""/>
+      <xaif:BasicBlock vertex_id="2" annotation="sth" scope_id="2">
+        <xaif:Assignment statement_id="_elementary_partial_0">
+          <xaif:AssignmentLHS active="false" deriv="0" constant="0">
+            <xaif:SymbolReference vertex_id="1" symbol_id="test_prefixlin_0" annotation="xaifBoosterLinearization::ExpressionAlg::createPartialExpressions" scope_id="2"/>
+          </xaif:AssignmentLHS>
+          <xaif:AssignmentRHS>
+            <xaif:VariableReference vertex_id="1" active="true" deriv="0" constant="0">
+              <xaif:SymbolReference vertex_id="1" symbol_id="x" annotation="" scope_id="2"/>
+              <xaif:ArrayElementReference vertex_id="2">
+                <xaif:IndexTriplet>
+                  <xaif:Index>
+                    <xaif:Constant vertex_id="1" type="integer" feType="" value="2"/>
+                  </xaif:Index>
+                </xaif:IndexTriplet>
+                <xaif:IndexTriplet>
+                  <xaif:Index>
+                    <xaif:Constant vertex_id="1" type="integer" feType="" value="3"/>
+                  </xaif:Index>
+                </xaif:IndexTriplet>
+              </xaif:ArrayElementReference>
+              <xaif:VariableReferenceEdge edge_id="1" source="1" target="2"/>
+            </xaif:VariableReference>
+          </xaif:AssignmentRHS>
+        </xaif:Assignment>
+        <xaif:Assignment statement_id="_elementary_partial_1">
+          <xaif:AssignmentLHS active="false" deriv="0" constant="0">
+            <xaif:SymbolReference vertex_id="1" symbol_id="test_prefixlin_1" annotation="xaifBoosterLinearization::ExpressionAlg::createPartialExpressions" scope_id="2"/>
+          </xaif:AssignmentLHS>
+          <xaif:AssignmentRHS>
+            <xaif:VariableReference vertex_id="1" active="true" deriv="0" constant="0">
+              <xaif:SymbolReference vertex_id="1" symbol_id="x" annotation="" scope_id="2"/>
+              <xaif:ArrayElementReference vertex_id="2">
+                <xaif:IndexTriplet>
+                  <xaif:Index>
+                    <xaif:Constant vertex_id="1" type="integer" feType="" value="1"/>
+                  </xaif:Index>
+                </xaif:IndexTriplet>
+                <xaif:IndexTriplet>
+                  <xaif:Index>
+                    <xaif:Constant vertex_id="1" type="integer" feType="" value="1"/>
+                  </xaif:Index>
+                  <xaif:Bound>
+                    <xaif:Constant vertex_id="1" type="integer" feType="" value="2"/>
+                  </xaif:Bound>
+                  <xaif:Stride>
+                    <xaif:Constant vertex_id="1" type="integer" feType="" value="1"/>
+                  </xaif:Stride>
+                </xaif:IndexTriplet>
+              </xaif:ArrayElementReference>
+              <xaif:VariableReferenceEdge edge_id="1" source="1" target="2"/>
+            </xaif:VariableReference>
+          </xaif:AssignmentRHS>
+        </xaif:Assignment>
+        <xaif:Assignment statement_id="1">
+          <xaif:AssignmentLHS active="true" deriv="0" constant="0">
+            <xaif:SymbolReference vertex_id="1" symbol_id="y" annotation="" scope_id="2"/>
+          </xaif:AssignmentLHS>
+          <xaif:AssignmentRHS>
+            <xaif:VariableReference vertex_id="1" active="true" deriv="0" constant="0">
+              <xaif:SymbolReference vertex_id="1" symbol_id="x" annotation="" scope_id="2"/>
+              <xaif:ArrayElementReference vertex_id="2">
+                <xaif:IndexTriplet>
+                  <xaif:Index>
+                    <xaif:Constant vertex_id="1" type="integer" feType="" value="1"/>
+                  </xaif:Index>
+                </xaif:IndexTriplet>
+                <xaif:IndexTriplet>
+                  <xaif:Index>
+                    <xaif:Constant vertex_id="1" type="integer" feType="" value="1"/>
+                  </xaif:Index>
+                  <xaif:Bound>
+                    <xaif:Constant vertex_id="1" type="integer" feType="" value="2"/>
+                  </xaif:Bound>
+                  <xaif:Stride>
+                    <xaif:Constant vertex_id="1" type="integer" feType="" value="1"/>
+                  </xaif:Stride>
+                </xaif:IndexTriplet>
+              </xaif:ArrayElementReference>
+              <xaif:VariableReferenceEdge edge_id="1" source="1" target="2"/>
+            </xaif:VariableReference>
+            <xaif:VariableReference vertex_id="2" active="true" deriv="0" constant="0">
+              <xaif:SymbolReference vertex_id="1" symbol_id="x" annotation="" scope_id="2"/>
+              <xaif:ArrayElementReference vertex_id="2">
+                <xaif:IndexTriplet>
+                  <xaif:Index>
+                    <xaif:Constant vertex_id="1" type="integer" feType="" value="2"/>
+                  </xaif:Index>
+                </xaif:IndexTriplet>
+                <xaif:IndexTriplet>
+                  <xaif:Index>
+                    <xaif:Constant vertex_id="1" type="integer" feType="" value="3"/>
+                  </xaif:Index>
+                </xaif:IndexTriplet>
+              </xaif:ArrayElementReference>
+              <xaif:VariableReferenceEdge edge_id="1" source="1" target="2"/>
+            </xaif:VariableReference>
+            <xaif:Intrinsic vertex_id="3" annotation="" name="mul_scal_scal"/>
+            <xaif:ExpressionEdge edge_id="1" source="1" target="3" position="1"/>
+            <xaif:ExpressionEdge edge_id="2" source="2" target="3" position="2"/>
+          </xaif:AssignmentRHS>
+        </xaif:Assignment>
+        <xaif:InlinableSubroutineCall subroutine_name="push_s0" statement_id="inline_push">
+          <xaif:Argument position="1">
+            <xaif:VariableReference vertex_id="1" active="false" deriv="0" constant="0">
+              <xaif:SymbolReference vertex_id="1" symbol_id="test_prefixlin_0" annotation="xaifBoosterLinearization::ExpressionAlg::createPartialExpressions" scope_id="2"/>
+            </xaif:VariableReference>
+          </xaif:Argument>
+        </xaif:InlinableSubroutineCall>
+        <xaif:InlinableSubroutineCall subroutine_name="push_s1" statement_id="inline_push">
+          <xaif:Argument position="1">
+            <xaif:VariableReference vertex_id="1" active="false" deriv="0" constant="0">
+              <xaif:SymbolReference vertex_id="1" symbol_id="test_prefixlin_1" annotation="xaifBoosterLinearization::ExpressionAlg::createPartialExpressions" scope_id="2"/>
+            </xaif:VariableReference>
+          </xaif:Argument>
+        </xaif:InlinableSubroutineCall>
+      </xaif:BasicBlock>
+      <xaif:Exit vertex_id="3" annotation=""/>
+      <xaif:ControlFlowEdge edge_id="1" source="1" target="2" has_condition_value="0"/>
+      <xaif:ControlFlowEdge edge_id="2" source="2" target="3" has_condition_value="0"/>
+    </xaif:ControlFlowGraph>
+  </xaif:CallGraph>

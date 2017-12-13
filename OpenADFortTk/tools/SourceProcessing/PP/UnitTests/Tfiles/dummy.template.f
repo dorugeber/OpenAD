@@ -1,0 +1,2 @@
+      subroutine template
+      end subroutine

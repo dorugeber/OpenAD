@@ -1,0 +1,2 @@
+povray -Ititle_r.pov -H65 -W390 +D
+
