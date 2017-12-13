@@ -67,7 +67,7 @@ class openadConfig:
     else:
       self.OpenADRepos[name]=(Repository.SVNRepository('https://svn.code.sf.net/p/angellib/code',OpenADRoot,name,None,'trunk','ANGEL_BASE'),True)
     name="boost";         self.orderedRepoList.append(name)
-    self.OpenADRepos[name]=(Repository.SVNRepository('http://svn.boost.org/svn/boost',OpenADRoot,name,'boost','tags/release/Boost_1_45_0','BOOST_BASE'),True)
+    self.OpenADRepos[name]=(Repository.SVNRepository('https://svn.boost.org/svn/boost',OpenADRoot,name,'boost','tags/release/Boost_1_45_0','BOOST_BASE'),True)
     if includeExtras:
       name="RevolveF9X"; self.orderedRepoList.append(name)
       self.OpenADRepos[name]=(Repository.MercurialRepository(ANLMercurialUrl+name,OpenADRoot,name,None,None,None),False)
