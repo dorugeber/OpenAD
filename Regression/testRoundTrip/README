@@ -1,0 +1,10 @@
+we expect the rest of the system be built
+including Open64/OpenAnalysis/whirl2xaif etc. 
+
+and the following environment variables as set in OpenAD/setenv.sh:
+
+OPENADROOT
+OPEN64ROOT
+XAIFBOOSTER_BASE
+XAIFSCHEMAROOT
+

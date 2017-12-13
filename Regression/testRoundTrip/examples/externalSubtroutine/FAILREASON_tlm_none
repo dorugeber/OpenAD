@@ -1,0 +1,1 @@
+the  front end drops information about the public and private qualifiers so there is a name clash between the private module procedure and the plain subroutine (defined in the driver files); see <a href="http://trac.mcs.anl.gov/projects/openAD/ticket/162">bug report</a> 

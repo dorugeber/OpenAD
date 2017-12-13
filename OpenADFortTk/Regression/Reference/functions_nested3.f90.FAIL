@@ -1,0 +1,1 @@
+uncanonicalized function call; whirl2xaif will throw an exception for this reason; need to <a href="http://trac.mcs.anl.gov/projects/openAD/ticket/164">change Regression test setup</a> to run canonicalization first; 

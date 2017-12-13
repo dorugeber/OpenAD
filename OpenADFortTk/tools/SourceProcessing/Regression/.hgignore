@@ -1,0 +1,21 @@
+syntax: glob
+*.o
+*.run
+*.mod
+*.mod-whirl
+*.MOD
+*.orig
+*~
+PrePostTimings/postInput????.f
+PrePostTimings/postProcess.make
+PrePostTimings/preOutput.f
+TransFile/driver.f90
+TransFile/oad_transformed.decls.f90
+TransFile/oad_transformed.f90
+TransFile/oad_untouched.f90
+TransFile/oad_untouched.ty.f90
+TransFile/oad_untouched.ty.out
+syntax: regexp
+^PrePost/[^/]+\.f90
+^PrePost/[^/]+\.f
+^PrePost/[^/]+\.out

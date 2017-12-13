@@ -1,0 +1,18 @@
+subroutine myloop(x)
+  double precision, intent(inout) :: x
+d1: do while (x > 0)
+     x=x-.3
+     do j=1,3
+       if (x > 0) cycle d1
+       x=x+.01D0
+     end do
+     x=x-3
+  end do d1
+end subroutine
+
+program controlflow
+  double precision :: x
+  x = 2
+  call myloop(x)
+  print *,x
+end program

@@ -1,0 +1,16 @@
+This is a Fortran9X adaptation of the functionality of "Revolve", see: 
+
+Andreas Griewank, Andrea Walther
+"Algorithm 799: Revolve: An Implementation of Checkpoint for the 
+ Reverse or Adjoint Mode of Computational Differentiation"
+Article in ACM Transactions on Mathematical Software, 2000  
+
+The interface of the routines differs from the cited revolve implementation 
+found in Adol-C and has been designed to be more in line with the 
+Fortran 9X language features.
+
+The code is contained in revolve.f90, the use is illustrated in 
+example.f90, both written by J. Utke. 
+
+The mercurial repository with the latest version can be found at:
+http://mercurial.mcs.anl.gov/ad/RevolveF9X

@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ******************************************************************** -->
+<!-- XAIF file translated from WHIRL at Tue Sep 29 00:12:34 2009 -->
+<!-- ******************************************************************** -->
+
+<xaif:CallGraph xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xaif="http://www.mcs.anl.gov/XAIF" xsi:schemaLocation="http://www.mcs.anl.gov/XAIF xaif.xsd" program_name="***myprog***" prefix="OpenAD_">
+  <xaif:ScopeHierarchy>
+    <xaif:Scope vertex_id="1" annotation="{SymTab_Id#1}">
+      <xaif:SymbolTable>
+        <xaif:Symbol symbol_id=".preg_B_1" kind="variable" type="integer" shape="scalar" annotation="{Sym_Id#1}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_I4_2" kind="variable" type="integer" shape="scalar" annotation="{Sym_Id#2}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_I8_3" kind="variable" type="integer" shape="scalar" annotation="{Sym_Id#3}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_U4_4" kind="variable" type="integer" shape="scalar" annotation="{Sym_Id#4}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_U8_5" kind="variable" type="integer" shape="scalar" annotation="{Sym_Id#5}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_F4_6" kind="variable" type="real" shape="scalar" annotation="{Sym_Id#6}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_F8_7" kind="variable" type="real" shape="scalar" annotation="{Sym_Id#7}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_F10_8" kind="variable" type="real" shape="scalar" annotation="{Sym_Id#8}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_F16_9" kind="variable" type="real" shape="scalar" annotation="{Sym_Id#9}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_FQ_10" kind="variable" type="real" shape="scalar" annotation="{Sym_Id#10}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_C4_11" kind="variable" type="complex" shape="scalar" annotation="{Sym_Id#11}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_C8_12" kind="variable" type="complex" shape="scalar" annotation="{Sym_Id#12}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_CQ_13" kind="variable" type="complex" shape="scalar" annotation="{Sym_Id#13}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_A8_14" kind="variable" type="opaque" shape="scalar" annotation="{Sym_Id#14}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_C10_15" kind="variable" type="complex" shape="scalar" annotation="{Sym_Id#15}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_C16_16" kind="variable" type="complex" shape="scalar" annotation="{Sym_Id#16}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_I16_17" kind="variable" type="integer" shape="scalar" annotation="{Sym_Id#17}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_U16_18" kind="variable" type="integer" shape="scalar" annotation="{Sym_Id#18}" active="0"/>
+        <xaif:Symbol symbol_id=".preg_return_val_19" kind="variable" type="opaque" shape="scalar" annotation="{Sym_Id#19}" active="0"/>
+        <xaif:Symbol symbol_id="a__20" kind="subroutine" type="void" annotation="{Sym_Id#20}"/>
+        <xaif:Symbol symbol_id="LONGNAME_21" kind="variable" type="integer" feType="I4" shape="scalar" annotation="{Sym_Id#21}" active="0">
+        </xaif:Symbol>
+        <xaif:Symbol symbol_id="FOO_22" kind="subroutine" type="void" annotation="{Sym_Id#22}"/>
+        <xaif:Symbol symbol_id="S_23" kind="variable" type="integer" feType="I4" shape="scalar" annotation="{Sym_Id#23}" active="0">
+        </xaif:Symbol>
+        <xaif:Symbol symbol_id="b__24" kind="subroutine" type="void" annotation="{Sym_Id#24}"/>
+        <xaif:Symbol symbol_id="BAR_25" kind="subroutine" type="void" annotation="{Sym_Id#25}"/>
+        <xaif:Symbol symbol_id="S_26" kind="variable" type="integer" feType="I4" shape="scalar" annotation="{Sym_Id#26}" active="0">
+        </xaif:Symbol>
+        <xaif:Symbol symbol_id="c__27" kind="subroutine" type="void" annotation="{Sym_Id#27}"/>
+        <xaif:Symbol symbol_id="multrename__28" kind="subroutine" type="void" annotation="{Sym_Id#28}"/>
+        <xaif:Symbol symbol_id="_END_29" kind="subroutine" type="void" annotation="{Sym_Id#29}"/>
+      </xaif:SymbolTable>
+    </xaif:Scope>
+
+    <xaif:Scope vertex_id="2" annotation="{SymTab_Id#2}">
+      <xaif:SymbolTable>
+      </xaif:SymbolTable>
+    </xaif:Scope>
+
+    <xaif:ScopeEdge edge_id="1" source="2" target="1"/>
+
+    <xaif:Scope vertex_id="3" annotation="{SymTab_Id#3}">
+      <xaif:SymbolTable>
+        <xaif:Symbol symbol_id="BFOO_1" kind="variable" type="opaque" feType="UNK" shape="scalar" annotation="{Sym_Id#1}" active="0">
+        </xaif:Symbol>
+      </xaif:SymbolTable>
+    </xaif:Scope>
+
+    <xaif:ScopeEdge edge_id="2" source="3" target="1"/>
+
+    <xaif:Scope vertex_id="4" annotation="{SymTab_Id#4}">
+      <xaif:SymbolTable>
+        <xaif:Symbol symbol_id="__slink_sym_temp_0_1" kind="variable" type="integer" feType="U8" shape="scalar" annotation="{Sym_Id#1}" active="0">
+        </xaif:Symbol>
+      </xaif:SymbolTable>
+    </xaif:Scope>
+
+    <xaif:ScopeEdge edge_id="3" source="4" target="3"/>
+
+    <xaif:Scope vertex_id="5" annotation="{SymTab_Id#5}">
+      <xaif:SymbolTable>
+        <xaif:Symbol symbol_id="CBAR_1" kind="variable" type="opaque" feType="UNK" shape="scalar" annotation="{Sym_Id#1}" active="0">
+        </xaif:Symbol>
+      </xaif:SymbolTable>
+    </xaif:Scope>
+
+    <xaif:ScopeEdge edge_id="4" source="5" target="1"/>
+
+    <xaif:Scope vertex_id="6" annotation="{SymTab_Id#6}">
+      <xaif:SymbolTable>
+        <xaif:Symbol symbol_id="__slink_sym_temp_1_1" kind="variable" type="integer" feType="U8" shape="scalar" annotation="{Sym_Id#1}" active="0">
+        </xaif:Symbol>
+      </xaif:SymbolTable>
+    </xaif:Scope>
+
+    <xaif:ScopeEdge edge_id="5" source="6" target="5"/>
+
+    <xaif:Scope vertex_id="7" annotation="{SymTab_Id#7}">
+      <xaif:SymbolTable>
+        <xaif:Symbol symbol_id="_END_1" kind="subroutine" type="void" annotation="{Sym_Id#1}"/>
+      </xaif:SymbolTable>
+    </xaif:Scope>
+
+    <xaif:ScopeEdge edge_id="6" source="7" target="1"/>
+
+  </xaif:ScopeHierarchy>
+
+  <xaif:AliasSetMap>
+    <xaif:AliasSet key="0"/>
+    <xaif:AliasSet key="1"/>
+    <xaif:AliasSet key="2">
+      <xaif:AliasRange from_virtual_address="1" to_virtual_address="1" partial="0"/>
+    </xaif:AliasSet>
+    <xaif:AliasSet key="3">
+      <xaif:AliasRange from_virtual_address="1" to_virtual_address="1" partial="0"/>
+    </xaif:AliasSet>
+    <xaif:AliasSet key="4">
+      <xaif:AliasRange from_virtual_address="1" to_virtual_address="1" partial="0"/>
+    </xaif:AliasSet>
+  </xaif:AliasSetMap>
+
+  <xaif:DUUDSetMap>
+    <xaif:StmtIdSet key="0"/>
+    <xaif:StmtIdSet key="1"/>
+    <xaif:StmtIdSet key="2">
+      <xaif:StatementId idRef=""/>
+    </xaif:StmtIdSet>
+  </xaif:DUUDSetMap>
+
+  <xaif:DOSetMap>
+    <xaif:StmtIdSet key="0"/>
+    <xaif:StmtIdSet key="1"/>
+    <xaif:StmtIdSet key="2">
+      <xaif:StatementId idRef=""/>
+    </xaif:StmtIdSet>
+  </xaif:DOSetMap>
+
+  <!-- ******************************************************************** -->
+  <xaif:ControlFlowGraph vertex_id="20" scope_id="1" symbol_id="a__20" annotation="{PU_Id#1}" controlflowgraph_scope_id="2">
+  </xaif:ControlFlowGraph>
+
+  <!-- ******************************************************************** -->
+  <xaif:ControlFlowGraph vertex_id="21" scope_id="1" symbol_id="b__24" annotation="{PU_Id#2}" controlflowgraph_scope_id="3">
+  </xaif:ControlFlowGraph>
+
+  <!-- ******************************************************************** -->
+  <xaif:ControlFlowGraph vertex_id="22" scope_id="1" symbol_id="FOO_22" annotation="{PU_Id#3}" controlflowgraph_scope_id="4">
+    <xaif:ArgumentList/>
+    <xaif:ModLocal>
+      <xaif:SideEffectReference vertex_id="1">
+        <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_23"/>
+      </xaif:SideEffectReference>
+    </xaif:ModLocal>
+    <xaif:Mod>
+      <xaif:SideEffectReference vertex_id="1">
+        <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_23"/>
+      </xaif:SideEffectReference>
+    </xaif:Mod>
+    <xaif:ReadLocal>
+      <xaif:SideEffectReference vertex_id="1">
+        <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_23"/>
+      </xaif:SideEffectReference>
+    </xaif:ReadLocal>
+    <xaif:Read>
+      <xaif:SideEffectReference vertex_id="1">
+        <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_23"/>
+      </xaif:SideEffectReference>
+    </xaif:Read>
+
+    <xaif:Entry vertex_id="7"/>
+
+    <xaif:BasicBlock vertex_id="8" scope_id="4">
+      <xaif:Marker statement_id="5" annotation="{WHIRL_Id#5} [passive: OPR_PRAGMA]"/>
+      <xaif:Assignment statement_id="6" lineNumber="12" do_chain="1">
+        <xaif:AssignmentLHS du_ud="2" alias="2">
+          <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_23"/>
+        </xaif:AssignmentLHS>
+        <xaif:AssignmentRHS>
+          <xaif:Intrinsic vertex_id="1" name="add_scal_scal" type="***" rType="integer"/>
+          <xaif:VariableReference vertex_id="2" du_ud="2" alias="2">
+            <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_23"/>
+          </xaif:VariableReference>
+          <xaif:Constant vertex_id="3" type="integer" feType="I4" value="1"/>
+          <xaif:ExpressionEdge edge_id="1" source="2" target="1" position="1"/>
+          <xaif:ExpressionEdge edge_id="2" source="3" target="1" position="2"/>
+        </xaif:AssignmentRHS>
+      </xaif:Assignment>
+    </xaif:BasicBlock>
+
+    <xaif:Exit vertex_id="9"/>
+
+    <xaif:ControlFlowEdge edge_id="1" source="7" target="8"/>
+    <xaif:ControlFlowEdge edge_id="2" source="8" target="9"/>
+  </xaif:ControlFlowGraph>
+
+  <!-- ******************************************************************** -->
+  <xaif:ControlFlowGraph vertex_id="23" scope_id="1" symbol_id="c__27" annotation="{PU_Id#4}" controlflowgraph_scope_id="5">
+  </xaif:ControlFlowGraph>
+
+  <!-- ******************************************************************** -->
+  <xaif:ControlFlowGraph vertex_id="24" scope_id="1" symbol_id="BAR_25" annotation="{PU_Id#5}" controlflowgraph_scope_id="6">
+    <xaif:ArgumentList/>
+    <xaif:ModLocal>
+      <xaif:SideEffectReference vertex_id="1">
+        <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_26"/>
+      </xaif:SideEffectReference>
+    </xaif:ModLocal>
+    <xaif:Mod>
+      <xaif:SideEffectReference vertex_id="1">
+        <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_23"/>
+      </xaif:SideEffectReference>
+      <xaif:SideEffectReference vertex_id="1">
+        <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_26"/>
+      </xaif:SideEffectReference>
+    </xaif:Mod>
+    <xaif:ReadLocal>
+      <xaif:SideEffectReference vertex_id="1">
+        <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_26"/>
+      </xaif:SideEffectReference>
+    </xaif:ReadLocal>
+    <xaif:Read>
+      <xaif:SideEffectReference vertex_id="1">
+        <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_23"/>
+      </xaif:SideEffectReference>
+      <xaif:SideEffectReference vertex_id="1">
+        <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_26"/>
+      </xaif:SideEffectReference>
+    </xaif:Read>
+
+    <xaif:Entry vertex_id="13"/>
+
+    <xaif:BasicBlock vertex_id="14" scope_id="6">
+      <xaif:Marker statement_id="5" annotation="{WHIRL_Id#5} [passive: OPR_PRAGMA]"/>
+      <xaif:Marker statement_id="6" annotation="{WHIRL_Id#6} [passive: OPR_USE]"/>
+      <xaif:Assignment statement_id="7" lineNumber="24" do_chain="1">
+        <xaif:AssignmentLHS du_ud="2" alias="3">
+          <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_26"/>
+        </xaif:AssignmentLHS>
+        <xaif:AssignmentRHS>
+          <xaif:Intrinsic vertex_id="1" name="add_scal_scal" type="***" rType="integer"/>
+          <xaif:VariableReference vertex_id="2" du_ud="2" alias="3">
+            <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_26"/>
+          </xaif:VariableReference>
+          <xaif:Constant vertex_id="3" type="integer" feType="I4" value="1"/>
+          <xaif:ExpressionEdge edge_id="1" source="2" target="1" position="1"/>
+          <xaif:ExpressionEdge edge_id="2" source="3" target="1" position="2"/>
+        </xaif:AssignmentRHS>
+      </xaif:Assignment>
+      <xaif:SubroutineCall statement_id="11" scope_id="1" lineNumber="25" formalArgCount="0" symbol_id="FOO_22"/>
+    </xaif:BasicBlock>
+
+    <xaif:Exit vertex_id="15"/>
+
+    <xaif:ControlFlowEdge edge_id="1" source="13" target="14"/>
+    <xaif:ControlFlowEdge edge_id="2" source="14" target="15"/>
+  </xaif:ControlFlowGraph>
+
+  <!-- ******************************************************************** -->
+  <!-- *** This is the PROGRAM routine *** -->
+  <xaif:ControlFlowGraph vertex_id="25" scope_id="1" symbol_id="multrename__28" annotation="{PU_Id#6}" controlflowgraph_scope_id="7">
+    <xaif:ArgumentList/>
+    <xaif:ModLocal>
+      <xaif:SideEffectReference vertex_id="1">
+        <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="LONGNAME_21"/>
+      </xaif:SideEffectReference>
+    </xaif:ModLocal>
+    <xaif:Mod>
+      <xaif:SideEffectReference vertex_id="1">
+        <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="LONGNAME_21"/>
+      </xaif:SideEffectReference>
+      <xaif:SideEffectReference vertex_id="1">
+        <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_23"/>
+      </xaif:SideEffectReference>
+      <xaif:SideEffectReference vertex_id="1">
+        <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_26"/>
+      </xaif:SideEffectReference>
+    </xaif:Mod>
+    <xaif:ReadLocal/>
+    <xaif:Read>
+      <xaif:SideEffectReference vertex_id="1">
+        <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_23"/>
+      </xaif:SideEffectReference>
+      <xaif:SideEffectReference vertex_id="1">
+        <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="S_26"/>
+      </xaif:SideEffectReference>
+    </xaif:Read>
+
+    <xaif:Entry vertex_id="16"/>
+
+    <xaif:BasicBlock vertex_id="17" scope_id="7">
+      <xaif:Marker statement_id="5" annotation="{WHIRL_Id#5} [passive: OPR_PRAGMA]"/>
+      <xaif:Marker statement_id="6" annotation="{WHIRL_Id#6} [passive: OPR_USE]"/>
+      <xaif:Marker statement_id="7" annotation="{WHIRL_Id#7} [passive: OPR_USE]"/>
+      <xaif:Assignment statement_id="8" lineNumber="32" do_chain="1">
+        <xaif:AssignmentLHS du_ud="2" alias="4">
+          <xaif:SymbolReference vertex_id="1" scope_id="1" symbol_id="LONGNAME_21"/>
+        </xaif:AssignmentLHS>
+        <xaif:AssignmentRHS>
+          <xaif:Constant vertex_id="1" type="integer" feType="I4" value="1"/>
+        </xaif:AssignmentRHS>
+      </xaif:Assignment>
+      <xaif:SubroutineCall statement_id="10" scope_id="1" lineNumber="33" formalArgCount="0" symbol_id="BAR_25"/>
+      <xaif:Marker statement_id="11" annotation="{WHIRL_Id#11} [passive: OPR_COMMENT]"/>
+      <xaif:Marker statement_id="12" annotation="{WHIRL_Id#12} [passive: OPR_PRAGMA]"/>
+      <xaif:Marker statement_id="13" annotation="{WHIRL_Id#13} [WRITE***]"/>
+      <xaif:Marker statement_id="25" annotation="{WHIRL_Id#25} [passive: OPR_PRAGMA]"/>
+      <xaif:SubroutineCall statement_id="26" scope_id="1" lineNumber="35" formalArgCount="0" symbol_id="_END_29"/>
+    </xaif:BasicBlock>
+
+    <xaif:Exit vertex_id="19"/>
+
+    <xaif:ControlFlowEdge edge_id="1" source="16" target="17"/>
+    <xaif:ControlFlowEdge edge_id="2" source="17" target="19"/>
+  </xaif:ControlFlowGraph>
+
+  <xaif:CallGraphEdge edge_id="1" source="24" target="22"/>
+  <xaif:CallGraphEdge edge_id="2" source="25" target="24"/>
+</xaif:CallGraph>

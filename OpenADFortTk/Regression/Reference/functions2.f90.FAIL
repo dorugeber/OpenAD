@@ -1,0 +1,1 @@
+open64 drops the result clause on the recursive function, see <a href="http://trac.mcs.anl.gov/projects/openAD/ticket/147">bug report</a>

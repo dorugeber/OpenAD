@@ -1,0 +1,16 @@
+syntax: glob
+*.o
+*.run
+*.B
+*.mod
+*~
+*.orig
+*.MOD
+*.out
+*.mod-whirl
+*.xsd
+syntax: regexp
+^[^/]+\.f90
+^[^/]+\.f
+^[^/]+\.xaif
+^[^/]+\.sxp

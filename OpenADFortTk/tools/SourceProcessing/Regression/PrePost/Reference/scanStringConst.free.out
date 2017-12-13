@@ -1,0 +1,5 @@
+ 4
+  <APPLET \
+   code = "ptolemy.plot.compat.PxgraphApplet" \
+   code = "ptolemy.plot.PlotApplet" \
+   code = "javapeno.javapeno"\

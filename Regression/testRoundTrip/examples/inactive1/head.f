@@ -1,0 +1,35 @@
+      module m 
+       interface i 
+         module procedure p1 
+         module procedure p2 
+       end interface 
+     
+      contains 
+       subroutine p1 (x)
+       double precision :: x
+       end subroutine 
+       subroutine p2 (x)
+       integer :: x
+       end subroutine 
+      end module 
+     
+      subroutine foo (x)
+       use m
+       double precision :: x
+       integer :: theInt
+       theInt=2 
+       call i(x)
+       x=x*theInt
+       call i(x)
+       call i(theInt)
+       call i(x)
+      end subroutine
+     
+      subroutine head(x,y)
+       double precision :: x(1),y(1)
+!$openad INDEPENDENT(X)
+       x=2*x
+       call foo(x)
+       y=x
+!$openad DEPENDENT(y)
+      end subroutine

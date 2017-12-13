@@ -1,0 +1,19 @@
+      subroutine foo() 
+        double precision, dimension(2),intent(in) :: x
+        double precision, dimension(1),intent(out) :: y
+        y(1)=x(1)*x(2)
+      end subroutine
+
+      subroutine head(x,y) 
+	interface 
+          subroutine foo() 
+            double precision, dimension(2),intent(in) :: x
+            double precision, dimension(1),intent(out) :: y
+          end subroutine
+        end interface
+        double precision, dimension(2) :: x
+        double precision, dimension(1) :: y
+c$openad INDEPENDENT(x)
+        call foo(x,y)
+c$openad DEPENDENT(y)
+       end subroutine

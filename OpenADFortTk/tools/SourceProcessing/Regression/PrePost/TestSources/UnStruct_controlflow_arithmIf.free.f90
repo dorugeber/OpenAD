@@ -1,0 +1,10 @@
+program p 
+integer i
+i=2
+if (i-3) 10, 20, 10
+goto 50
+10 print *,'10'
+goto 50
+20 print *,'20'
+50 continue
+end

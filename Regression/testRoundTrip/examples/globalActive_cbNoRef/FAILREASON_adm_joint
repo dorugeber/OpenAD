@@ -1,0 +1,1 @@
+activity analysis fails when no reference is made to common block variable, <a href="http://trac.mcs.anl.gov/projects/openAD/ticket/288">bug report</a>

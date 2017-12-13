@@ -1,0 +1,1 @@
+{'xaifBooster':{'opts':'-N ${XAIFSCHEMAROOT}/schema/examples/noninlinable_intrinsics.xaif'}}

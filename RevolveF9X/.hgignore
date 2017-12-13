@@ -1,0 +1,9 @@
+syntax: glob
+example
+*.mod
+*.o
+*~
+doc/html
+.cproject
+.project
+

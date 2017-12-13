@@ -1,0 +1,348 @@
+;; *** Summary ***
+;; WHIRL      ::= (whirl GBL_SYMTAB PU_FOREST)
+;; GBL_SYMTAB ::= (gbl_symtab GBL_TAB1..GBL_TABn)        ; n is fixed
+;; PU_FOREST  ::= (pu_forest PU_TREE*)                   ; list of PU_TREEs
+;; PU_TREE    ::= (pu_tree PU PU_TREE*) | NULL
+;; PU         ::= (pu PU_SYM PU_SYMTAB WN_AST)
+;; PU_SYMTAB  ::= (pu_symtab PU_TAB1..PU_TABm)           ; m is fixed
+;; WN_AST     ::= (WN_OPR WN_ATTRS WN_AST*) | NULL
+;;
+;; *** Symbol Table Details ***
+;; GBL_SYMTAB ::= (gbl_symtab
+;;                   FILE_INFO       ; file information
+;;                   ST_TAB          ; symbol table (global)
+;;                     ST_ATTR_TAB   ;   misc. attributes for ST_TAB
+;;                   PU_TAB          ; program-unit table
+;;                   TY_TAB          ; type table
+;;                     FLD_TAB       ;   field table (structured types)
+;;                     ARB_TAB       ;   array-bound table
+;;                     TYLIST_TAB    ;   function prototypes
+;;                   TCON_TAB        ; constant table
+;;                     TCON_STR_TAB  ;   string constant table
+;;                   INITO_TAB       ; initial values for init'd objects
+;;                     INITV_TAB     ;   values for scalar components
+;;                   BLK_TAB         ; layout info for block of data 
+;;                   STR_TAB         ; string table
+;;                   )
+;; PU_SYMTAB  ::= (pu_symtab
+;;                   ST_TAB          ; symbol table (local)
+;;                     ST_ATTR_TAB   ;   misc. attributes for ST_TAB
+;;                   LABEL_TAB       ; label table
+;;                   PREG_TAB        ; psuedo-register table
+;;                   INITO_TAB       ; initial values for init'd objects
+;;                   )
+;;
+;; FILE_INFO   ::= (file_info GP_GROUP FLAGS)
+;;
+;; ST_TAB      ::= (st_tab ENTRY*)
+;; ENTRY       ::= (IDX SYM_CLASS STORAGE_CLASS EXPORT_CLASS
+;;                  NAME_IDX/TCON TYPE/PU/BLK BASE_IDX OFFSET
+;;                  FLAGS FLAGS_EXT ST)
+;;
+;; ST_ATTR_TAB ::= (st_attr_tab ENTRY*)
+;; ENTRY       ::= (IDX ST KIND REG_ID/SECTION_NAME)
+;;
+;; PU_TAB      ::= (pu_tab ENTRY*)
+;; ENTRY       ::= (IDX PROTOTYPE LEXICAL_LEVEL GP_GROUP SRC_LANG
+;;                  TARGET_IDX FLAGS)
+;;
+;; TY_TAB      ::= (ty_tab ENTRY*)
+;; ENTRY       ::= (IDX KIND NAME_IDX MTYPE SIZE FLAGS
+;;                  ARB/FLD/TYLIST ETYPE/POINTED/PU_FLAGS)
+;;
+;; FLD_TAB     ::= (fld_tab ENTRY*)
+;; ENTRY       ::= (IDX NAME_IDX TYPE OFST, BSIZE, BOFST FLAGS ST)
+;;
+;; ARB_TAB     ::= (arb_tab ENTRY*)
+;; ENTRY       ::= (IDX FLAGS DIMENSION CO_DIMENSION
+;;                  LBND_VAL/LBND_VAR UBND_VAL/UBND_VAR
+;;                  STRIDE_VAL/STRIDE_VAR)
+;;
+;; TYLIST_TAB  ::= (tylist_tab ENTRY*)
+;; ENTRY       ::= (IDX TY)
+;;
+;; TCON_TAB    ::= (tcon_tab ENTRY*)
+;; ENTRY       ::= (IDX TY FLAGS VALS CMPLXVAL)
+;;
+;; TCON_STR_TAB ::= (tcon_str_tab ENTRY*)
+;; ENTRY       ::= (IDX CHAR_ARRAY)
+;;
+;; INITO_TAB   ::= (inito_tab ENTRY*)
+;; ENTRY       ::= (IDX ST VAL)
+;;
+;; INITV_TAB   ::= (initv_tab ENTRY*)
+;; ENTRY       ::= (IDX NEXT KIND REPEAT1
+;;                  ST/LAB/LAB1/MTYPE/TC/BLK/PAD OFST/ST2/REPEAT2/UNUSED)
+;;
+;; BLK_TAB     ::= (blk_tab ENTRY*)
+;; ENTRY       ::= (IDX SIZE ALIGN FLAGS SECTION_IDX SCNINFO_IDX)
+;;
+;; STR_TAB     ::= (str_tab ENTRY*)
+;; ENTRY       ::= (IDX STRING)
+;;
+;; LABEL_TAB   ::= (label_tab ENTRY*)
+;; ENTRY       ::= (IDX NAME_IDX KIND FLAGS)
+;;
+;; PREG_TAB    ::= (preg_tab ENTRY*)
+;; ENTRY       ::= (IDX NAME_IDX)
+;;
+;;
+;; ST  ::= (st HSTR SCOPE_IDX IDX)
+;; TY  ::= (ty HSTR IDX ALIGN)
+;;
+;; HSTR (helper string) is a (possibly empty) quoted string.
+;;
+;; *** AST Details ***
+;; WN_OPR     ::= OPERATOR RTYPE DTYPE
+;; WN_ATTRS   ::= ((ATTR1 ...) (ATTR2 ...) (ATTR3 ...) ...)
+(whirl
+  (gbl_symtab
+    (file_info 0 (flg ""))
+    (st_tab
+      (1 C_PREG S_REG X_LOCAL (".preg_B" 291) (ty ".predef_B" 1 1) (st 1 1) 0 (flg "") (flg "") (st 1 1))
+      (2 C_PREG S_REG X_LOCAL (".preg_I4" 299) (ty ".predef_I4" 4 4) (st 1 2) 0 (flg "") (flg "") (st 1 2))
+      (3 C_PREG S_REG X_LOCAL (".preg_I8" 308) (ty ".predef_I8" 5 8) (st 1 3) 0 (flg "") (flg "") (st 1 3))
+      (4 C_PREG S_REG X_LOCAL (".preg_U4" 317) (ty ".predef_U4" 8 4) (st 1 4) 0 (flg "") (flg "") (st 1 4))
+      (5 C_PREG S_REG X_LOCAL (".preg_U8" 326) (ty ".predef_U8" 9 8) (st 1 5) 0 (flg "") (flg "") (st 1 5))
+      (6 C_PREG S_REG X_LOCAL (".preg_F4" 335) (ty ".predef_F4" 10 4) (st 1 6) 0 (flg "") (flg "") (st 1 6))
+      (7 C_PREG S_REG X_LOCAL (".preg_F8" 344) (ty ".predef_F8" 11 8) (st 1 7) 0 (flg "") (flg "") (st 1 7))
+      (8 C_PREG S_REG X_LOCAL (".preg_F10" 353) (ty ".predef_F10" 12 16) (st 1 8) 0 (flg "") (flg "") (st 1 8))
+      (9 C_PREG S_REG X_LOCAL (".preg_F16" 363) (ty ".predef_F16" 13 16) (st 1 9) 0 (flg "") (flg "") (st 1 9))
+      (10 C_PREG S_REG X_LOCAL (".preg_FQ" 373) (ty ".predef_FQ" 15 16) (st 1 10) 0 (flg "") (flg "") (st 1 10))
+      (11 C_PREG S_REG X_LOCAL (".preg_C4" 382) (ty ".predef_C4" 17 4) (st 1 11) 0 (flg "") (flg "") (st 1 11))
+      (12 C_PREG S_REG X_LOCAL (".preg_C8" 391) (ty ".predef_C8" 18 8) (st 1 12) 0 (flg "") (flg "") (st 1 12))
+      (13 C_PREG S_REG X_LOCAL (".preg_CQ" 400) (ty ".predef_CQ" 19 16) (st 1 13) 0 (flg "") (flg "") (st 1 13))
+      (14 C_PREG S_REG X_LOCAL (".preg_A8" 409) (ty ".predef_A8" 22 8) (st 1 14) 0 (flg "") (flg "") (st 1 14))
+      (15 C_PREG S_REG X_LOCAL (".preg_C10" 418) (ty ".predef_C10" 23 16) (st 1 15) 0 (flg "") (flg "") (st 1 15))
+      (16 C_PREG S_REG X_LOCAL (".preg_C16" 428) (ty ".predef_C16" 24 16) (st 1 16) 0 (flg "") (flg "") (st 1 16))
+      (17 C_PREG S_REG X_LOCAL (".preg_I16" 438) (ty ".predef_I16" 25 16) (st 1 17) 0 (flg "") (flg "") (st 1 17))
+      (18 C_PREG S_REG X_LOCAL (".preg_U16" 448) (ty ".predef_U16" 26 16) (st 1 18) 0 (flg "") (flg "") (st 1 18))
+      (19 C_PREG S_REG X_LOCAL (".preg_return_val" 458) (ty "" 0 1) (st 1 19) 0 (flg "") (flg "") (st 1 19))
+      (20 C_FUNC S_TEXT X_PREEMPTIBLE ("scalartest_" 489) 1 (st 1 20) 0 (flg "") (flg "") (st 1 20))
+      (21 C_FUNC S_EXTERN X_PREEMPTIBLE ("_END" 512) 2 (st 1 21) 0 (flg "") (flg "") (st 1 21))
+      (22 C_CONST S_FSTATIC X_LOCAL ("    6.000000" 3) (ty ".predef_F4" 10 4) (st 1 22) 0 (flg "ST_IS_INITIALIZED") (flg "") (st 1 22))
+      (23 C_CONST S_FSTATIC X_LOCAL ("    6.000000000000000" 4) (ty ".predef_F8" 11 8) (st 1 23) 0 (flg "ST_IS_INITIALIZED") (flg "") (st 1 23))
+      (24 C_CONST S_FSTATIC X_LOCAL ("    2.300000" 5) (ty ".predef_F4" 10 4) (st 1 24) 0 (flg "ST_IS_INITIALIZED") (flg "") (st 1 24))
+      (25 C_CONST S_FSTATIC X_LOCAL ("    2.299999952316284" 6) (ty ".predef_F8" 11 8) (st 1 25) 0 (flg "ST_IS_INITIALIZED") (flg "") (st 1 25))
+      (26 C_CONST S_FSTATIC X_LOCAL ("    3.141500" 7) (ty ".predef_F4" 10 4) (st 1 26) 0 (flg "ST_IS_INITIALIZED") (flg "") (st 1 26))
+      (27 C_CONST S_FSTATIC X_LOCAL ("    3.141499996185303" 8) (ty ".predef_F8" 11 8) (st 1 27) 0 (flg "ST_IS_INITIALIZED") (flg "") (st 1 27))
+      (28 C_CONST S_FSTATIC X_LOCAL ("print *,'x(1) = ', x, 'ix(4) = ',ix" 9) (ty ".ch_str." 30 1) (st 1 28) 0 (flg "ST_IS_INITIALIZED") (flg "") (st 1 28))
+      (29 C_CONST S_FSTATIC X_LOCAL ("x(1) = " 10) (ty ".ch_str." 31 1) (st 1 29) 0 (flg "ST_IS_INITIALIZED") (flg "") (st 1 29))
+      (30 C_CONST S_FSTATIC X_LOCAL ("ix(4) = " 11) (ty ".ch_str." 32 1) (st 1 30) 0 (flg "ST_IS_INITIALIZED") (flg "") (st 1 30))
+      )
+    (st_attr_tab
+      )
+    (pu_tab
+      (1 (ty ".proc." 28 1) 2 0 (flg "PU_F90_LANG") 0 (flg "PU_NEED_UNPARSED,PU_IS_MAINPU,PU_NO_INLINE"))
+      (2 (ty ".proc." 28 1) 2 0 (flg "") 0 (flg "PU_NEED_UNPARSED"))
+      (3 (ty ".proc." 28 1) 2 0 (flg "") 0 (flg "PU_NEED_UNPARSED,PU_DECL_VIEW"))
+      )
+    (ty_tab
+      (1 SCALAR (".predef_B" 1) B 0 (flg "") ())
+      (2 SCALAR (".predef_I1" 11) I1 1 (flg "") ())
+      (3 SCALAR (".predef_I2" 22) I2 2 (flg "") ())
+      (4 SCALAR (".predef_I4" 33) I4 4 (flg "") ())
+      (5 SCALAR (".predef_I8" 44) I8 8 (flg "") ())
+      (6 SCALAR (".predef_U1" 55) U1 1 (flg "") ())
+      (7 SCALAR (".predef_U2" 66) U2 2 (flg "") ())
+      (8 SCALAR (".predef_U4" 77) U4 4 (flg "") ())
+      (9 SCALAR (".predef_U8" 88) U8 8 (flg "") ())
+      (10 SCALAR (".predef_F4" 99) F4 4 (flg "") ())
+      (11 SCALAR (".predef_F8" 110) F8 8 (flg "") ())
+      (12 SCALAR (".predef_F10" 121) F10 16 (flg "") ())
+      (13 SCALAR (".predef_F16" 133) F16 16 (flg "") ())
+      (14 SCALAR (".predef_STR" 145) STR 0 (flg "") ())
+      (15 SCALAR (".predef_FQ" 157) FQ 16 (flg "") ())
+      (16 SCALAR (".predef_M" 168) M 0 (flg "") ())
+      (17 SCALAR (".predef_C4" 178) C4 8 (flg "") ())
+      (18 SCALAR (".predef_C8" 189) C8 16 (flg "") ())
+      (19 SCALAR (".predef_CQ" 200) CQ 32 (flg "") ())
+      (20 VOID (".predef_V" 211) V 0 (flg "") ())
+      (21 SCALAR (".predef_BS" 221) BS 0 (flg "") ())
+      (22 POINTER (".predef_A8" 232) A8 8 (flg "") ((ty ".predef_V" 20 1)))
+      (23 SCALAR (".predef_C10" 243) C10 32 (flg "") ())
+      (24 SCALAR (".predef_C16" 255) C16 32 (flg "") ())
+      (25 SCALAR (".predef_I16" 267) I16 32 (flg "") ())
+      (26 SCALAR (".predef_U16" 279) U16 32 (flg "") ())
+      (27 SCALAR (".log.4" 475) I4 4 (flg "TY_IS_LOGICAL") ())
+      (28 FUNCTION (".proc." 482) UNK 0 (flg "") (3 (flg "")))
+      (29 SCALAR (".character." 517) U1 1 (flg "TY_IS_CHARACTER") ())
+      (30 ARRAY (".ch_str." 529) UNK 35 (flg "TY_IS_CHARACTER") (1 (ty ".character." 29 1)))
+      (31 ARRAY (".ch_str." 529) UNK 7 (flg "TY_IS_CHARACTER") (2 (ty ".character." 29 1)))
+      (32 ARRAY (".ch_str." 529) UNK 8 (flg "TY_IS_CHARACTER") (3 (ty ".character." 29 1)))
+      (33 POINTER ("anon_ptr." 574) U8 8 (flg "") ((ty ".ch_str." 32 1)))
+      (34 POINTER ("anon_ptr." 574) U8 8 (flg "") ((ty ".ch_str." 31 1)))
+      )
+    (fld_tab
+      )
+    (arb_tab
+      (1 (flg "ARB_LAST_DIMEN,ARB_FIRST_DIMEN,ARB_CONST_STRIDE,ARB_CONST_UBND,ARB_CONST_LBND") 1 0 (const 1) (const 35) (const 1))
+      (2 (flg "ARB_LAST_DIMEN,ARB_FIRST_DIMEN,ARB_CONST_STRIDE,ARB_CONST_UBND,ARB_CONST_LBND") 1 0 (const 1) (const 7) (const 1))
+      (3 (flg "ARB_LAST_DIMEN,ARB_FIRST_DIMEN,ARB_CONST_STRIDE,ARB_CONST_UBND,ARB_CONST_LBND") 1 0 (const 1) (const 8) (const 1))
+      )
+    (tylist_tab
+      (1 (ty ".predef_V" 20 1))
+      (2 (ty "" 0 1))
+      (3 (ty ".predef_V" 20 1))
+      (4 (ty "" 0 1))
+      )
+    (tcon_tab
+      (1 F4 (flg "") (0x0 0x0) (0x0 0x0))
+      (2 F8 (flg "") (0x0 0x0) (0x0 0x0))
+      (3 F4 (flg "") (0x0 0x40c00000) (0x0 0x0))
+      (4 F8 (flg "") (0x0 0x4018000000000000) (0x0 0x0))
+      (5 F4 (flg "") (0x0 0x40133333) (0x0 0x0))
+      (6 F8 (flg "") (0x0 0x4002666660000000) (0x0 0x0))
+      (7 F4 (flg "") (0x0 0x40490e56) (0x0 0x0))
+      (8 F8 (flg "") (0x0 0x400921cac0000000) (0x0 0x0))
+      (9 STR (flg "") (0x0 0x2300000001) (0x0 0x0))
+      (10 STR (flg "") (0x0 0x700000026) (0x0 0x0))
+      (11 STR (flg "") (0x0 0x80000002f) (0x0 0x0))
+      )
+    (tcon_str_tab
+      (1 "print *,'x(1) = ', x, 'ix(4) = ',ix")
+      (38 "x(1) = ")
+      (47 "ix(4) = ")
+      )
+    (inito_tab
+      )
+    (initv_tab
+      )
+    (blk_tab
+      )
+    (str_tab
+      (1 ".predef_B")
+      (11 ".predef_I1")
+      (22 ".predef_I2")
+      (33 ".predef_I4")
+      (44 ".predef_I8")
+      (55 ".predef_U1")
+      (66 ".predef_U2")
+      (77 ".predef_U4")
+      (88 ".predef_U8")
+      (99 ".predef_F4")
+      (110 ".predef_F8")
+      (121 ".predef_F10")
+      (133 ".predef_F16")
+      (145 ".predef_STR")
+      (157 ".predef_FQ")
+      (168 ".predef_M")
+      (178 ".predef_C4")
+      (189 ".predef_C8")
+      (200 ".predef_CQ")
+      (211 ".predef_V")
+      (221 ".predef_BS")
+      (232 ".predef_A8")
+      (243 ".predef_C10")
+      (255 ".predef_C16")
+      (267 ".predef_I16")
+      (279 ".predef_U16")
+      (291 ".preg_B")
+      (299 ".preg_I4")
+      (308 ".preg_I8")
+      (317 ".preg_U4")
+      (326 ".preg_U8")
+      (335 ".preg_F4")
+      (344 ".preg_F8")
+      (353 ".preg_F10")
+      (363 ".preg_F16")
+      (373 ".preg_FQ")
+      (382 ".preg_C4")
+      (391 ".preg_C8")
+      (400 ".preg_CQ")
+      (409 ".preg_A8")
+      (418 ".preg_C10")
+      (428 ".preg_C16")
+      (438 ".preg_I16")
+      (448 ".preg_U16")
+      (458 ".preg_return_val")
+      (475 ".log.4")
+      (482 ".proc.")
+      (489 "scalartest_")
+      (501 "IX")
+      (504 "JJJ")
+      (508 "X")
+      (510 "Y")
+      (512 "_END")
+      (517 ".character.")
+      (529 ".ch_str.")
+      (538 "print *,'x(1) = ', x, 'ix(4) = ',ix")
+      (574 "anon_ptr.")
+      ))
+  (pu_forest
+    (pu_tree
+      (pu (st "scalartest_" 1 20)
+        (pu_symtab
+          (st_tab
+            (1 C_VAR S_AUTO X_LOCAL ("IX" 501) (ty ".predef_I4" 4 4) (st 2 1) 0 (flg "ST_KEEP_NAME_W2F") (flg "") (st 2 1))
+            (2 C_VAR S_AUTO X_LOCAL ("JJJ" 504) (ty ".predef_I4" 4 4) (st 2 2) 0 (flg "ST_KEEP_NAME_W2F") (flg "") (st 2 2))
+            (3 C_VAR S_AUTO X_LOCAL ("X" 508) (ty ".predef_F8" 11 8) (st 2 3) 0 (flg "ST_KEEP_NAME_W2F") (flg "") (st 2 3))
+            (4 C_VAR S_AUTO X_LOCAL ("Y" 510) (ty ".predef_F8" 11 8) (st 2 4) 0 (flg "ST_KEEP_NAME_W2F") (flg "") (st 2 4))
+            (5 C_FUNC S_EXTERN X_PREEMPTIBLE ("_END" 512) 3 (st 1 21) 0 (flg "") (flg "") (st 2 5))
+            (6 C_NAME S_UNKNOWN X_LOCAL ("print *,'x(1) = ', x, 'ix(4) = ',ix" 538) (ty "" 0 1) (st 2 6) 0 (flg "") (flg "") (st 2 6))
+            )
+          (st_attr_tab
+            )
+          (label_tab
+            )
+          (preg_tab
+            )
+          (inito_tab
+            ))
+        (FUNC_ENTRY V V ((st "scalartest_" 1 20))
+          (BLOCK V V ())
+          (BLOCK V V ())
+          (BLOCK V V ()
+            (PRAGMA V V (120 (st "" 0 0) (oflg 0x0) 0))
+            (STID V F8 ((st "X" 2 3) 0 (ty ".predef_F8" 11 8) 0)
+              (CONST F8 V ((st "    6.000000000000000" 1 23))))
+            (STID V F8 ((st "Y" 2 4) 0 (ty ".predef_F8" 11 8) 0)
+              (CONST F8 V ((st "    2.299999952316284" 1 25))))
+            (STID V I4 ((st "IX" 2 1) 0 (ty ".predef_I4" 4 4) 0)
+              (INTCONST I4 V (2)))
+            (STID V I4 ((st "JJJ" 2 2) 0 (ty ".predef_I4" 4 4) 0)
+              (INTCONST I4 V (3)))
+            (STID V F8 ((st "X" 2 3) 0 (ty ".predef_F8" 11 8) 0)
+              (SUB F8 V ()
+                (ADD F8 V ()
+                  (MPY F8 V ()
+                    (LDID F8 F8 ((st "X" 2 3) 0 (ty ".predef_F8" 11 8) 0))
+                    (LDID F8 F8 ((st "X" 2 3) 0 (ty ".predef_F8" 11 8) 0)))
+                  (CONST F8 V ((st "    3.141499996185303" 1 27))))
+                (LDID F8 F8 ((st "Y" 2 4) 0 (ty ".predef_F8" 11 8) 0))))
+            (STID V I4 ((st "IX" 2 1) 0 (ty ".predef_I4" 4 4) 0)
+              (ADD I4 V ()
+                (LDID I4 I4 ((st "JJJ" 2 2) 0 (ty ".predef_I4" 4 4) 0))
+                (INTCONST I4 V (1))))
+            (COMMENT V V ((st "print *,'x(1) = ', x, 'ix(4) = ',ix" 2 6)))
+            (PRAGMA V V (177 (st "" 0 0) (oflg 0x0) 0))
+            (IO V V (FORMATTED_WRITE (oflg 0x2))
+              (IO_ITEM V V (NONE (ty "" 0 0)))
+              (IO_ITEM V V (NONE (ty "" 0 0)))
+              (IO_ITEM V V (FIRST_LAST_FLAG (ty "" 0 0))
+                (INTCONST I4 V (3)))
+              (IO_ITEM V V (END_EOR_EOF_FLAG (ty "" 0 0))
+                (INTCONST I4 V (0)))
+              (IO_ITEM V V (ENCODE_DECODE_FLAG (ty "" 0 0))
+                (INTCONST I4 V (0)))
+              (IO_ITEM V V (CHAR (ty ".ch_str." 31 1))
+                (LDA U8 V ((st "x(1) = " 1 29) 0 (ty "anon_ptr." 34 8) 0))
+                (INTCONST I8 V (140763258159104))
+                (INTCONST U4 V (7)))
+              (IO_ITEM V V (EXPR (ty ".predef_F8" 11 8))
+                (LDID F8 F8 ((st "X" 2 3) 0 (ty ".predef_F8" 11 8) 0))
+                (INTCONST I8 V (1127012303372288)))
+              (IO_ITEM V V (CHAR (ty ".ch_str." 32 1))
+                (LDA U8 V ((st "ix(4) = " 1 30) 0 (ty "anon_ptr." 33 8) 0))
+                (INTCONST I8 V (140763258159104))
+                (INTCONST U4 V (8)))
+              (IO_ITEM V V (EXPR (ty ".predef_I4" 4 4))
+                (LDID I4 I4 ((st "IX" 2 1) 0 (ty ".predef_I4" 4 4) 0))
+                (INTCONST I8 V (562958543355904))))
+            (PRAGMA V V (178 (st "" 0 0) (oflg 0x0) 0))
+            (CALL V V ((st "_END" 1 21) (oflg 0x87e)))
+            (RETURN V V ())
+            (RETURN V V ()))))
+      )
+    )
+  )
