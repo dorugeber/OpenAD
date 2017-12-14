@@ -17,6 +17,11 @@ program driver
   integer i,j,k
   type(active)::r
   integer maxDoubleTapeLength
+
+! INITIALIZATION EMULATOR
+  RPE_ACTIVE = .TRUE.
+  RPE_DEFAULT_SBITS = 12
+
   nx1=5
   nx2=5
 

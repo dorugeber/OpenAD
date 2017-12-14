@@ -1,20 +1,20 @@
 ifndef F90C
 F90C=gfortran
 endif
-RTSUPP=w2f__types OAD_active
+RTSUPP=w2f__types OAD_active_rpe
 driverTLM: $(addsuffix .o, $(RTSUPP)) head.pre.xb.x2w.w2f.post.o driverTLM.o init.o
-	${F90C} -o $@ $^
+	${F90C} -o $@ $^ -L../../../../rpe/lib -lrpe
 
 head.pre.xb.x2w.w2f.post.f $(addsuffix .f90, $(RTSUPP)) : toolChain 
 
 toolChain : head.f
-	openad -c -m f $<
+	openad_rpe -c -m f $<
 
 %.o : %.f90
-	${F90C} -o $@ -c $< 
+	${F90C} -I../../../../rpe/modules -o $@ -c $<
 
 %.o : %.f
-	${F90C} -o $@ -c $< 
+	${F90C} -I../../../../rpe/modules -o $@ -c $<
 
 all_globals_mod.f: 
 	ln -s ../$@ ./
