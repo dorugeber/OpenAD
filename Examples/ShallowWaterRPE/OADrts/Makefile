@@ -3,7 +3,7 @@ include ../Makefile.inc
 build: $(OAD_RTS) $(addsuffix .o, $(basename $(OAD_RTS)))
 
 # pick up the support files from the OpenAD installation
-OAD_active.f90:
+OAD_active_rpe.f90:
 	ln -sf ${OPENADROOT}/runTimeSupport/scalar/$@ ./
 w2f__types.f90 iaddr.c:
 	ln -sf ${OPENADROOT}/runTimeSupport/all/$@ ./
@@ -15,7 +15,7 @@ timeRatio.c:
 # we do not want impose the default bit size on reals required for 
 # the other source code 
 %.o:%.f90 
-	$(F90C) -c $(F90FLAGS) -o $@ $< 
+	$(F90C) -I../../../../rpe/modules -c $(F90FLAGS) -o $@ $< 
 
 clean:
 	rm -f *.o *.mod *.MOD

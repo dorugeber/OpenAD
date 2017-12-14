@@ -24,7 +24,7 @@ endif
 # OpenAD runtime support files 
 OAD_RTS = \
 w2f__types.f90 \
-OAD_active.f90 \
+OAD_active_rpe.f90 \
 OAD_cp.f90 \
 OAD_tape.f90 \
 OAD_rev.f90 \

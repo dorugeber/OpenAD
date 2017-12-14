@@ -15,6 +15,11 @@
       integer i
       type(active) xc(ncmax)
 
+c INITIALIZATION EMULATOR
+      RPE_ACTIVE = .TRUE.
+      RPE_DEFAULT_SBITS = 16
+
+
       print *, 'inifields:'
 
 c set the execution mode
@@ -70,7 +75,7 @@ c #############
       print *, 'cost function = ', cost%v
 
       do i=1,nc
-         write(*,'(A,I3,A,E25.17E3)') 'grad(', i, ')= ', xc(i)%d
+         write(*,'(A,I3,A,E25.17E3)') 'grad(', i, ')= ', xc(i)%d%val
       end do
 
 c #############

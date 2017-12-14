@@ -60,7 +60,7 @@ Run/shallow_water_ad: $(addprefix $(OAD_RTS_DIR)/,$(addsuffix .o, $(basename $(O
 	              numericalCore.xb.x2w.w2f.pp.o \
 		      ionetcdf.o \
                       main.prepped.o
-	$(FC) $(LFLAGS) -o $@ $^ $(LIBS)  
+	$(FC) $(LFLAGS) -o $@ $^ -L../../../rpe/lib $(LIBS) -lrpe
 
 # the stages of the tool pipeline: 
 
@@ -91,7 +91,7 @@ numericalCore.xb.x2w.w2f.pp.f: numericalCore.xb.x2w.w2f.f
 
 # compile this file
 numericalCore.xb.x2w.w2f.pp.o: numericalCore.xb.x2w.w2f.pp.f
-	$(F90C) $(FIXEDFORMAT) $(F90FLAGS) $(FFLAGS) $(MODPATH) -c  -o $@ $<
+	$(F90C) $(FIXEDFORMAT) $(F90FLAGS) $(FFLAGS) $(MODPATH) -I../../../rpe/modules -c  -o $@ $<
 
 ###################################################################
 # generic things 
@@ -106,11 +106,11 @@ numericalCore.xb.x2w.w2f.pp.o: numericalCore.xb.x2w.w2f.pp.f
 
 # F77 compile rule
 %.o:%.f 
-	$(FC) $(FIXEDFORMAT) $(FFLAGS) $(MODPATH) -c  -o $@ $< 
+	$(FC) $(FIXEDFORMAT) $(FFLAGS) $(MODPATH) -I../../../rpe/modules -c  -o $@ $< 
 
 # F90 compile rule
 %.o:%.f90 
-	$(F90C) $(F90FLAGS) $(FFLAGS) $(MODPATH) -c -o $@ $< 
+	$(F90C) $(F90FLAGS) $(FFLAGS) $(MODPATH) -I../../../rpe/modules -c -o $@ $< 
 
 # C compile rule
 %.o:%.c 
