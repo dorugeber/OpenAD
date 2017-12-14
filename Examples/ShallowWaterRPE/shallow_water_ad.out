@@ -1,0 +1,530 @@
+OAD TIMING: stamp 0: 1231906038.420245
+OAD TIMING: stamp 1: 1231906042.225084
+OAD TIMING: delta stamps 1-0: 3.804839
+ inifields:
+ readparms:
+ determine_data_time: # of data times =           68
+   0.00000000000000        300000.000000000        600000.000000000        900000.000000000        1200000.00000000        1500000.00000000        1800000.00000000        2100000.00000000        2400000.00000000        2700000.00000000        3000000.00000000        3300000.00000000        3600000.00000000        3900000.00000000        4200000.00000000        4500000.00000000        4800000.00000000        5100000.00000000        5400000.00000000        5700000.00000000        6000000.00000000        6300000.00000000        6600000.00000000        6900000.00000000        7200000.00000000        7500000.00000000        7800000.00000000        8100000.00000000        8400000.00000000        8700000.00000000        9000000.00000000        9300000.00000000        9600000.00000000        9900000.00000000        10200000.0000000        10500000.0000000        10800000.0000000        11100000.0000000        11400000.0000000        11700000.0000000        12000000.0000000        12300000.0000000        12600000.0000000        12900000.0000000        13200000.0000000        13500000.0000000        13800000.0000000        14100000.0000000        14400000.0000000        14700000.0000000        15000000.0000000        15300000.0000000        15600000.0000000        15900000.0000000        16200000.0000000        16500000.0000000        16800000.0000000        17100000.0000000        17400000.0000000        17700000.0000000        18000000.0000000        18300000.0000000        18600000.0000000        18900000.0000000        19200000.0000000        19500000.0000000        19800000.0000000        20000000.0000000     
+ rini =   4.000000000000000E-003
+ will overwrite frict with rini
+ cold start from initial fields
+ variable "uini                                                                            " not found in restart_long.nc 
+ set to zero
+ variable "vini                                                                            " not found in restart_long.nc 
+ set to zero
+ variable "etaini                                                                          " not found in restart_long.nc 
+ set to zero
+ rough check of CLF criterion:
+ OK
+ forward_model:
+ variable "etadata                                                                         " not found in restart_long.nc 
+ set to zero
+ enter length_of_control_vector:FFFFTFF
+  length_of_control_vector: entering plain
+ dimensions of control vector =          160
+ leave length_of_control_vector:FFFFTFF
+ calculate intial cost function
+ enter map_to_control_vector:FFFFTFF
+  map_to_control_vector: entering plain
+ leave map_to_control_vector:FFFFTFF
+ enter forward_model:FFFFFTT
+  forward_model: entering tape
+  enter map_from_control_vector:TFFFTFF
+   map_from_control_vector: entering arg store
+   map_from_control_vector: entering plain
+  leave map_from_control_vector:TFFFTFF
+  enter calc_depth_uv:TFFFTFF
+   calc_depth_uv: entering arg store
+   calc_depth_uv: entering plain
+  leave calc_depth_uv:TFFFTFF
+  enter initial_values:TFFFTFF
+   initial_values: entering arg store
+   initial_values: entering plain
+  leave initial_values:TFFFTFF
+  enter cost_depth:TFFFTFF
+   cost_depth: entering arg store
+   cost_depth: entering plain
+  leave cost_depth:TFFFTFF
+ number of outer loops = number of tape records =           80
+ Writing Time Step            0
+ outer loop            1
+ outer loop            2
+ outer loop            3
+ outer loop            4
+ outer loop            5
+ outer loop            6
+ Writing Time Step         3000
+ outer loop            7
+ outer loop            8
+ outer loop            9
+ outer loop           10
+ outer loop           11
+ outer loop           12
+ Writing Time Step         6000
+ outer loop           13
+ outer loop           14
+ outer loop           15
+ outer loop           16
+ outer loop           17
+ outer loop           18
+ Writing Time Step         9000
+ outer loop           19
+ outer loop           20
+ outer loop           21
+ outer loop           22
+ outer loop           23
+ outer loop           24
+ Writing Time Step        12000
+ outer loop           25
+ outer loop           26
+ outer loop           27
+ outer loop           28
+ outer loop           29
+ outer loop           30
+ Writing Time Step        15000
+ outer loop           31
+ outer loop           32
+ outer loop           33
+ outer loop           34
+ outer loop           35
+ outer loop           36
+ Writing Time Step        18000
+ outer loop           37
+ outer loop           38
+ outer loop           39
+ outer loop           40
+ outer loop           41
+ outer loop           42
+ Writing Time Step        21000
+ outer loop           43
+ outer loop           44
+ outer loop           45
+ outer loop           46
+ outer loop           47
+ outer loop           48
+ Writing Time Step        24000
+ outer loop           49
+ outer loop           50
+ outer loop           51
+ outer loop           52
+ outer loop           53
+ outer loop           54
+ Writing Time Step        27000
+ outer loop           55
+ outer loop           56
+ outer loop           57
+ outer loop           58
+ outer loop           59
+ outer loop           60
+ Writing Time Step        30000
+ outer loop           61
+ outer loop           62
+ outer loop           63
+ outer loop           64
+ outer loop           65
+ outer loop           66
+ Writing Time Step        33000
+ outer loop           67
+ outer loop           68
+ outer loop           69
+ outer loop           70
+ outer loop           71
+ outer loop           72
+ Writing Time Step        36000
+ outer loop           73
+ outer loop           74
+ outer loop           75
+ outer loop           76
+ outer loop           77
+ outer loop           78
+ Writing Time Step        39000
+ outer loop           79
+ outer loop           80
+  enter calc_zonal_transport_joint:TFFFTFF
+   calc_zonal_transport_joint: entering arg store
+   calc_zonal_transport_joint: entering plain
+  leave calc_zonal_transport_joint:TFFFTFF
+ zonal volume transport =    69.4097151334578       Sv
+  forward_model: entering adjoint
+  enter calc_zonal_transport_joint:FTFFFTF
+   calc_zonal_transport_joint: entering arg restore
+   calc_zonal_transport_joint: entering tape
+   calc_zonal_transport_joint: entering adjoint
+  leave calc_zonal_transport_joint:FTFFFTF
+ outer loop               80 taping
+ CPD+
+ CPD+
+ CPB+
+ CPD+
+ CPB+
+ outer loop               80 adjoint
+ outer loop               79 taping
+ outer loop               79 adjoint
+ outer loop               78 taping
+ Writing Time Step        39000
+ outer loop               78 adjoint
+ Writing Time Step        39000
+ outer loop               77 taping
+ outer loop               77 adjoint
+ outer loop               76 taping
+ outer loop               76 adjoint
+ outer loop               75 taping
+ outer loop               75 adjoint
+ outer loop               74 taping
+ outer loop               74 adjoint
+ outer loop               73 taping
+ outer loop               73 adjoint
+ outer loop               72 taping
+ Writing Time Step        36000
+ outer loop               72 adjoint
+ Writing Time Step        36000
+ outer loop               71 taping
+ outer loop               71 adjoint
+ outer loop               70 taping
+ outer loop               70 adjoint
+ outer loop               69 taping
+ outer loop               69 adjoint
+ outer loop               68 taping
+ outer loop               68 adjoint
+ outer loop               67 taping
+ outer loop               67 adjoint
+ outer loop               66 taping
+ Writing Time Step        33000
+ outer loop               66 adjoint
+ Writing Time Step        33000
+ outer loop               65 taping
+ outer loop               65 adjoint
+ outer loop               64 taping
+ outer loop               64 adjoint
+ outer loop               63 taping
+ outer loop               63 adjoint
+ outer loop               62 taping
+ outer loop               62 adjoint
+ outer loop               61 taping
+ outer loop               61 adjoint
+ outer loop               60 taping
+ Writing Time Step        30000
+ outer loop               60 adjoint
+ Writing Time Step        30000
+ outer loop               59OAD TIMING: stamp 2: 1231906076.398764
+OAD TIMING: delta stamps 2-1: 34.173680
+OAD TIMING: delta stamps 2-0: 37.978519
+OAD TIMING: ratio stamps (2-1)/(1-0): 3.417368e+07/3.804839e+06=8.981636e+00
+ taping
+ outer loop               59 adjoint
+ outer loop               58 taping
+ outer loop               58 adjoint
+ outer loop               57 taping
+ outer loop               57 adjoint
+ outer loop               56 taping
+ outer loop               56 adjoint
+ outer loop               55 taping
+ outer loop               55 adjoint
+ outer loop               54 taping
+ Writing Time Step        27000
+ outer loop               54 adjoint
+ Writing Time Step        27000
+ outer loop               53 taping
+ outer loop               53 adjoint
+ outer loop               52 taping
+ outer loop               52 adjoint
+ outer loop               51 taping
+ outer loop               51 adjoint
+ outer loop               50 taping
+ outer loop               50 adjoint
+ outer loop               49 taping
+ outer loop               49 adjoint
+ outer loop               48 taping
+ Writing Time Step        24000
+ outer loop               48 adjoint
+ Writing Time Step        24000
+ outer loop               47 taping
+ outer loop               47 adjoint
+ outer loop               46 taping
+ outer loop               46 adjoint
+ outer loop               45 taping
+ outer loop               45 adjoint
+ outer loop               44 taping
+ outer loop               44 adjoint
+ outer loop               43 taping
+ outer loop               43 adjoint
+ outer loop               42 taping
+ Writing Time Step        21000
+ outer loop               42 adjoint
+ Writing Time Step        21000
+ outer loop               41 taping
+ outer loop               41 adjoint
+ outer loop               40 taping
+ outer loop               40 adjoint
+ outer loop               39 taping
+ outer loop               39 adjoint
+ outer loop               38 taping
+ outer loop               38 adjoint
+ outer loop               37 taping
+ outer loop               37 adjoint
+ outer loop               36 taping
+ Writing Time Step        18000
+ outer loop               36 adjoint
+ Writing Time Step        18000
+ outer loop               35 taping
+ outer loop               35 adjoint
+ outer loop               34 taping
+ outer loop               34 adjoint
+ outer loop               33 taping
+ outer loop               33 adjoint
+ outer loop               32 taping
+ outer loop               32 adjoint
+ outer loop               31 taping
+ outer loop               31 adjoint
+ outer loop               30 taping
+ Writing Time Step        15000
+ outer loop               30 adjoint
+ Writing Time Step        15000
+ outer loop               29 taping
+ outer loop               29 adjoint
+ outer loop               28 taping
+ outer loop               28 adjoint
+ outer loop               27 taping
+ outer loop               27 adjoint
+ outer loop               26 taping
+ outer loop               26 adjoint
+ outer loop               25 taping
+ outer loop               25 adjoint
+ outer loop               24 taping
+ Writing Time Step        12000
+ outer loop               24 adjoint
+ Writing Time Step        12000
+ outer loop               23 taping
+ outer loop               23 adjoint
+ outer loop               22 taping
+ outer loop               22 adjoint
+ outer loop               21 taping
+ outer loop               21 adjoint
+ outer loop               20 taping
+ outer loop               20 adjoint
+ outer loop               19 taping
+ outer loop               19 adjoint
+ outer loop               18 taping
+ Writing Time Step         9000
+ outer loop               18 adjoint
+ Writing Time Step         9000
+ outer loop               17 taping
+ outer loop               17 adjoint
+ outer loop               16 taping
+ outer loop               16 adjoint
+ outer loop               15 taping
+ outer loop               15 adjoint
+ outer loop               14 taping
+ outer loop               14 adjoint
+ outer loop               13 taping
+ outer loop               13 adjoint
+ outer loop               12 taping
+ Writing Time Step         6000
+ outer loop               12 adjoint
+ Writing Time Step         6000
+ outer loop               11 taping
+ outer loop               11 adjoint
+ outer loop               10 taping
+ outer loop               10 adjoint
+ outer loop                9 taping
+ outer loop                9 adjoint
+ outer loop                8 taping
+ outer loop                8 adjoint
+ outer loop                7 taping
+ outer loop                7 adjoint
+ outer loop                6 taping
+ Writing Time Step         3000
+ outer loop                6 adjoint
+ Writing Time Step         3000
+ outer loop                5 taping
+ outer loop                5 adjoint
+ outer loop                4 taping
+ outer loop                4 adjoint
+ outer loop                3 taping
+ outer loop                3 adjoint
+ outer loop                2 taping
+ outer loop                2 adjoint
+ outer loop                1 taping
+ outer loop                1 adjoint
+  enter cost_depth:FTFFFTF
+   cost_depth: entering arg restore
+   cost_depth: entering tape
+   cost_depth: entering adjoint
+  leave cost_depth:FTFFFTF
+  enter initial_values:FTFFFTF
+   initial_values: entering arg restore
+   initial_values: entering tape
+   initial_values: entering adjoint
+  leave initial_values:FTFFFTF
+  enter calc_depth_uv:FTFFFTF
+   calc_depth_uv: entering arg restore
+   calc_depth_uv: entering tape
+   calc_depth_uv: entering adjoint
+  leave calc_depth_uv:FTFFFTF
+  enter map_from_control_vector:FTFFFTF
+   map_from_control_vector: entering arg restore
+   map_from_control_vector: entering tape
+   map_from_control_vector: entering adjoint
+  leave map_from_control_vector:FTFFFTF
+ leave forward_model:FTFFFTF
+ cost function =    69409715.1334578     
+grad(  1)= -0.74167779048803464E+008
+grad(  2)= -0.54555704613088106E+005
+grad(  3)= -0.19963720671956806E+005
+grad(  4)=  0.66263623129503394E+004
+grad(  5)=  0.36856173744005231E+005
+grad(  6)= -0.50951686425028820E+005
+grad(  7)= -0.23153650497315060E+007
+grad(  8)= -0.11264010215260329E+008
+grad(  9)= -0.41605673803507597E+007
+grad( 10)=  0.10982405047879301E+007
+grad( 11)= -0.41163734002668187E+007
+grad( 12)= -0.46781878834735304E+007
+grad( 13)= -0.14197097598483770E+007
+grad( 14)= -0.13185010716288600E+007
+grad( 15)= -0.11803384801455524E+007
+grad( 16)= -0.66237117800646077E+006
+grad( 17)= -0.40462290647342888E+006
+grad( 18)= -0.26951275220224680E+006
+grad( 19)= -0.18965438362962348E+006
+grad( 20)= -0.13575634161674086E+006
+grad( 21)= -0.99448425485345438E+008
+grad( 22)= -0.52524750022581946E+007
+grad( 23)= -0.55754142179700509E+007
+grad( 24)= -0.61226029449273217E+007
+grad( 25)= -0.68543074790996229E+007
+grad( 26)= -0.77636021633118959E+007
+grad( 27)= -0.87697004124280810E+007
+grad( 28)= -0.18826858099133428E+008
+grad( 29)= -0.42740399979840256E+008
+grad( 30)= -0.61718496462659007E+007
+grad( 31)= -0.87476880017015543E+007
+grad( 32)= -0.13002331192550261E+008
+grad( 33)= -0.35919592461607009E+007
+grad( 34)= -0.60217638050911464E+007
+grad( 35)= -0.66027804337678757E+007
+grad( 36)= -0.57442327507122736E+007
+grad( 37)= -0.50758900286738006E+007
+grad( 38)= -0.47559607041641390E+007
+grad( 39)= -0.47404291754621351E+007
+grad( 40)= -0.48705810026401943E+007
+grad( 41)= -0.50804777944083646E+008
+grad( 42)= -0.91627925802134182E+007
+grad( 43)= -0.94494392737952787E+007
+grad( 44)= -0.10019315989212947E+008
+grad( 45)= -0.10562089623387398E+008
+grad( 46)= -0.10333586590663122E+008
+grad( 47)= -0.10952140493415339E+008
+grad( 48)= -0.17760844184418648E+008
+grad( 49)= -0.57563354555469021E+008
+grad( 50)= -0.20077706137239859E+008
+grad( 51)= -0.10331065442238022E+008
+grad( 52)= -0.10451530643582268E+008
+grad( 53)=  0.10023656343443664E+008
+grad( 54)=  0.31326556133230340E+005
+grad( 55)= -0.50353947708906187E+007
+grad( 56)= -0.72219423417966925E+007
+grad( 57)= -0.78896254629418310E+007
+grad( 58)= -0.81622586174516091E+007
+grad( 59)= -0.84704996400194559E+007
+grad( 60)= -0.87722308382094651E+007
+grad( 61)=  0.22296788775554545E+008
+grad( 62)= -0.10262413624812076E+008
+grad( 63)= -0.10283115164892409E+008
+grad( 64)= -0.10609691712868361E+008
+grad( 65)= -0.10795780913598439E+008
+grad( 66)= -0.94506272184694186E+007
+grad( 67)= -0.76610117172912369E+007
+grad( 68)= -0.84540718345675990E+007
+grad( 69)= -0.53890797368031479E+008
+grad( 70)= -0.25890365173573978E+008
+grad( 71)= -0.46585003531865384E+007
+grad( 72)= -0.15030856040863110E+008
+grad( 73)=  0.65112235033068759E+007
+grad( 74)= -0.28612260673133461E+007
+grad( 75)= -0.57989406922349194E+007
+grad( 76)= -0.81321903866352644E+007
+grad( 77)= -0.91578214319914673E+007
+grad( 78)= -0.96368296365675051E+007
+grad( 79)= -0.10015591278588224E+008
+grad( 80)= -0.10267452887464322E+008
+grad( 81)=  0.75210104323211968E+008
+grad( 82)= -0.86519357748912871E+007
+grad( 83)= -0.84666445537119787E+007
+grad( 84)= -0.86292167696396671E+007
+grad( 85)= -0.87982507228998672E+007
+grad( 86)= -0.75254877273614118E+007
+grad( 87)= -0.46118636201773100E+007
+grad( 88)=  0.42990654531642087E+007
+grad( 89)= -0.24433360229604766E+008
+grad( 90)= -0.16098954607141526E+008
+grad( 91)=  0.18350819950935684E+008
+grad( 92)= -0.55119719129823158E+007
+grad( 93)= -0.10420509486518900E+007
+grad( 94)= -0.90125551505654287E+007
+grad( 95)= -0.90740686036096588E+007
+grad( 96)= -0.97301799615006018E+007
+grad( 97)= -0.95822235531120095E+007
+grad( 98)= -0.93307808632397670E+007
+grad( 99)= -0.92362433381224480E+007
+grad(100)= -0.91493280905913282E+007
+grad(101)=  0.80213497190640569E+008
+grad(102)= -0.54151292064434998E+007
+grad(103)= -0.52210835854910128E+007
+grad(104)= -0.53066665317464918E+007
+grad(105)= -0.55533442716512289E+007
+grad(106)= -0.50643585352497799E+007
+grad(107)= -0.25624214931063186E+007
+grad(108)=  0.16967746166161161E+008
+grad(109)=  0.27290026539149500E+008
+grad(110)=  0.15089485217544377E+008
+grad(111)=  0.58258102636569336E+008
+grad(112)=  0.10012790565364851E+008
+grad(113)= -0.11260740522059744E+008
+grad(114)= -0.11471372678838419E+008
+grad(115)= -0.90135562410792038E+007
+grad(116)= -0.84530279710087348E+007
+grad(117)= -0.74264944919927623E+007
+grad(118)= -0.66483912775546201E+007
+grad(119)= -0.62362629078319184E+007
+grad(120)= -0.59736077977479622E+007
+grad(121)=  0.29896563838526782E+008
+grad(122)= -0.21529943857042380E+007
+grad(123)= -0.20885630883744103E+007
+grad(124)= -0.20926085612327501E+007
+grad(125)= -0.22042799412516709E+007
+grad(126)= -0.22661747916876539E+007
+grad(127)= -0.12854187155257661E+007
+grad(128)=  0.19229311050267782E+008
+grad(129)=  0.35586493750830092E+008
+grad(130)=  0.43080543326539867E+008
+grad(131)=  0.84869863017382428E+008
+grad(132)= -0.21828115439730141E+008
+grad(133)= -0.12689612521402637E+008
+grad(134)= -0.34914205988060664E+007
+grad(135)= -0.32079799987128172E+007
+grad(136)= -0.32888989311625017E+007
+grad(137)= -0.27521720132477782E+007
+grad(138)= -0.23890833827820150E+007
+grad(139)= -0.22751267680301652E+007
+grad(140)= -0.22518270935243466E+007
+grad(141)= -0.67115654192252487E+008
+grad(142)= -0.50014586039096036E+006
+grad(143)= -0.53418575845353061E+006
+grad(144)= -0.48761980025832279E+006
+grad(145)= -0.33057642217280081E+006
+grad(146)=  0.10124479227238709E+006
+grad(147)=  0.14933334964284534E+007
+grad(148)=  0.62678443290621797E+007
+grad(149)=  0.18671053799320298E+009
+grad(150)=  0.26783512618529803E+009
+grad(151)=  0.18450726165235859E+009
+grad(152)=  0.84041851628182560E+008
+grad(153)=  0.22371929108119253E+007
+grad(154)=  0.26784865405666293E+007
+grad(155)=  0.93079824110319722E+006
+grad(156)=  0.36097108142718015E+006
+grad(157)=  0.24447872203532036E+006
+grad(158)=  0.10605459757555525E+006
+grad(159)= -0.87697583714409862E+005
+grad(160)= -0.27012193314788898E+006
